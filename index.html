@@ -208,6 +208,17 @@
   <script>
     lucide.createIcons();
 
+    // Helper para prevenir XSS sanitizando texto dinamico
+    function escapeHTML(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     async function buscarTicket() {
       const ticketInput = document.getElementById('ticketInput');
       const ticket = ticketInput.value.trim().toUpperCase();
@@ -222,7 +233,7 @@
       resultDiv.innerHTML = `<p class="text-gray-500 text-center">Ricerca in corso...</p>`;
 
       try {
-        // Petición al endpoint backend seguro de Vercel (sin exponer tokens ni llamar directo a Airtable)
+        // La barra '/' inicial asegura que consulte a https://dominio.com/api/ticket independientemente de la subruta
         const response = await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);
         
         if (!response.ok) {
@@ -231,45 +242,39 @@
 
         const data = await response.json();
 
-        // Extracción robusta de registros (soporta array de registros o respuesta envuelta)
-        let recordsList = [];
-        if (Array.isArray(data)) {
-          recordsList = data;
-        } else if (data.records && Array.isArray(data.records)) {
-          recordsList = data.records;
-        } else if (data.fields) {
-          recordsList = [data];
-        }
-
-        if (recordsList.length > 0) {
-          const record = recordsList[0].fields || recordsList[0];
+        if (data.records && data.records.length > 0) {
+          const record = data.records[0].fields;
           
-          const statoText = record.Stato || record.Estado || 'In elaborazione';
-          const statoLower = statoText.toLowerCase();
+          const rawTicket = record.Ticket || ticket;
+          const rawCliente = record.Cliente || 'N/D';
+          const rawStato = record.Stato || 'In lavorazione';
+          const rawDesc = record.Descrizione || 'Nessuna descrizione disponibile.';
+
+          const statoLower = rawStato.toLowerCase();
 
           let estadoColor = 'bg-yellow-100 text-yellow-800';
-          if (statoLower.includes('pronto') || statoLower.includes('listo') || statoLower.includes('completato')) {
+          if (statoLower.includes('pronto') || statoLower.includes('completato') || statoLower.includes('listo')) {
             estadoColor = 'bg-green-100 text-green-800';
-          } else if (statoLower.includes('senza') || statoLower.includes('sin') || statoLower.includes('annullato')) {
+          } else if (statoLower.includes('senza') || statoLower.includes('annullato') || statoLower.includes('sin')) {
             estadoColor = 'bg-red-100 text-red-800';
           }
 
           resultDiv.innerHTML = `
             <div class="flex justify-between items-start gap-4">
               <div>
-                <h4 class="font-bold text-lg text-gray-900">Ticket #${record.Ticket || ticket}</h4>
-                <p class="text-sm text-gray-600">Cliente: <strong>${record.Cliente || 'N/D'}</strong></p>
+                <h4 class="font-bold text-lg text-gray-900">Ticket #${escapeHTML(rawTicket)}</h4>
+                <p class="text-sm text-gray-600">Cliente: <strong>${escapeHTML(rawCliente)}</strong></p>
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-bold ${estadoColor}">${statoText}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-bold ${estadoColor}">${escapeHTML(rawStato)}</span>
             </div>
             <hr class="my-2 border-gray-200">
             <div>
               <p class="text-xs text-gray-400 uppercase font-semibold">Descrizione / Diagnosi</p>
-              <p class="text-sm text-gray-700 mt-1">${record.Descrizione || record.Diagnostico || 'Nessuna descrizione disponibile.'}</p>
+              <p class="text-sm text-gray-700 mt-1">${escapeHTML(rawDesc)}</p>
             </div>
           `;
         } else {
-          resultDiv.innerHTML = `<p class="text-red-500 font-medium text-center">Nessuna riparazione trovata con il codice "${ticket}". Verifica il codice e riprova.</p>`;
+          resultDiv.innerHTML = `<p class="text-red-500 font-medium text-center">Nessuna riparazione trovata con il codice "${escapeHTML(ticket)}". Verifica il codice e riprova.</p>`;
         }
       } catch (error) {
         console.error('Error fetching ticket:', error);

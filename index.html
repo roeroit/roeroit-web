@@ -169,29 +169,39 @@
     <h2 class="text-3xl font-bold text-center mb-2">Richiedi Assistenza o Registra il tuo Dispositivo</h2>
     <p class="text-center text-gray-600 mb-10 max-w-lg mx-auto">Compila il modulo con i tuoi dati. Ti risponderemo subito per fissare un intervento.</p>
     
-    <form action="https://api.web3forms.com/submit" method="POST" class="bg-white p-8 rounded-2xl shadow-sm border space-y-5">
-      <input type="hidden" name="access_key" value="TU_WEB3FORMS_KEY">
-      <input type="hidden" name="subject" value="Nuova richiesta da RoeroIT.it">
-      
+    <form id="registroForm" onsubmit="event.preventDefault(); enviarSolicitud();" class="bg-white p-8 rounded-2xl shadow-sm border space-y-5">
       <div class="grid md:grid-cols-2 gap-5">
         <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-700">Nome e Cognome</label>
-          <input type="text" name="name" required placeholder="es. Marco Rossi" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Nome e Cognome *</label>
+          <input type="text" id="formCliente" required placeholder="es. Marco Rossi" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-700">Telefono</label>
-          <input type="tel" name="phone" required placeholder="es. 333 1234567" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Telefono *</label>
+          <input type="tel" id="formTelefono" required placeholder="es. 333 1234567" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5">
+        <div>
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Email</label>
+          <input type="email" id="formEmail" placeholder="tuamail@example.it" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Dispositivo *</label>
+          <input type="text" id="formDispositivo" required placeholder="es. Notebook HP Pavilion, iPhone 12, etc." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
         </div>
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1.5 text-gray-700">Email</label>
-        <input type="email" name="email" required placeholder="tuamail@example.it" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <label class="block text-sm font-medium mb-1.5 text-gray-700">Descrizione del problema</label>
+        <textarea id="formDescrizione" rows="3" placeholder="Es. Notebook lentissimo, schizzato d'acqua, richiesta installazione telecamera, ecc..." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
       </div>
       <div>
-        <label class="block text-sm font-medium mb-1.5 text-gray-700">Dispositivo e problema riscontrato</label>
-        <textarea name="message" rows="4" required placeholder="Es. Notebook HP lentissimo, richiesta installazione telecamera, ecc..." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
+        <label class="block text-sm font-medium mb-1.5 text-gray-700">Accessori consegnati (opzionale)</label>
+        <input type="text" id="formAccessori" placeholder="es. Caricabatterie, borsa, mouse..." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
       </div>
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition text-lg">Invia Richiesta</button>
+      <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition text-lg flex justify-center items-center gap-2">
+        Invia Richiesta
+      </button>
+      <div id="formFeedback" class="hidden text-center p-4 rounded-lg font-medium text-sm"></div>
     </form>
   </section>
 
@@ -204,11 +214,11 @@
     </div>
   </footer>
 
-  <!-- SCRIPT LOGICA CONSULTA VIA VERCEL API PROXY -->
+  <!-- SCRIPT LOGICA CONSULTA ED INVIO VIA VERCEL API -->
   <script>
     lucide.createIcons();
 
-    // Helper para prevenir XSS sanitizando texto dinamico
+    // Helper per prevenire attacchi XSS
     function escapeHTML(str) {
       if (!str) return '';
       return String(str)
@@ -219,6 +229,7 @@
         .replace(/'/g, '&#039;');
     }
 
+    // 1. RICERCA TICKET (GET)
     async function buscarTicket() {
       const ticketInput = document.getElementById('ticketInput');
       const ticket = ticketInput.value.trim().toUpperCase();
@@ -230,33 +241,30 @@
       }
 
       resultDiv.classList.remove('hidden');
-      resultDiv.innerHTML = `<p class="text-gray-500 text-center">Ricerca in corso...</p>`;
+      resultDiv.innerHTML = `<p class="text-gray-500 text-center animate-pulse">Ricerca in corso...</p>`;
 
       try {
-        // La barra '/' inicial asegura que consulte a https://dominio.com/api/ticket independientemente de la subruta
-        const response = await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
+        const response = await fetch(`/api/registro?ticket=${encodeURIComponent(ticket)}`);
         const data = await response.json();
 
-        if (data.records && data.records.length > 0) {
-          const record = data.records[0].fields;
-          
-          const rawTicket = record.Ticket || ticket;
-          const rawCliente = record.Cliente || 'N/D';
-          const rawStato = record.Stato || 'In lavorazione';
-          const rawDesc = record.Descrizione || 'Nessuna descrizione disponibile.';
+        if (response.ok) {
+          const rawTicket = data.ticket || ticket;
+          const rawCliente = data.cliente || 'N/D';
+          const rawDispositivo = data.dispositivo || 'N/D';
+          const rawStato = data.stato || 'Nuova Richiesta';
+          const rawDesc = data.descrizione || 'Nessuna descrizione disponibile.';
+          const rawPreventivo = data.preventivo ? `€ ${data.preventivo}` : 'In fase di valutazione';
+          const rawConsegna = data.dataConsegna || 'Da definire';
 
           const statoLower = rawStato.toLowerCase();
 
           let estadoColor = 'bg-yellow-100 text-yellow-800';
-          if (statoLower.includes('pronto') || statoLower.includes('completato') || statoLower.includes('listo')) {
+          if (statoLower.includes('pronto') || statoLower.includes('completato') || statoLower.includes('consegnato')) {
             estadoColor = 'bg-green-100 text-green-800';
-          } else if (statoLower.includes('senza') || statoLower.includes('annullato') || statoLower.includes('sin')) {
+          } else if (statoLower.includes('annullato') || statoLower.includes('rifiutato')) {
             estadoColor = 'bg-red-100 text-red-800';
+          } else if (statoLower.includes('in lavorazione')) {
+            estadoColor = 'bg-blue-100 text-blue-800';
           }
 
           resultDiv.innerHTML = `
@@ -264,21 +272,77 @@
               <div>
                 <h4 class="font-bold text-lg text-gray-900">Ticket #${escapeHTML(rawTicket)}</h4>
                 <p class="text-sm text-gray-600">Cliente: <strong>${escapeHTML(rawCliente)}</strong></p>
+                <p class="text-sm text-gray-600">Dispositivo: <strong>${escapeHTML(rawDispositivo)}</strong></p>
               </div>
               <span class="px-3 py-1 rounded-full text-xs font-bold ${estadoColor}">${escapeHTML(rawStato)}</span>
             </div>
             <hr class="my-2 border-gray-200">
+            <div class="grid grid-cols-2 gap-4 text-xs mb-2">
+              <div>
+                <span class="text-gray-400 uppercase font-semibold block">Preventivo:</span>
+                <span class="text-gray-800 font-bold">${escapeHTML(rawPreventivo)}</span>
+              </div>
+              <div>
+                <span class="text-gray-400 uppercase font-semibold block">Consegna Prevista:</span>
+                <span class="text-gray-800 font-bold">${escapeHTML(rawConsegna)}</span>
+              </div>
+            </div>
             <div>
               <p class="text-xs text-gray-400 uppercase font-semibold">Descrizione / Diagnosi</p>
               <p class="text-sm text-gray-700 mt-1">${escapeHTML(rawDesc)}</p>
             </div>
           `;
         } else {
-          resultDiv.innerHTML = `<p class="text-red-500 font-medium text-center">Nessuna riparazione trovata con il codice "${escapeHTML(ticket)}". Verifica il codice e riprova.</p>`;
+          resultDiv.innerHTML = `<p class="text-red-500 font-medium text-center">${escapeHTML(data.error || 'Nessuna riparazione trovata.')}</p>`;
         }
       } catch (error) {
         console.error('Error fetching ticket:', error);
         resultDiv.innerHTML = `<p class="text-red-500 text-center font-medium">Si è verificato un errore durante la ricerca. Riprova più tardi.</p>`;
+      }
+    }
+
+    // 2. INVIO MODULO / CREAZIONE TICKET (POST)
+    async function enviarSolicitud() {
+      const btnSubmit = document.getElementById('btnSubmit');
+      const feedback = document.getElementById('formFeedback');
+
+      const payload = {
+        cliente: document.getElementById('formCliente').value.trim(),
+        telefono: document.getElementById('formTelefono').value.trim(),
+        email: document.getElementById('formEmail').value.trim(),
+        dispositivo: document.getElementById('formDispositivo').value.trim(),
+        descrizione: document.getElementById('formDescrizione').value.trim(),
+        accessori: document.getElementById('formAccessori').value.trim()
+      };
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = 'Invio in corso...';
+      feedback.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/registro', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          feedback.className = 'p-4 rounded-lg font-medium text-sm bg-green-100 text-green-800';
+          feedback.innerHTML = `✅ Richiesta inviata con successo! Il tuo numero di ticket è <strong>#${data.ticket}</strong>. Conservalo per verificare lo stato.`;
+          feedback.classList.remove('hidden');
+          document.getElementById('registroForm').reset();
+        } else {
+          throw new Error(data.error || 'Errore durante il salvataggio.');
+        }
+      } catch (error) {
+        feedback.className = 'p-4 rounded-lg font-medium text-sm bg-red-100 text-red-800';
+        feedback.textContent = `❌ Si è verificato un errore: ${error.message}`;
+        feedback.classList.remove('hidden');
+      } finally {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = 'Invia Richiesta';
       }
     }
   </script>

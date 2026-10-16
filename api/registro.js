@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  // Permitir CORS para solicitudes desde el frontend roeroit.it
+  // Permitir CORS (Recomendación: en producción, cambia '*' por 'https://roeroit.it')
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -28,8 +28,10 @@ export default async function handler(req, res) {
     }
 
     try {
-      const filterFormula = encodeURIComponent(`{Ticket} = '${ticket}'`);
-      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=${filterFormula}`;
+      // Escapamos comillas simples para evitar inyección en la fórmula de Airtable
+      const safeTicket = String(ticket).replace(/'/g, "\\'");
+      const filterFormula = encodeURIComponent(`{Ticket} = '${safeTicket}'`);
+      const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?filterByFormula=${filterFormula}&maxRecords=1`;
 
       const response = await fetch(url, { headers });
       const data = await response.json();
@@ -38,7 +40,7 @@ export default async function handler(req, res) {
         throw new Error(data.error?.message || 'Error al consultar Airtable');
       }
 
-      if (data.records.length === 0) {
+      if (!data.records || data.records.length === 0) {
         return res.status(404).json({ error: 'Ticket no encontrado.' });
       }
 
@@ -54,7 +56,8 @@ export default async function handler(req, res) {
         descrizione: record.Descrizione || ''
       });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      console.error('GET Error:', error);
+      return res.status(500).json({ error: error.message || 'Error interno del servidor' });
     }
   }
 
@@ -67,14 +70,17 @@ export default async function handler(req, res) {
     }
 
     try {
-      // 1. Obtener el último ticket para auto-incrementar
-      const listUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?sort[0][field]=Ticket&sort[0][direction]=desc&pageSize=1`;
+      // 🔥 MEJORA 1: Ordenar por fecha de creación (createdTime) en lugar del campo Ticket.
+      // Esto evita el error de ordenamiento alfabético ("99" > "1000") si el campo es Texto.
+      const listUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}?sort[0][field]=createdTime&sort[0][direction]=desc&maxRecords=1`;
+      
       const listRes = await fetch(listUrl, { headers });
       const listData = await listRes.json();
 
       let nextTicketNumber = 1001;
       if (listData.records && listData.records.length > 0) {
-        const lastTicket = parseInt(listData.records[0].fields.Ticket, 10);
+        const lastTicketStr = listData.records[0].fields.Ticket;
+        const lastTicket = parseInt(lastTicketStr, 10);
         if (!isNaN(lastTicket)) {
           nextTicketNumber = lastTicket + 1;
         }
@@ -83,16 +89,20 @@ export default async function handler(req, res) {
       // 2. Crear el registro en Airtable
       const createUrl = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
       const payload = {
-        fields: {
-          Ticket: String(nextTicketNumber),
-          Cliente: cliente,
-          Telefono: telefono,
-          Email: email || '',
-          Dispositivo: dispositivo,
-          Descrizione: descrizione || '',
-          Accessori: accessori || '',
-          Stato: 'Nuova Richiesta'
-        }
+        records: [ // 🔥 MEJORA 2: Airtable espera un array "records", no un objeto "fields" suelto en POST
+          {
+            fields: {
+              Ticket: String(nextTicketNumber),
+              Cliente: cliente,
+              Telefono: telefono,
+              Email: email || '',
+              Dispositivo: dispositivo,
+              Descrizione: descrizione || '',
+              Accessori: accessori || '',
+              Stato: 'Nuova Richiesta'
+            }
+          }
+        ]
       };
 
       const createRes = await fetch(createUrl, {
@@ -104,18 +114,23 @@ export default async function handler(req, res) {
       const createData = await createRes.json();
 
       if (!createRes.ok) {
+        console.error('Airtable POST Error:', createData);
         throw new Error(createData.error?.message || 'Error al guardar la solicitud');
       }
 
+      // La respuesta exitosa de Airtable viene en createData.records[0].fields
+      const newRecordFields = createData.records[0].fields;
+
       return res.status(201).json({
         success: true,
-        ticket: createData.fields.Ticket,
-        message: 'Registro creado con éxito'
+        ticket: newRecordFields.Ticket,
+        message: 'Registro creato con successo'
       });
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      console.error('POST Error:', error);
+      return res.status(500).json({ error: error.message || 'Error interno del servidor' });
     }
   }
 
-  return res.status(405).json({ error: 'Método no permitido.' });
+  return res.status(405).json({ error: 'Metodo non consentito.' });
 }

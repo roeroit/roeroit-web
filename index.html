@@ -3,233 +3,485 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roero IT - Assistenza Informatica & Servizi Digitali</title>
-  <!-- Tailwind CSS via CDN -->
+  <title>Roero IT - Assistenza Informatica nel Roero</title>
+  <meta name="description" content="Assistenza informatica a domicilio a Sommariva del Bosco e in tutto il Roero. Riparazioni rapide, reti e videosorveglianza.">
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Configuración Tailwind personalizada -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            roero: {
+              blue: '#1E3A8A',
+              brick: '#92400E',
+              gold: '#D97706',
+              stone: '#6B7280',
+              light: '#F9FAFB'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    .bg-roero-pattern {
-      background-image: url('https://thumbs.dreamstime.com/b/morning-fog-hills-autumnal-vineyards-italy-aerial-view-over-piedmont-290011954.jpg');
-      background-size: cover;
-      background-attachment: fixed;
-      background-position: center;
-      opacity: 0.03;
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: -1;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    /* Animaciones de entrada (Estilo Apple) */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .hero-background {
-      position: relative;
-      background-image: url('https://www.visitpiemonte.com/core/storage/images/3681/GettyImages-1346601443.jpg');
-      background-size: cover;
-      background-position: center;
+    /* Micro-interacciones (Estilo Linear) */
+    .hover-lift {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .hero-overlay {
+    .hover-lift:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -8px rgba(30, 58, 138, 0.15);
+    }
+
+    /* Efecto Glassmorphism sutil */
+    .glass {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* Mapa de nodos (Estilo Stripe) */
+    .node-line {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: drawLine 2s ease-out forwards;
+    }
+    @keyframes drawLine {
+      to { stroke-dashoffset: 0; }
+    }
+    .node-pulse {
+      animation: pulseNode 2s infinite;
+    }
+    @keyframes pulseNode {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+
+    /* Timeline visual (Estilo Amazon) */
+    .timeline-step {
+      position: relative;
+    }
+    .timeline-step::after {
+      content: '';
       position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(30, 58, 138, 0.82) 100%);
-      z-index: 1;
+      top: 50%;
+      left: 100%;
+      width: 100%;
+      height: 2px;
+      background: #E5E7EB;
+      transform: translateY(-50%);
+      z-index: 0;
     }
-    .hero-content {
-      position: relative;
-      z-index: 2;
+    .timeline-step:last-child::after {
+      display: none;
+    }
+    .timeline-step.completed::after {
+      background: #10B981;
+    }
+    .timeline-step.active .step-circle {
+      background: #1E3A8A;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.2);
     }
   </style>
 </head>
-<body class="text-gray-800 font-sans relative bg-gray-50">
+<body class="text-gray-800 font-sans bg-roero-light antialiased">
 
-  <!-- Fondo sutil general -->
-  <div class="bg-roero-pattern"></div>
-
-  <!-- 1. NAVBAR / ENCABEZADO -->
-  <header class="bg-white/95 shadow-sm sticky top-0 z-50 backdrop-blur-sm">
+  <!-- NAVBAR -->
+  <header class="glass sticky top-0 z-50 border-b border-gray-100 shadow-sm">
     <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="text-2xl font-bold text-blue-600 flex items-center gap-2">
-        <i data-lucide="cpu"></i> Roero<span class="text-gray-900">IT</span>
+      <div class="text-2xl font-bold text-roero-blue flex items-center gap-2">
+        <i data-lucide="cpu" class="w-7 h-7"></i> Roero<span class="text-gray-900 font-light">IT</span>
       </div>
-      <nav class="hidden md:flex space-x-6 font-medium text-gray-600">
-        <a href="#servizi" class="hover:text-blue-600 transition">Servizi</a>
-        <a href="#stato-riparazione" class="hover:text-blue-600 transition">Stato Riparazione</a>
-        <a href="#contatti" class="hover:text-blue-600 transition">Richiedi Assistenza</a>
+      <nav class="hidden md:flex space-x-8 font-medium text-gray-600">
+        <a href="#come-funziona" class="hover:text-roero-blue transition">Come funziona</a>
+        <a href="#servizi" class="hover:text-roero-blue transition">Servizi</a>
+        <a href="#stato-riparazione" class="hover:text-roero-blue transition">Stato Riparazione</a>
+        <a href="#contatti" class="hover:text-roero-blue transition">Contatti</a>
       </nav>
-      <a href="https://wa.me/393000000000" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition">
-        <i data-lucide="message-circle"></i> WhatsApp
+      <a href="https://wa.me/393287971003" target="_blank" class="bg-green-500 hover:bg-green-600 text-white font-medium px-5 py-2.5 rounded-full flex items-center gap-2 transition shadow-md hover:shadow-lg">
+        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp
       </a>
     </div>
   </header>
 
-  <!-- 2. HERO SECTION -->
-  <section class="hero-background text-white py-24 md:py-32 px-4 text-center">
-    <div class="hero-overlay"></div>
-    <div class="max-w-4xl mx-auto hero-content">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">Assistenza Informatica Professionale a Domicilio</h1>
-      <p class="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">Riparazione PC, notebook, reti domestiche e videosorveglianza a Sommariva del Bosco e in tutto il Roero.</p>
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <a href="#contatti" class="bg-white text-blue-900 font-bold px-6 py-3.5 rounded-lg shadow hover:bg-gray-100 transition">Richiedi Assistenza</a>
-        <a href="#stato-riparazione" class="bg-blue-600 border border-blue-400 font-bold px-6 py-3.5 rounded-lg hover:bg-blue-500 transition">Verifica Stato PC</a>
+  <!-- HERO SECTION -->
+  <section class="relative py-24 md:py-36 px-4 overflow-hidden">
+    <!-- Fondo con imagen del Roero y overlay suave -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Paesaggio del Roero" class="w-full h-full object-cover">
+      <div class="absolute inset-0 bg-gradient-to-b from-roero-blue/80 via-roero-blue/60 to-roero-blue/90"></div>
+    </div>
+
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <div class="fade-in-up">
+        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium mb-6 backdrop-blur-sm">
+          <i data-lucide="zap" class="w-4 h-4 text-roero-gold"></i> Riparazioni in giornata, quando possibile
+        </span>
+      </div>
+      
+      <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight fade-in-up delay-100">
+        Assistenza Informatica <br class="hidden md:block">nel cuore del Roero
+      </h1>
+      
+      <p class="text-lg md:text-xl text-blue-100 mb-10 max-w-2xl mx-auto fade-in-up delay-200">
+        Ci prendiamo cura dei tuoi dispositivi con la stessa attenzione che mettiamo nel nostro territorio. Vicini, veloci e trasparenti.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in-up delay-300">
+        <a href="#contatti" class="bg-white text-roero-blue font-bold px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:bg-gray-50 transition transform hover:-translate-y-1">
+          Richiedi Assistenza
+        </a>
+        <a href="#stato-riparazione" class="bg-white/10 border border-white/30 text-white font-bold px-8 py-4 rounded-full hover:bg-white/20 transition backdrop-blur-sm">
+          Verifica Stato Riparazione
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- 3. SERVICIOS COMPLETOS (#servizi) -->
-  <section id="servizi" class="py-20 relative px-4">
-    <div class="max-w-6xl mx-auto relative z-10">
+  <!-- COME FUNZIONA (3 Pasos - Estilo Notion/Stripe) -->
+  <section id="come-funziona" class="py-24 px-4 bg-white">
+    <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold text-gray-900">I Nostri Servizi</h2>
-        <p class="text-gray-600 mt-2">Soluzioni informatiche complete per privati, professionisti e attività locali nel Roero.</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Semplice, veloce, senza complicazioni</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Tre passaggi per tornare a lavorare o divertirti con il tuo dispositivo.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-12">
+        <!-- Paso 1 -->
+        <div class="text-center hover-lift p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-blue-50 text-roero-blue rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="phone" class="w-8 h-8"></i>
+          </div>
+          <div class="text-xs font-bold text-roero-gold uppercase tracking-wider mb-2">Passo 1</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Contattaci</h3>
+          <p class="text-gray-600 text-sm">Compila il modulo qui sotto o scrivici su WhatsApp. Ti rispondiamo entro poche ore.</p>
+        </div>
+        <!-- Paso 2 -->
+        <div class="text-center hover-lift p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-blue-50 text-roero-blue rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="search" class="w-8 h-8"></i>
+          </div>
+          <div class="text-xs font-bold text-roero-gold uppercase tracking-wider mb-2">Passo 2</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Diagnosi e Preventivo</h3>
+          <p class="text-gray-600 text-sm">Analizziamo il problema con trasparenza. Niente sorprese, solo soluzioni chiare.</p>
+        </div>
+        <!-- Paso 3 -->
+        <div class="text-center hover-lift p-6 rounded-2xl">
+          <div class="w-16 h-16 bg-blue-50 text-roero-blue rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="check-circle" class="w-8 h-8"></i>
+          </div>
+          <div class="text-xs font-bold text-roero-gold uppercase tracking-wider mb-2">Passo 3</div>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Ritiro e Sollievo</h3>
+          <p class="text-gray-600 text-sm">Ti avvisiamo quando è pronto. Paghi solo se sei soddisfatto del lavoro svolto.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS (Íconos personalizados) -->
+  <section id="servizi" class="py-24 px-4 bg-roero-light">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">I Nostri Servizi</h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">Soluzioni informatiche complete per privati, professionisti e attività locali.</p>
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- CARD 1 -->
-        <div class="bg-white/90 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition backdrop-blur-sm">
-          <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
-            <i data-lucide="laptop" class="w-6 h-6"></i>
+        <!-- PC -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+          <div class="w-14 h-14 bg-blue-50 text-roero-blue rounded-xl flex items-center justify-center mb-6">
+            <i data-lucide="laptop" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">PC, Mac & Mobile</h3>
-          <p class="text-gray-600 text-sm mb-4">Riparazione e assistenza per Notebook, PC desktop, Tablet e Smartphone (Android & iOS).</p>
-          <ul class="text-xs text-gray-500 space-y-1.5 border-t pt-3">
-            <li>✔ Formattazione & Installazione OS</li>
-            <li>✔ Aggiornamento Windows & macOS</li>
-            <li>✔ Riparazione display e batterie</li>
-            <li>✔ Upgrade SSD & Potenziamento RAM</li>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">PC, Mac & Mobile</h3>
+          <p class="text-gray-600 text-sm mb-4">Riparazione e assistenza per Notebook, PC desktop, Tablet e Smartphone.</p>
+          <ul class="text-xs text-gray-500 space-y-2">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Formattazione & Installazione OS</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Upgrade SSD & RAM</li>
           </ul>
         </div>
 
-        <!-- CARD 2 -->
-        <div class="bg-white/90 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition backdrop-blur-sm">
-          <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-4">
-            <i data-lucide="wifi" class="w-6 h-6"></i>
+        <!-- Reti -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+          <div class="w-14 h-14 bg-green-50 text-green-600 rounded-xl flex items-center justify-center mb-6">
+            <i data-lucide="wifi" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">Reti & Wi-Fi</h3>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Reti & Wi-Fi</h3>
           <p class="text-gray-600 text-sm mb-4">Infrastrutture di rete stabili e copertura internet totale in casa o in azienda.</p>
-          <ul class="text-xs text-gray-500 space-y-1.5 border-t pt-3">
-            <li>✔ Cablaggio strutturato Ethernet</li>
-            <li>✔ Configurazione Modem & Router</li>
-            <li>✔ Ripetitori & Estensori Wi-Fi Mesh</li>
-            <li>✔ Risoluzione problemi di segnale</li>
+          <ul class="text-xs text-gray-500 space-y-2">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Cablaggio strutturato</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Ripetitori Wi-Fi Mesh</li>
           </ul>
         </div>
 
-        <!-- CARD 3 -->
-        <div class="bg-white/90 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition backdrop-blur-sm">
-          <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-4">
-            <i data-lucide="video" class="w-6 h-6"></i>
+        <!-- Videosorveglianza -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+          <div class="w-14 h-14 bg-red-50 text-red-600 rounded-xl flex items-center justify-center mb-6">
+            <i data-lucide="video" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">Videosorveglianza</h3>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Videosorveglianza</h3>
           <p class="text-gray-600 text-sm mb-4">Proteggi la tua casa o la tua attività con impianti di telecamere intelligenti.</p>
-          <ul class="text-xs text-gray-500 space-y-1.5 border-t pt-3">
-            <li>✔ Installazione Telecamere IP / Wi-Fi</li>
-            <li>✔ Controllo in tempo reale da Smartphone</li>
-            <li>✔ Registrazione continua e sensori</li>
-            <li>✔ Manutenzione e assistenza impianti</li>
+          <ul class="text-xs text-gray-500 space-y-2">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Telecamere IP / Wi-Fi</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Controllo da Smartphone</li>
           </ul>
         </div>
 
-        <!-- CARD 4 -->
-        <div class="bg-white/90 p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition backdrop-blur-sm">
-          <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-4">
-            <i data-lucide="globe" class="w-6 h-6"></i>
+        <!-- Siti Web -->
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover-lift">
+          <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-6">
+            <i data-lucide="globe" class="w-7 h-7"></i>
           </div>
-          <h3 class="text-xl font-bold text-gray-900 mb-2">Siti Web & Hosting</h3>
-          <p class="text-gray-600 text-sm mb-4">Creazione di presenza online professionale per negozi, aziende e professionisti.</p>
-          <ul class="text-xs text-gray-500 space-y-1.5 border-t pt-3">
-            <li>✔ Sviluppo Pagine Web moderne</li>
-            <li>✔ Dominio e Hosting inclusi</li>
-            <li>✔ Grafica responsive per Cellulari</li>
-            <li>✔ Email aziendali personalizzate</li>
+          <h3 class="text-xl font-bold text-gray-900 mb-3">Siti Web & Hosting</h3>
+          <p class="text-gray-600 text-sm mb-4">Creazione di presenza online professionale per negozi e professionisti.</p>
+          <ul class="text-xs text-gray-500 space-y-2">
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Sviluppo Pagine Web moderne</li>
+            <li class="flex items-start gap-2"><i data-lucide="check" class="w-3 h-3 mt-0.5 text-green-500"></i> Email aziendali personalizzate</li>
           </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 4. BUSCADOR AIRTABLE (#stato-riparazione) -->
-  <section id="stato-riparazione" class="py-16 bg-blue-50/60 px-4">
-    <div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md border border-blue-100 relative">
-      <div class="text-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-900">🔍 Stato della tua Riparazione</h2>
-        <p class="text-gray-600 text-sm mt-1">Inserisci il codice del tuo ticket (es. 1001)</p>
+  <!-- PERCHÉ SCEGLIERCI -->
+  <section class="py-24 px-4 bg-white">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Vicino a te, da sempre</h2>
       </div>
-      <form onsubmit="event.preventDefault(); buscarTicket();" class="flex gap-2">
-        <input type="text" id="ticketInput" placeholder="Codice Ticket (es. 1001)" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none uppercase transition">
-        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-lg flex items-center gap-1 transition">
-          Cerca
-        </button>
-      </form>
-
-      <!-- Tarjeta de Resultado Dinámica -->
-      <div id="ticketResult" class="hidden mt-6 p-6 rounded-xl border bg-gray-50 space-y-3"></div>
+      <div class="grid md:grid-cols-3 gap-10">
+        <div class="text-center">
+          <div class="w-12 h-12 bg-roero-brick/10 text-roero-brick rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="map-pin" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Radici nel territorio</h3>
+          <p class="text-gray-600 text-sm">Conosciamo il Roero, i suoi paesi, le sue esigenze. Non siamo una catena, siamo i tuoi vicini.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-roero-gold/10 text-roero-gold rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="zap" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Velocità e cura</h3>
+          <p class="text-gray-600 text-sm">Sappiamo quanto ti serve il tuo dispositivo. Ci impegniamo a completare la maggior parte dei lavori in giornata.</p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 bg-roero-blue/10 text-roero-blue rounded-full flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="eye" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-lg font-bold text-gray-900 mb-2">Trasparenza totale</h3>
+          <p class="text-gray-600 text-sm">Segui lo stato della tua riparazione in tempo reale, senza chiamate, senza attese.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 5. REGISTRO DE CLIENTE / SOLICITUD (#contatti) -->
-  <section id="contatti" class="py-20 max-w-3xl mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center mb-2">Richiedi Assistenza o Registra il tuo Dispositivo</h2>
-    <p class="text-center text-gray-600 mb-10 max-w-lg mx-auto">Compila il modulo con i tuoi dati. Ti risponderemo subito per fissare un intervento.</p>
-    
-    <form id="registroForm" onsubmit="event.preventDefault(); enviarSolicitud();" class="bg-white p-8 rounded-2xl shadow-sm border space-y-5">
-      <div class="grid md:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-700">Nome e Cognome *</label>
-          <input type="text" id="formCliente" required placeholder="es. Marco Rossi" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+  <!-- MAPPA DI COPERTURA (Nodos estilo Stripe) -->
+  <section class="py-24 px-4 bg-roero-blue text-white relative overflow-hidden">
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">La nostra rete nel Roero</h2>
+      <p class="text-blue-200 max-w-2xl mx-auto mb-16">Come le antiche torri proteggevano il territorio, noi proteggiamo la tua connessione. Siamo presenti in tutta la zona.</p>
+      
+      <!-- Representación visual del mapa -->
+      <div class="relative w-full max-w-3xl mx-auto h-80 md:h-96 bg-roero-blue/50 rounded-3xl border border-white/10 backdrop-blur-sm">
+        <svg class="absolute inset-0 w-full h-full" viewBox="0 0 800 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Líneas de conexión -->
+          <path d="M200 100 L600 120 L400 250 L650 320" stroke="rgba(255,255,255,0.2)" stroke-width="2" class="node-line"/>
+          <path d="M200 100 L400 250" stroke="rgba(255,255,255,0.2)" stroke-width="2" class="node-line"/>
+          <path d="M600 120 L650 320" stroke="rgba(255,255,255,0.2)" stroke-width="2" class="node-line"/>
+          
+          <!-- Nodos -->
+          <circle cx="200" cy="100" r="8" fill="#D97706" class="node-pulse"/>
+          <circle cx="600" cy="120" r="8" fill="#D97706" class="node-pulse" style="animation-delay: 0.5s"/>
+          <circle cx="400" cy="250" r="8" fill="#D97706" class="node-pulse" style="animation-delay: 1s"/>
+          <circle cx="650" cy="320" r="8" fill="#D97706" class="node-pulse" style="animation-delay: 1.5s"/>
+        </svg>
+
+        <!-- Etiquetas de pueblos -->
+        <div class="absolute top-[15%] left-[15%] text-center">
+          <div class="text-xs text-blue-200 mb-1">Sede Principale</div>
+          <div class="font-bold text-white">Sommariva del Bosco</div>
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1.5 text-gray-700">Telefono *</label>
-          <input type="tel" id="formTelefono" required placeholder="es. 333 1234567" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+        <div class="absolute top-[20%] right-[20%] text-center">
+          <div class="font-bold text-white">Ceresole d'Alba</div>
+        </div>
+        <div class="absolute bottom-[30%] left-[40%] text-center">
+          <div class="font-bold text-white">Bra</div>
+        </div>
+        <div class="absolute bottom-[15%] right-[15%] text-center">
+          <div class="font-bold text-white">Baldissero</div>
         </div>
       </div>
-      <div class="grid md:grid-cols-2 gap-5">
+    </div>
+  </section>
+
+  <!-- STATO RIPARAZIONE (Timeline visual) -->
+  <section id="stato-riparazione" class="py-24 px-4 bg-roero-light">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Stato della tua Riparazione</h2>
+        <p class="text-gray-600">Inserisci il codice del tuo ticket (es. R-7K2M9X) per vedere a che punto siamo.</p>
+      </div>
+
+      <div class="bg-white p-8 md:p-10 rounded-3xl shadow-lg border border-gray-100">
+        <form onsubmit="event.preventDefault(); buscarTicket();" class="flex flex-col sm:flex-row gap-3 mb-8">
+          <input type="text" id="ticketInput" placeholder="Codice Ticket (es. R-7K2M9X)" class="w-full px-5 py-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-roero-blue focus:border-transparent outline-none uppercase transition text-lg">
+          <button type="submit" class="bg-roero-blue hover:bg-blue-800 text-white font-bold px-8 py-4 rounded-xl transition transform hover:scale-105 flex items-center justify-center gap-2">
+            <i data-lucide="search" class="w-5 h-5"></i> Cerca
+          </button>
+        </form>
+
+        <!-- Contenedor de resultados -->
+        <div id="ticketResult" class="hidden space-y-6"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATTI -->
+  <section id="contatti" class="py-24 px-4 bg-white">
+    <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Richiedi Assistenza</h2>
+        <p class="text-gray-600 mb-10">Compila il modulo con i tuoi dati. Ti risponderemo subito per fissare un intervento o darti un preventivo.</p>
+        
+        <div class="space-y-6">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-blue-50 text-roero-blue rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="map-pin" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900">Dove siamo</h4>
+              <p class="text-gray-600 text-sm">Via Torino 25<br>Sommariva del Bosco (CN)</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="message-circle" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900">WhatsApp</h4>
+              <a href="https://wa.me/393287971003" class="text-roero-blue hover:underline text-sm">328 797 1003</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+              <i data-lucide="mail" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-gray-900">Email</h4>
+              <a href="mailto:it@roeroit.it" class="text-roero-blue hover:underline text-sm">it@roeroit.it</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="registroForm" onsubmit="event.preventDefault(); enviarSolicitud();" class="bg-roero-light p-8 rounded-3xl border border-gray-100 space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-medium mb-1.5 text-gray-700">Nome e Cognome *</label>
+            <input type="text" id="formCliente" required placeholder="Mario Rossi" class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5 text-gray-700">Telefono *</label>
+            <input type="tel" id="formTelefono" required placeholder="333 1234567" class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition">
+          </div>
+        </div>
         <div>
           <label class="block text-sm font-medium mb-1.5 text-gray-700">Email</label>
-          <input type="email" id="formEmail" placeholder="tuamail@example.it" class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input type="email" id="formEmail" placeholder="tuamail@example.it" class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition">
         </div>
         <div>
           <label class="block text-sm font-medium mb-1.5 text-gray-700">Dispositivo *</label>
-          <input type="text" id="formDispositivo" required placeholder="es. Notebook HP Pavilion, iPhone 12, etc." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
+          <input type="text" id="formDispositivo" required placeholder="es. Notebook HP, iPhone 12" class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition">
         </div>
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1.5 text-gray-700">Descrizione del problema</label>
-        <textarea id="formDescrizione" rows="3" placeholder="Es. Notebook lentissimo, schizzato d'acqua, richiesta installazione telecamera, ecc..." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition"></textarea>
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1.5 text-gray-700">Accessori consegnati (opzionale)</label>
-        <input type="text" id="formAccessori" placeholder="es. Caricabatterie, borsa, mouse..." class="w-full border px-4 py-2.5 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 transition">
-      </div>
-      <button type="submit" id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition text-lg flex justify-center items-center gap-2">
-        Invia Richiesta
-      </button>
-      <div id="formFeedback" class="hidden text-center p-4 rounded-lg font-medium text-sm"></div>
-    </form>
+        <div>
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Descrizione del problema</label>
+          <textarea id="formDescrizione" rows="3" placeholder="Descrivi brevemente il problema..." class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1.5 text-gray-700">Accessori consegnati (opzionale)</label>
+          <input type="text" id="formAccessori" placeholder="es. Caricabatterie, borsa..." class="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-roero-blue transition">
+        </div>
+        <button type="submit" id="btnSubmit" class="w-full bg-roero-blue hover:bg-blue-800 text-white font-bold py-4 rounded-xl transition text-lg flex justify-center items-center gap-2 transform hover:scale-[1.02]">
+          Invia Richiesta
+        </button>
+        <div id="formFeedback" class="hidden text-center p-4 rounded-xl font-medium text-sm"></div>
+      </form>
+    </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="bg-gray-900 text-gray-400 py-10 text-center text-sm border-t border-gray-800 px-4">
-    <div class="max-w-6xl mx-auto">
-      <p>&copy; 2026 Roero IT - Assistenza Informatica a Sommariva del Bosco e Roero.</p>
-      <p class="mt-2 text-xs text-gray-500">Zona di copertura: Sommariva del Bosco, Ceresole d'Alba, Sanfrè, Bra, Baldissero e comuni limitrofi.</p>
-      <p class="mt-2">Email: <a href="mailto:info@roeroit.it" class="text-blue-400 hover:underline">info@roeroit.it</a></p>
+  <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800 px-4">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-center md:text-left">
+        <div class="text-xl font-bold text-white flex items-center gap-2 justify-center md:justify-start mb-2">
+          <i data-lucide="cpu" class="w-5 h-5 text-roero-blue"></i> Roero<span class="text-gray-400 font-light">IT</span>
+        </div>
+        <p class="text-xs text-gray-500">Dal cuore del Roero, con cura per la tua tecnologia.</p>
+      </div>
+      <div class="text-center md:text-right text-xs text-gray-500">
+        <p>&copy; 2026 Roero IT. Tutti i diritti riservati.</p>
+        <p class="mt-1">Via Torino 25, Sommariva del Bosco | <a href="mailto:it@roeroit.it" class="text-blue-400 hover:underline">it@roeroit.it</a></p>
+      </div>
     </div>
   </footer>
 
-  <!-- SCRIPT LOGICA CONSULTA ED INVIO VIA VERCEL API -->
+  <!-- WHATSAPP FLOTANTE -->
+  <a href="https://wa.me/393287971003" target="_blank" class="fixed bottom-6 right-6 z-50 bg-green-500 hover:bg-green-600 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition transform hover:scale-110" aria-label="Contattaci su WhatsApp">
+    <i data-lucide="message-circle" class="w-7 h-7"></i>
+  </a>
+
+  <!-- LÓGICA JAVASCRIPT -->
   <script>
     lucide.createIcons();
 
-    // Helper per prevenire attacchi XSS
     function escapeHTML(str) {
       if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
     }
 
-    // 1. RICERCA TICKET (GET)
+    // Auto-búsqueda por URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ticketFromUrl = urlParams.get('ticket');
+      if (ticketFromUrl) {
+        document.getElementById('ticketInput').value = ticketFromUrl;
+        setTimeout(() => {
+          document.getElementById('stato-riparazione').scrollIntoView({ behavior: 'smooth' });
+          buscarTicket();
+        }, 500);
+      }
+    });
+
+    // BUSCAR TICKET CON TIMELINE VISUAL
     async function buscarTicket() {
       const ticketInput = document.getElementById('ticketInput');
       const ticket = ticketInput.value.trim().toUpperCase();
@@ -241,67 +493,98 @@
       }
 
       resultDiv.classList.remove('hidden');
-      resultDiv.innerHTML = `<p class="text-gray-500 text-center animate-pulse">Ricerca in corso...</p>`;
+      resultDiv.innerHTML = `<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-roero-blue"></div></div>`;
 
       try {
-        const response = await fetch(`/api/registro?ticket=${encodeURIComponent(ticket)}`);
+        const response = await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);
         const data = await response.json();
 
         if (response.ok) {
-          const rawTicket = data.ticket || ticket;
-          const rawCliente = data.cliente || 'N/D';
-          const rawDispositivo = data.dispositivo || 'N/D';
-          const rawStato = data.stato || 'Nuova Richiesta';
-          const rawDesc = data.descrizione || 'Nessuna descrizione disponibile.';
-          const rawPreventivo = data.preventivo ? `€ ${data.preventivo}` : 'In fase di valutazione';
-          const rawConsegna = data.dataConsegna || 'Da definire';
+          // Definir pasos del timeline
+          const steps = [
+            { id: 'ricevuto', label: 'Ricevuto' },
+            { id: 'diagnosi', label: 'In diagnosi' },
+            { id: 'lavorazione', label: 'In lavorazione' },
+            { id: 'pronto', label: 'Pronto' },
+            { id: 'consegnato', label: 'Consegnato' }
+          ];
 
-          const statoLower = rawStato.toLowerCase();
+          const statoLower = data.stato.toLowerCase();
+          let currentStepIndex = 0;
+          
+          if (statoLower.includes('diagnosi')) currentStepIndex = 1;
+          else if (statoLower.includes('lavorazione')) currentStepIndex = 2;
+          else if (statoLower.includes('pronto') || statoLower.includes('completato')) currentStepIndex = 3;
+          else if (statoLower.includes('consegnato')) currentStepIndex = 4;
 
-          let estadoColor = 'bg-yellow-100 text-yellow-800';
-          if (statoLower.includes('pronto') || statoLower.includes('completato') || statoLower.includes('consegnato')) {
-            estadoColor = 'bg-green-100 text-green-800';
-          } else if (statoLower.includes('annullato') || statoLower.includes('rifiutato')) {
-            estadoColor = 'bg-red-100 text-red-800';
-          } else if (statoLower.includes('in lavorazione')) {
-            estadoColor = 'bg-blue-100 text-blue-800';
-          }
+          // Generar HTML del timeline
+          let timelineHTML = '<div class="flex justify-between items-center mb-8 px-2 md:px-8">';
+          steps.forEach((step, index) => {
+            let statusClass = '';
+            let icon = '<div class="w-3 h-3 bg-gray-300 rounded-full"></div>';
+            
+            if (index < currentStepIndex) {
+              statusClass = 'completed';
+              icon = '<i data-lucide="check" class="w-4 h-4 text-white"></i>';
+            } else if (index === currentStepIndex) {
+              statusClass = 'active';
+              icon = '<div class="w-3 h-3 bg-white rounded-full"></div>';
+            }
+
+            timelineHTML += `
+              <div class="timeline-step ${statusClass} flex flex-col items-center relative z-10 flex-1">
+                <div class="step-circle w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-200 bg-white mb-2 transition-all">
+                  ${icon}
+                </div>
+                <span class="text-[10px] md:text-xs font-medium ${index <= currentStepIndex ? 'text-roero-blue' : 'text-gray-400'} text-center">${step.label}</span>
+              </div>
+            `;
+          });
+          timelineHTML += '</div>';
+
+          const ticketUrl = `${window.location.origin}/?ticket=${encodeURIComponent(data.ticket)}#stato-riparazione`;
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(ticketUrl)}&margin=5`;
 
           resultDiv.innerHTML = `
-            <div class="flex justify-between items-start gap-4">
-              <div>
-                <h4 class="font-bold text-lg text-gray-900">Ticket #${escapeHTML(rawTicket)}</h4>
-                <p class="text-sm text-gray-600">Cliente: <strong>${escapeHTML(rawCliente)}</strong></p>
-                <p class="text-sm text-gray-600">Dispositivo: <strong>${escapeHTML(rawDispositivo)}</strong></p>
+            ${timelineHTML}
+            
+            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h4 class="font-bold text-lg text-gray-900">Ticket #${escapeHTML(data.ticket)}</h4>
+                  <p class="text-sm text-gray-600">Dispositivo: <strong>${escapeHTML(data.dispositivo)}</strong></p>
+                </div>
+                <img src="${qrUrl}" alt="QR Code" class="w-16 h-16 rounded-lg border border-gray-200">
               </div>
-              <span class="px-3 py-1 rounded-full text-xs font-bold ${estadoColor}">${escapeHTML(rawStato)}</span>
-            </div>
-            <hr class="my-2 border-gray-200">
-            <div class="grid grid-cols-2 gap-4 text-xs mb-2">
-              <div>
-                <span class="text-gray-400 uppercase font-semibold block">Preventivo:</span>
-                <span class="text-gray-800 font-bold">${escapeHTML(rawPreventivo)}</span>
+              
+              <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                <div>
+                  <span class="text-gray-400 text-xs uppercase font-semibold block mb-1">Preventivo</span>
+                  <span class="text-gray-900 font-bold">${data.preventivo ? '€ ' + escapeHTML(data.preventivo) : 'In fase di valutazione'}</span>
+                </div>
+                <div>
+                  <span class="text-gray-400 text-xs uppercase font-semibold block mb-1">Consegna Prevista</span>
+                  <span class="text-gray-900 font-bold">${escapeHTML(data.dataConsegna) || 'Da definire'}</span>
+                </div>
               </div>
-              <div>
-                <span class="text-gray-400 uppercase font-semibold block">Consegna Prevista:</span>
-                <span class="text-gray-800 font-bold">${escapeHTML(rawConsegna)}</span>
+              
+              <div class="border-t border-gray-200 pt-4">
+                <span class="text-gray-400 text-xs uppercase font-semibold block mb-1">Diagnosi / Note</span>
+                <p class="text-gray-700 text-sm">${escapeHTML(data.descrizione)}</p>
               </div>
-            </div>
-            <div>
-              <p class="text-xs text-gray-400 uppercase font-semibold">Descrizione / Diagnosi</p>
-              <p class="text-sm text-gray-700 mt-1">${escapeHTML(rawDesc)}</p>
             </div>
           `;
+          lucide.createIcons();
         } else {
-          resultDiv.innerHTML = `<p class="text-red-500 font-medium text-center">${escapeHTML(data.error || 'Nessuna riparazione trovata.')}</p>`;
+          resultDiv.innerHTML = `<div class="text-center py-8"><p class="text-red-500 font-medium">${escapeHTML(data.error || 'Nessuna riparazione trovata.')}</p></div>`;
         }
       } catch (error) {
         console.error('Error fetching ticket:', error);
-        resultDiv.innerHTML = `<p class="text-red-500 text-center font-medium">Si è verificato un errore durante la ricerca. Riprova più tardi.</p>`;
+        resultDiv.innerHTML = `<div class="text-center py-8"><p class="text-red-500 font-medium">Si è verificato un errore. Riprova più tardi.</p></div>`;
       }
     }
 
-    // 2. INVIO MODULO / CREAZIONE TICKET (POST)
+    // ENVIAR FORMULARIO
     async function enviarSolicitud() {
       const btnSubmit = document.getElementById('btnSubmit');
       const feedback = document.getElementById('formFeedback');
@@ -316,7 +599,7 @@
       };
 
       btnSubmit.disabled = true;
-      btnSubmit.innerHTML = 'Invio in corso...';
+      btnSubmit.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div> Invio in corso...';
       feedback.classList.add('hidden');
 
       try {
@@ -329,15 +612,21 @@
         const data = await response.json();
 
         if (response.ok && data.success) {
-          feedback.className = 'p-4 rounded-lg font-medium text-sm bg-green-100 text-green-800';
-          feedback.innerHTML = `✅ Richiesta inviata con successo! Il tuo numero di ticket è <strong>#${data.ticket}</strong>. Conservalo per verificare lo stato.`;
+          feedback.className = 'p-4 rounded-xl font-medium text-sm bg-green-50 text-green-800 border border-green-100';
+          feedback.innerHTML = `✅ Richiesta inviata con successo! Il tuo codice ticket è <strong>${data.ticket}</strong>. Conservalo per verificare lo stato.`;
           feedback.classList.remove('hidden');
           document.getElementById('registroForm').reset();
+          
+          document.getElementById('ticketInput').value = data.ticket;
+          setTimeout(() => {
+            document.getElementById('stato-riparazione').scrollIntoView({ behavior: 'smooth' });
+            buscarTicket();
+          }, 1500);
         } else {
           throw new Error(data.error || 'Errore durante il salvataggio.');
         }
       } catch (error) {
-        feedback.className = 'p-4 rounded-lg font-medium text-sm bg-red-100 text-red-800';
+        feedback.className = 'p-4 rounded-xl font-medium text-sm bg-red-50 text-red-800 border border-red-100';
         feedback.textContent = `❌ Si è verificato un errore: ${error.message}`;
         feedback.classList.remove('hidden');
       } finally {

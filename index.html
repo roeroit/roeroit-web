@@ -37,20 +37,18 @@
       color: #FAFAFA;
       font-family: 'Inter', sans-serif;
       -webkit-font-smoothing: antialiased;
-      cursor: none; /* Ocultamos el cursor por defecto para usar el personalizado */
+      cursor: none;
     }
 
-    /* 1. EFECTO DE RUIDO/GRANO (Noise Overlay) */
     .noise-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
       z-index: 9998;
-      opacity: 0.04;
+      opacity: 0.03;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    /* 2. CURSOR PERSONALIZADO */
     .cursor-dot, .cursor-outline {
       position: fixed;
       top: 0; left: 0;
@@ -74,7 +72,6 @@
       border-color: transparent;
     }
 
-    /* 3. REVELADO DE TEXTO ENMASCARADO */
     .reveal-text {
       clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     }
@@ -99,7 +96,6 @@
       transform: translateY(0);
     }
 
-    /* 4. TARJETAS CON EFECTO GLOW SUTIL */
     .premium-card {
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -128,6 +124,15 @@
       z-index: 1;
     }
 
+    /* Imagen del territorio en B/N con alto contraste */
+    .territory-img {
+      filter: grayscale(100%) contrast(1.2) brightness(0.9);
+      transition: filter 1s ease;
+    }
+    .territory-img:hover {
+      filter: grayscale(100%) contrast(1.3) brightness(1);
+    }
+
     .gold-line {
       height: 1px;
       background: linear-gradient(90deg, transparent, #D97706, transparent);
@@ -142,10 +147,7 @@
 </head>
 <body class="selection:bg-roero-gold selection:text-black">
 
-  <!-- Capa de Ruido (Noise) -->
   <div class="noise-overlay"></div>
-
-  <!-- Cursor Personalizado -->
   <div class="cursor-dot hidden md:block"></div>
   <div class="cursor-outline hidden md:block"></div>
 
@@ -158,8 +160,8 @@
       </a>
       
       <div class="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-400">
+        <a href="#territorio" class="hoverable hover:text-white transition-colors">Territorio</a>
         <a href="#servizi" class="hoverable hover:text-white transition-colors">Servizi</a>
-        <a href="#metodo" class="hoverable hover:text-white transition-colors">Metodo</a>
         <a href="#stato" class="hoverable hover:text-white transition-colors">Stato Riparazione</a>
         <a href="#contatti" class="hoverable px-5 py-2.5 bg-white text-black rounded-full hover:bg-neutral-200 transition-colors font-semibold">
           Contattaci
@@ -204,6 +206,58 @@
     </div>
   </section>
 
+  <!-- SECCIÓN TERRITORIO CON FOTO B/N -->
+  <section id="territorio" class="py-32 px-6 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        
+        <!-- Imagen del Roero en Blanco y Negro -->
+        <div class="reveal-up relative group">
+          <div class="absolute inset-0 bg-roero-gold/5 rounded-2xl transform translate-x-4 translate-y-4 transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-2"></div>
+          <img 
+            src="/images/roero-sunset.jpg" 
+            alt="Alba nel Roero con chiese e castelli - Sommariva del Bosco" 
+            class="territory-img relative rounded-2xl w-full object-cover h-[400px] lg:h-[500px] border border-border shadow-2xl"
+          >
+          <!-- Badge minimalista -->
+          <div class="absolute -bottom-6 -right-6 bg-dark border border-border p-6 rounded-xl shadow-2xl reveal-up" style="transition-delay: 200ms;">
+            <div class="text-roero-gold text-3xl font-bold mb-1">Roero</div>
+            <div class="text-neutral-400 text-xs uppercase tracking-wider">Patrimonio UNESCO</div>
+          </div>
+        </div>
+        
+        <!-- Texto -->
+        <div class="reveal-up lg:pl-8" style="transition-delay: 100ms;">
+          <p class="text-roero-gold text-sm font-medium tracking-[0.2em] uppercase mb-4">Il Nostro Territorio</p>
+          <h2 class="text-4xl md:text-5xl font-semibold tracking-tight mb-8 leading-tight">
+            Radici profonde nel <br>cuore del <span class="text-neutral-500">Roero</span>
+          </h2>
+          <p class="text-neutral-400 text-lg leading-relaxed mb-10">
+            Da Sommariva del Bosco, portiamo innovazione tecnologica mantenendo i valori 
+            della nostra terra: precisione, affidabilità e quel tocco artigianale che 
+            ci distingue. Conosciamo ogni strada, ogni azienda e ogni esigenza di questo territorio.
+          </p>
+          
+          <div class="space-y-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-px bg-roero-gold"></div>
+              <span class="text-neutral-300 font-medium">Sommariva del Bosco</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-px bg-neutral-700"></div>
+              <span class="text-neutral-400">Ceresole d'Alba, Bra</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-px bg-neutral-700"></div>
+              <span class="text-neutral-400">Baldissero, Sanfrè e dintorni</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <div class="max-w-7xl mx-auto px-6"><div class="gold-line"></div></div>
 
   <!-- SERVICIOS -->
@@ -220,7 +274,6 @@
       </div>
 
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="cards-container">
-        <!-- Card 1 -->
         <div class="premium-card p-8 rounded-2xl reveal-up hoverable">
           <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 text-roero-gold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
@@ -233,7 +286,6 @@
           </ul>
         </div>
 
-        <!-- Card 2 -->
         <div class="premium-card p-8 rounded-2xl reveal-up hoverable" style="transition-delay: 100ms;">
           <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 text-roero-gold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
@@ -246,7 +298,6 @@
           </ul>
         </div>
 
-        <!-- Card 3 -->
         <div class="premium-card p-8 rounded-2xl reveal-up hoverable" style="transition-delay: 200ms;">
           <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-6 text-roero-gold">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
@@ -371,7 +422,7 @@
   </a>
 
   <script>
-    // 1. LÓGICA DEL CURSOR PERSONALIZADO
+    // CURSOR PERSONALIZADO
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     
@@ -379,24 +430,21 @@
       const posX = e.clientX;
       const posY = e.clientY;
       
-      // El punto sigue al mouse instantáneamente
       cursorDot.style.left = `${posX}px`;
       cursorDot.style.top = `${posY}px`;
       
-      // El anillo sigue con un poco de retraso (animación suave)
       cursorOutline.animate({
         left: `${posX}px`,
         top: `${posY}px`
       }, { duration: 500, fill: "forwards" });
     });
 
-    // Efecto hover en elementos interactivos
     document.querySelectorAll('.hoverable').forEach(el => {
       el.addEventListener('mouseenter', () => cursorOutline.classList.add('hovered'));
       el.addEventListener('mouseleave', () => cursorOutline.classList.remove('hovered'));
     });
 
-    // 2. EFECTO GLOW EN TARJETAS (Sigue al mouse dentro de la tarjeta)
+    // EFECTO GLOW EN TARJETAS
     document.getElementById('cards-container').onmousemove = e => {
       for(const card of document.getElementsByClassName("premium-card")) {
         const rect = card.getBoundingClientRect(),
@@ -407,7 +455,7 @@
       }
     };
 
-    // 3. ANIMACIONES AL HACER SCROLL (Intersection Observer)
+    // ANIMACIONES SCROLL
     const observerOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -419,7 +467,7 @@
     
     document.querySelectorAll('.reveal-up, .reveal-text').forEach(el => observer.observe(el));
 
-    // 4. LÓGICA DE AIRTABLE (Sin cambios, totalmente funcional)
+    // AIRTABLE FUNCTIONS
     function escapeHTML(str) {
       if (!str) return '';
       return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');

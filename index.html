@@ -184,7 +184,7 @@
     </div>
   </section>
 
-  <!-- CONTATTI: CUESTIONARIO GUIADO + PROMESA DE TRANSPARENCIA -->
+  <!-- CONTATTI: CUESTIONARIO GUIADO -->
   <section id="contatti" class="px-0 bg-surface">
     <div class="editorial-grid">
       <div class="editorial-cell col-span-12 md:col-span-5 border-b border-border md:border-b-0 md:border-r border-border p-8 md:p-16">
@@ -209,10 +209,10 @@
 
       <div class="editorial-cell col-span-12 md:col-span-7 p-8 md:p-16">
         
-        <!-- LA PROMESA DE TRANSPARENCIA (NUEVO) -->
+        <!-- LA PROMESA DE TRANSPARENCIA -->
         <div class="mb-12 p-6 border border-border bg-dark/50 reveal-up">
           <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-white mb-4 flex items-center gap-2">
-            <span class="text-roero-gold">⚡</span> Come funziona la nostra assistenza
+            <span class="text-roero-gold"></span> Come funziona la nostra assistenza
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-neutral-400 uppercase tracking-wide">
             <div class="flex flex-col gap-2">
@@ -241,6 +241,7 @@
               <option value="Smartphone/Tablet" class="bg-dark">Smartphone o Tablet</option>
               <option value="Console" class="bg-dark">Console (PS4, PS5, Xbox, Nintendo)</option>
               <option value="Rete/WiFi" class="bg-dark">Rete domestica o Wi-Fi</option>
+              <option value="Videosorveglianza" class="bg-dark">Videosorveglianza</option>
               <option value="Altro" class="bg-dark">Altro / Non sono sicuro</option>
             </select>
           </div>
@@ -248,7 +249,7 @@
           <!-- PASO 2: CAMPOS DINÁMICOS -->
           <div id="camposDinamicos" class="hidden space-y-8 pt-4 border-t border-border">
             
-            <!-- Extra PC -->
+            <!-- Extra PC (ACTUALIZADO CON SOFTWARE) -->
             <div id="extraPC" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group">
                 <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di computer</label>
@@ -266,13 +267,15 @@
                   <option value="Non si accende / Schermo nero" class="bg-dark">Non si accende / Schermo nero</option>
                   <option value="Lento / Si blocca spesso" class="bg-dark">Lento / Si blocca spesso</option>
                   <option value="Virus / Malware / Pubblicità" class="bg-dark">Virus / Malware / Pubblicità</option>
+                  <option value="Reinstallazione Windows / macOS" class="bg-dark">Reinstallazione Windows / macOS</option>
+                  <option value="Installazione Office / Programmi" class="bg-dark">Installazione Office / Programmi</option>
                   <option value="Recupero Dati" class="bg-dark">Recupero Dati</option>
                   <option value="Altro" class="bg-dark">Altro</option>
                 </select>
               </div>
             </div>
 
-            <!-- Extra Mobile -->
+            <!-- Extra Mobile (ACTUALIZADO) -->
             <div id="extraMobile" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group">
                 <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Sistema Operativo</label>
@@ -283,13 +286,14 @@
                 </select>
               </div>
               <div class="group">
-                <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di danno</label>
+                <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di danno / Richiesta</label>
                 <select id="formProblemaMobile" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
                   <option value="Non specificato" class="bg-dark">Seleziona...</option>
                   <option value="Schermo rotto / Non tocca" class="bg-dark">Schermo rotto / Non tocca</option>
                   <option value="Batteria / Non carica" class="bg-dark">Batteria / Non carica</option>
                   <option value="Caduto in acqua" class="bg-dark">Caduto in acqua</option>
-                  <option value="Software / Bloccato" class="bg-dark">Software / Bloccato</option>
+                  <option value="Configurazione iniziale / Trasferimento dati" class="bg-dark">Configurazione iniziale / Trasferimento dati</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
               </div>
             </div>
@@ -374,7 +378,7 @@
               Invia Richiesta e Ottieni Codice
             </button>
             
-            <!-- PANTALLA DE ÉXITO PREMIUM (Oculta por defecto) -->
+            <!-- PANTALLA DE ÉXITO PREMIUM -->
             <div id="formFeedback" class="hidden mt-8 p-8 border border-roero-gold/30 bg-roero-gold/5 text-center reveal-up visible">
               <span class="block text-xs uppercase tracking-[0.3em] text-roero-gold mb-4">Richiesta Inviata con Successo</span>
               <h4 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white mb-2" id="ticketCodeDisplay">R-XXXXXX</h4>
@@ -423,7 +427,6 @@
       const categoria = document.getElementById('formCategoria').value;
       const camposDinamicos = document.getElementById('camposDinamicos');
       
-      // Ocultar todos los extras primero
       document.getElementById('extraPC').classList.add('hidden');
       document.getElementById('extraMobile').classList.add('hidden');
       document.getElementById('extraConsole').classList.add('hidden');
@@ -499,7 +502,6 @@
       const feedback = document.getElementById('formFeedback');
       const categoria = document.getElementById('formCategoria').value;
       
-      // Construir la Ficha Técnica Inteligente para Airtable
       let fichaTecnica = `CATEGORIA: ${categoria}\n`;
       fichaTecnica += `DISPOSITIVO: ${document.getElementById('formDispositivo').value.trim()}\n`;
       
@@ -522,7 +524,7 @@
         email: document.getElementById('formEmail').value.trim(),
         dispositivo: document.getElementById('formDispositivo').value.trim(),
         categoria: categoria,
-        descrizione: fichaTecnica, // Enviamos la ficha técnica completa
+        descrizione: fichaTecnica,
         accessori: ''
       };
 
@@ -535,7 +537,6 @@
         const data = await response.json();
 
         if (response.ok && data.success) {
-          // Mostrar la Pantalla de Éxito Premium
           document.getElementById('ticketCodeDisplay').innerText = data.ticket;
           feedback.classList.remove('hidden');
           document.getElementById('registroForm').reset();

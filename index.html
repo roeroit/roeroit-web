@@ -188,40 +188,44 @@
     </div>
   </nav>
 
-  <!-- HERO ESTILO UNSEEN (Fondo Negro Puro) -->
-  <section class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 bg-dark">
-    <div class="max-w-[90vw] mx-auto w-full">
-      
-      <!-- Título Masivo -->
-      <h1 class="text-[12vw] leading-[0.85] font-black tracking-tighter uppercase text-white mb-8">
-        <div class="reveal-text"><span>Assistenza</span></div>
-        <div class="reveal-text"><span class="text-neutral-600">Informatica</span></div>
-        <div class="reveal-text"><span>Artigianale</span></div>
-      </h1>
-      
-      <div class="flex flex-col md:flex-row justify-between items-end mt-12 border-t border-border pt-8 reveal-up" style="transition-delay: 200ms;">
-        <p class="text-neutral-400 max-w-md text-sm leading-relaxed uppercase tracking-wide">
-          Riparazione di dispositivi, reti e infrastrutture digitali nel cuore del Roero. Tecnologia avanzata con trasparenza totale.
-        </p>
-        <div class="mt-8 md:mt-0">
-          <a href="#contatti" class="hoverable inline-flex items-center gap-4 text-white font-bold uppercase tracking-[0.2em] text-sm group">
-            Inizia Ora 
-            <span class="w-8 h-px bg-white group-hover:w-16 transition-all duration-500"></span>
-          </a>
-        </div>
+  <!-- HERO ESTILO UNSEEN (Imagen de fondo corregida) -->
+<section class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 bg-dark overflow-hidden">
+  <!-- Imagen de fondo del Roero (CORREGIDA: z-index negativo para que quede detrás) -->
+  <div class="absolute inset-0 w-full h-full unseen-img-container z-0 opacity-20 md:opacity-30 pointer-events-none">
+    <img 
+      src="/roero-sunset.jpg" 
+      alt="Paesaggio del Roero" 
+      class="unseen-img w-full h-full object-cover"
+    >
+  </div>
+
+  <!-- Gradiente superpuesto para mejorar legibilidad -->
+  <div class="absolute inset-0 bg-gradient-to-b from-dark via-dark/90 to-dark z-10 pointer-events-none"></div>
+
+  <!-- Contenido (z-index mayor para que quede encima) -->
+  <div class="relative z-20 max-w-[90vw] mx-auto w-full">
+    
+    <!-- Título Masivo -->
+    <h1 class="text-[12vw] leading-[0.85] font-black tracking-tighter uppercase text-white mb-8">
+      <div class="reveal-text"><span>Assistenza</span></div>
+      <div class="reveal-text"><span class="text-neutral-600">Informatica</span></div>
+      <div class="reveal-text"><span>Artigianale</span></div>
+    </h1>
+    
+    <div class="flex flex-col md:flex-row justify-between items-end mt-12 border-t border-border pt-8 reveal-up" style="transition-delay: 200ms;">
+      <p class="text-neutral-400 max-w-md text-sm leading-relaxed uppercase tracking-wide">
+        Riparazione di dispositivi, reti e infrastrutture digitali nel cuore del Roero. Tecnologia avanzata con trasparenza totale.
+      </p>
+      <div class="mt-8 md:mt-0">
+        <a href="#contatti" class="hoverable inline-flex items-center gap-4 text-white font-bold uppercase tracking-[0.2em] text-sm group">
+          Inizia Ora 
+          <span class="w-8 h-px bg-white group-hover:w-16 transition-all duration-500"></span>
+        </a>
       </div>
     </div>
-
-    <!-- Imagen del Roero (RUTA CORREGIDA A LA RAÍZ) -->
-    <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[40vw] h-[60vh] unseen-img-container z-0 opacity-40 md:opacity-60 reveal-up" style="transition-delay: 400ms;">
-      <img 
-        src="/roero-sunset.jpg" 
-        alt="Paesaggio del Roero" 
-        class="unseen-img"
-      >
-    </div>
-  </section>
-
+  </div>
+</section>
+  
   <!-- MARQUEE DIVISORIO -->
   <div class="border-y border-border py-4 overflow-hidden whitespace-nowrap bg-surface">
     <div class="inline-block animate-marquee" style="animation-direction: reverse;">

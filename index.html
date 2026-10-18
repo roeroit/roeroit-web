@@ -131,16 +131,16 @@
       display: grid;
       grid-template-columns: repeat(12, 1fr);
       gap: 1px;
-      background-color: #262626; /* Color de las líneas */
+      background-color: #262626; /* Color de las líneas de la grilla */
       border: 1px solid #262626;
     }
     .editorial-cell {
-      background-color: #050505;
+      background-color: inherit; /* Hereda el color de la sección (dark o surface) */
       padding: 2rem;
       transition: background-color 0.3s;
     }
     .editorial-cell:hover {
-      background-color: #0A0A0A;
+      background-color: #111111; /* Un poco más claro al pasar el mouse */
     }
 
     ::-webkit-scrollbar { width: 4px; }
@@ -154,7 +154,7 @@
   <div class="cursor-dot hidden md:block"></div>
   <div class="cursor-outline hidden md:block"></div>
 
-  <!-- MARQUEE INFINITO (Estilo Unseen) -->
+  <!-- MARQUEE INFINITO -->
   <div class="fixed top-0 w-full z-40 bg-dark border-b border-border py-3 overflow-hidden whitespace-nowrap">
     <div class="inline-block animate-marquee">
       <span class="text-xs font-bold tracking-[0.3em] uppercase text-neutral-500 mx-8">Assistenza Informatica</span>
@@ -188,8 +188,8 @@
     </div>
   </nav>
 
-  <!-- HERO ESTILO UNSEEN -->
-  <section class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6">
+  <!-- HERO ESTILO UNSEEN (Fondo Negro Puro) -->
+  <section class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 bg-dark">
     <div class="max-w-[90vw] mx-auto w-full">
       
       <!-- Título Masivo -->
@@ -212,10 +212,10 @@
       </div>
     </div>
 
-    <!-- Imagen del Roero estilo Unseen (Grande, B/N, con hover a color) -->
+    <!-- Imagen del Roero (RUTA CORREGIDA A LA RAÍZ) -->
     <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[40vw] h-[60vh] unseen-img-container z-0 opacity-40 md:opacity-60 reveal-up" style="transition-delay: 400ms;">
       <img 
-        src="/images/roero-sunset.jpg" 
+        src="/roero-sunset.jpg" 
         alt="Paesaggio del Roero" 
         class="unseen-img"
       >
@@ -238,8 +238,8 @@
     </div>
   </div>
 
-  <!-- SERVICIOS: GRID EDITORIAL -->
-  <section id="servizi" class="px-0 border-b border-border">
+  <!-- SERVICIOS: GRID EDITORIAL (Fondo Gris Oscuro para separar) -->
+  <section id="servizi" class="px-0 border-b border-border bg-surface">
     <div class="editorial-grid">
       <!-- Header de la grid -->
       <div class="editorial-cell col-span-12 md:col-span-4 border-b border-border flex items-end pb-4">
@@ -251,7 +251,7 @@
 
       <!-- Item 1 -->
       <div class="editorial-cell col-span-12 md:col-span-4 border-b border-border hoverable group">
-        <span class="text-5xl font-black text-neutral-800 group-hover:text-white transition-colors duration-500">01</span>
+        <span class="text-5xl font-black text-neutral-700 group-hover:text-white transition-colors duration-500">01</span>
       </div>
       <div class="editorial-cell col-span-12 md:col-span-8 border-b border-border hoverable">
         <h3 class="text-2xl font-bold uppercase tracking-tight mb-4">Riparazione Dispositivi</h3>
@@ -260,7 +260,7 @@
 
       <!-- Item 2 -->
       <div class="editorial-cell col-span-12 md:col-span-4 border-b border-border hoverable group">
-        <span class="text-5xl font-black text-neutral-800 group-hover:text-white transition-colors duration-500">02</span>
+        <span class="text-5xl font-black text-neutral-700 group-hover:text-white transition-colors duration-500">02</span>
       </div>
       <div class="editorial-cell col-span-12 md:col-span-8 border-b border-border hoverable">
         <h3 class="text-2xl font-bold uppercase tracking-tight mb-4">Reti e Wi-Fi</h3>
@@ -269,7 +269,7 @@
 
       <!-- Item 3 -->
       <div class="editorial-cell col-span-12 md:col-span-4 border-b border-border hoverable group">
-        <span class="text-5xl font-black text-neutral-800 group-hover:text-white transition-colors duration-500">03</span>
+        <span class="text-5xl font-black text-neutral-700 group-hover:text-white transition-colors duration-500">03</span>
       </div>
       <div class="editorial-cell col-span-12 md:col-span-8 border-b border-border hoverable">
         <h3 class="text-2xl font-bold uppercase tracking-tight mb-4">Videosorveglianza</h3>
@@ -278,8 +278,8 @@
     </div>
   </section>
 
-  <!-- STATO RIPARAZIONE -->
-  <section id="stato" class="py-32 px-6 border-b border-border">
+  <!-- STATO RIPARAZIONE (Fondo Negro Puro para separar) -->
+  <section id="stato" class="py-32 px-6 border-b border-border bg-dark">
     <div class="max-w-4xl mx-auto">
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 reveal-up">
         <div>
@@ -303,8 +303,8 @@
     </div>
   </section>
 
-  <!-- CONTATTI -->
-  <section id="contatti" class="px-0">
+  <!-- CONTATTI (Fondo Gris Oscuro para separar) -->
+  <section id="contatti" class="px-0 bg-surface">
     <div class="editorial-grid">
       <div class="editorial-cell col-span-12 md:col-span-5 border-b border-border md:border-b-0 md:border-r border-border p-8 md:p-16">
         <span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-8 block">Contatti</span>
@@ -360,7 +360,7 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- FOOTER (Fondo Negro Puro) -->
   <footer class="py-12 px-6 border-b border-border bg-dark flex flex-col md:flex-row justify-between items-center gap-6">
     <div class="flex items-center gap-3">
       <span class="text-lg font-black uppercase tracking-tighter">Roero<span class="font-light text-neutral-600">IT</span></span>

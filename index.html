@@ -45,8 +45,6 @@
     .tipo-card { transition:all .3s ease; border:2px solid transparent; }
     .tipo-card:hover { border-color:#333; background-color:#111; }
     .tipo-card.selected { border-color:#D97706 !important; background-color:rgba(217,119,6,.08) !important; }
-
-    /* MODAL DE ÉXITO */
     #successModal { background:rgba(5,5,5,.85); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
     .modal-pop { animation:modalPop .5s cubic-bezier(.16,1,.3,1); }
     @keyframes modalPop { from{opacity:0; transform:scale(.85) translateY(24px);} to{opacity:1; transform:scale(1) translateY(0);} }
@@ -57,6 +55,8 @@
     .confetti-piece { position:absolute; top:-12px; width:8px; height:14px; opacity:0; border-radius:2px; }
     .modal-pop .confetti-piece { animation:confettiFall 1.5s ease-out forwards; }
     @keyframes confettiFall { 0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:0; transform:translateY(260px) rotate(540deg);} }
+    /* HONEYPOT: Oculto visualmente pero accesible para bots */
+    .hp-field { position:absolute; left:-9999px; opacity:0; height:0; width:0; overflow:hidden; }
   </style>
 </head>
 <body class="selection:bg-white selection:text-black">
@@ -103,7 +103,7 @@
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 reveal-up" style="transition-delay:300ms;">
         <div class="flex items-start gap-3"><span class="text-2xl">⚡</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Riparazione in giornata</h4><p class="text-xs text-neutral-500">La maggior parte dei lavori completati in 24 ore.</p></div></div>
-        <div class="flex items-start gap-3"><span class="text-2xl">🏠</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Intervento a domicilio</h4><p class="text-xs text-neutral-500">Veniamo direttamente da te, senza spostamientos.</p></div></div>
+        <div class="flex items-start gap-3"><span class="text-2xl">🏠</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Intervento a domicilio</h4><p class="text-xs text-neutral-500">Veniamo direttamente da te, senza spostamenti.</p></div></div>
         <div class="flex items-start gap-3"><span class="text-2xl">📍</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Nel cuore del Roero</h4><p class="text-xs text-neutral-500">A pochi chilometri da Bra, Alba e Cuneo.</p></div></div>
       </div>
       <div class="flex flex-col md:flex-row gap-4 mb-12 reveal-up" style="transition-delay:400ms;">
@@ -188,6 +188,12 @@
         <form id="registroForm" onsubmit="event.preventDefault(); enviarSolicitud();" class="space-y-8">
           <input type="hidden" id="formTipoCliente" value="">
           <input type="hidden" id="formTipoRichiesta" value="">
+          
+          <!-- HONEYPOT: Campo trampa invisible para bots -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="website">Website</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </div>
 
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa ti serve oggi? *</label>
@@ -315,7 +321,6 @@
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
 
-  <!-- MODAL DE ÉXITO -->
   <div id="successModal" class="fixed inset-0 z-[10000] hidden items-center justify-center px-4">
     <div id="successModalCard" class="relative bg-surface border border-roero-gold/40 rounded-lg p-10 max-w-md w-full text-center modal-pop overflow-hidden">
       <div class="pointer-events-none absolute inset-0">
@@ -351,39 +356,28 @@
   <script>
     function updateClock(){const c=document.getElementById('live-clock');const d=document.getElementById('live-date');if(!c||!d)return;const n=new Date();c.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;const dd=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];const mm=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];d.textContent=`${dd[n.getDay()]} ${n.getDate()} ${mm[n.getMonth()]} ${n.getFullYear()}`;}
     if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{updateClock();setInterval(updateClock,1000);});}else{updateClock();setInterval(updateClock,1000);}
-
     const cursorDot=document.querySelector('.cursor-dot');const cursorOutline=document.querySelector('.cursor-outline');
     if(cursorDot&&cursorOutline){window.addEventListener('mousemove',(e)=>{cursorDot.style.left=`${e.clientX}px`;cursorDot.style.top=`${e.clientY}px`;cursorOutline.animate({left:`${e.clientX}px`,top:`${e.clientY}px`},{duration:600,fill:"forwards",easing:"cubic-bezier(0.16, 1, 0.3, 1)"});});}
     document.querySelectorAll('.hoverable').forEach(el=>{el.addEventListener('mouseenter',()=>cursorOutline&&cursorOutline.classList.add('hovered'));el.addEventListener('mouseleave',()=>cursorOutline&&cursorOutline.classList.remove('hovered'));});
-
     const observer=new IntersectionObserver((en)=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1,rootMargin:"0px 0px -50px 0px"});
     document.querySelectorAll('.reveal-up, .reveal-text').forEach(el=>observer.observe(el));
-
     const frasi=["Ripariamo il tuo dispositivo in giornata.","Intervento direttamente a casa tua.","Ritiro e consegna gratuiti nel Roero.","Assistenza rapida per privati e aziende."];
     let fraseIndex=0,charIndex=0,isDeleting=false;const tw=document.getElementById('typewriter-text');
     function typeWriter(){if(!tw)return;const c=frasi[fraseIndex];if(isDeleting){tw.textContent=c.substring(0,charIndex-1);charIndex--;}else{tw.textContent=c.substring(0,charIndex+1);charIndex++;}let sp=isDeleting?30:80;if(!isDeleting&&charIndex===c.length){sp=2500;isDeleting=true;}else if(isDeleting&&charIndex===0){isDeleting=false;fraseIndex=(fraseIndex+1)%frasi.length;sp=500;}setTimeout(typeWriter,sp);}
     setTimeout(typeWriter,1000);
-
     const categorieParticolare=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza casa'},{value:'Altro',label:'Altro / Non sono sicuro'}];
     const categorieAzienda=[{value:'PC/Mac',label:'Computer aziendali (PC / Mac)'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web aziendale'},{value:'Videosorveglianza',label:'Videosorveglianza business'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Consulenza'}];
     const categorieTutte=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Non sono sicuro'}];
-
     function selezionaTipo(tipo){document.getElementById('formTipoCliente').value=tipo;document.getElementById('tipoClienteIndicator').classList.remove('hidden');document.getElementById('tipoClienteText').textContent=tipo;caricaCategorie(tipo);setTimeout(()=>{const f=document.getElementById('contatti');if(f)f.scrollIntoView({behavior:'smooth'});},100);}
     function caricaCategorie(tipo){const select=document.getElementById('formCategoria');let cat=(tipo==='Particolare')?categorieParticolare:(tipo==='Azienda')?categorieAzienda:categorieTutte;select.innerHTML='<option value="" class="bg-dark text-neutral-500">Seleziona una categoria...</option>';cat.forEach(c=>{const o=document.createElement('option');o.value=c.value;o.textContent=c.label;o.className='bg-dark';select.appendChild(o);});document.getElementById('camposDinamicos').classList.add('hidden');['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(id=>document.getElementById(id).classList.add('hidden'));resetAltro();}
     function cambiaTipoCliente(){document.getElementById('formTipoCliente').value='';document.getElementById('tipoClienteIndicator').classList.add('hidden');caricaCategorie('');}
     function selezionaRichiesta(tipo){document.getElementById('formTipoRichiesta').value=tipo;const bR=document.getElementById('btnRiparazione');const bP=document.getElementById('btnPreventivo');bR.classList.remove('selected');bP.classList.remove('selected');if(tipo==='Riparazione')bR.classList.add('selected');else bP.classList.add('selected');}
-
-    // CAMPO "OTRO" DINÁMICO
     function toggleAltro(sel,boxId){const box=document.getElementById(boxId);const input=box.querySelector('input');if(sel.value==='Altro'){box.classList.remove('hidden');}else{box.classList.add('hidden');input.value='';}}
     function resetAltro(){['boxAltroCategoria','boxAltroPC','boxAltroMobile','boxAltroConsole','boxAltroWiFi','boxAltroSito'].forEach(id=>{const b=document.getElementById(id);if(b){b.classList.add('hidden');const i=b.querySelector('input');if(i)i.value='';}});}
     function otroTexto(id){const e=document.getElementById(id);return e?e.value.trim():'';}
     function problemaVal(selId,altroId){const v=document.getElementById(selId).value;if(v==='Altro'){return otroTexto(altroId)||'Altro (non specificato)';}return v;}
-
     function mostrarCamposEspecificos(){const categoria=document.getElementById('formCategoria').value;const campos=document.getElementById('camposDinamicos');['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(id=>document.getElementById(id).classList.add('hidden'));if(categoria){campos.classList.remove('hidden');setTimeout(()=>campos.classList.add('visible'),50);if(categoria==='PC/Mac')document.getElementById('extraPC').classList.remove('hidden');else if(categoria==='Smartphone/Tablet')document.getElementById('extraMobile').classList.remove('hidden');else if(categoria==='Console')document.getElementById('extraConsole').classList.remove('hidden');else if(categoria==='Rete/WiFi'||categoria==='Server/Rete')document.getElementById('extraWiFi').classList.remove('hidden');else if(categoria==='SitoWeb')document.getElementById('extraSito').classList.remove('hidden');}else{campos.classList.add('hidden');campos.classList.remove('visible');}}
-
     function escapeHTML(str){if(!str)return '';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
-
-    // MODAL
     function mostrarExito(tipoRichiesta,ticket,nombre){const modal=document.getElementById('successModal');const msg=document.getElementById('successModalMsg');const tBox=document.getElementById('successModalTicket');const tBtn=document.getElementById('successModalTrackBtn');
       if(tipoRichiesta==='Preventivo'){msg.textContent=`Grazie ${nombre}! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.`;tBox.classList.add('hidden');tBtn.classList.add('hidden');}
       else{msg.textContent='La tua richiesta è stata inviata. Salva il codice per seguire lo stato della riparazione.';document.getElementById('successModalTicketCode').textContent=ticket;tBox.classList.remove('hidden');tBtn.classList.remove('hidden');}
@@ -391,12 +385,16 @@
       const card=document.getElementById('successModalCard');card.classList.remove('modal-pop');void card.offsetWidth;card.classList.add('modal-pop');}
     function cerrarModal(){const modal=document.getElementById('successModal');modal.classList.add('hidden');modal.classList.remove('flex');}
     function irATracking(){const code=document.getElementById('successModalTicketCode').textContent;cerrarModal();document.getElementById('ticketInput').value=code;setTimeout(()=>{document.getElementById('stato').scrollIntoView({behavior:'smooth'});buscarTicket();},300);}
-
     window.addEventListener('DOMContentLoaded',()=>{const u=new URLSearchParams(window.location.search);const t=u.get('ticket');if(t){document.getElementById('ticketInput').value=t;setTimeout(()=>{document.getElementById('stato').scrollIntoView({behavior:'smooth'});buscarTicket();},500);}caricaCategorie('');});
-
     async function buscarTicket(){const ti=document.getElementById('ticketInput');const ticket=ti.value.trim().toUpperCase();const rd=document.getElementById('ticketResult');if(!ticket){alert('Inserisci un codice ticket valido.');return;}rd.classList.remove('hidden');rd.innerHTML='<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-2 border-neutral-800 border-t-white"></div></div>';try{const r=await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);const d=await r.json();if(r.ok){rd.innerHTML=`<div class="border border-border p-8 reveal-up visible"><div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-border"><div><span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-2 block">Ticket Attivo</span><h4 class="text-4xl font-black uppercase tracking-tighter">${escapeHTML(d.ticket)}</h4><p class="text-neutral-400 text-sm mt-2 uppercase tracking-wide">Dispositivo: <span class="text-white">${escapeHTML(d.dispositivo)}</span></p></div><div class="mt-4 md:mt-0 px-6 py-3 border border-white/20 rounded-full"><span class="text-sm font-bold uppercase tracking-[0.2em] ${d.stato.toLowerCase().includes('pronto')?'text-green-400':'text-roero-gold'}">${escapeHTML(d.stato)}</span></div></div><div class="grid md:grid-cols-2 gap-8"><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Preventivo</span><span class="text-2xl font-bold">${d.preventivo?'€ '+escapeHTML(d.preventivo):'In valutazione'}</span></div><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Consegna Prevista</span><span class="text-2xl font-bold">${escapeHTML(d.dataConsegna)||'Da definire'}</span></div></div>${d.descrizione?`<div class="mt-8 pt-8 border-t border-border"><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Note Tecniche</span><p class="text-neutral-300 leading-relaxed whitespace-pre-line">${escapeHTML(d.descrizione)}</p></div>`:''}</div>`;}else{rd.innerHTML=`<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">${escapeHTML(d.error||'Ticket non trovato.')}</p>`;}}catch(e){rd.innerHTML='<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">Errore di connessione. Riprova più tardi.</p>';}}
-
-    async function enviarSolicitud(){const btnSubmit=document.getElementById('btnSubmit');const feedback=document.getElementById('formFeedback');const tipoRichiesta=document.getElementById('formTipoRichiesta').value;const categoria=document.getElementById('formCategoria').value;const tipoCliente=document.getElementById('formTipoCliente').value||'Non specificato';
+    async function enviarSolicitud(){
+      // VALIDACIÓN HONEYPOT: Si el campo trampa está lleno, es un bot
+      const honeypot = document.getElementById('website').value;
+      if (honeypot) {
+        console.warn('Bot detectado');
+        return;
+      }
+      const btnSubmit=document.getElementById('btnSubmit');const feedback=document.getElementById('formFeedback');const tipoRichiesta=document.getElementById('formTipoRichiesta').value;const categoria=document.getElementById('formCategoria').value;const tipoCliente=document.getElementById('formTipoCliente').value||'Non specificato';
       if(!tipoRichiesta){alert('Per favore, seleziona prima cosa ti serve: Riparazione o Preventivo.');return;}
       let catTxt=categoria;if(categoria==='Altro'){const esp=otroTexto('formAltroCategoria');if(esp)catTxt+=' - '+esp;}
       let fichaTecnica=`TIPO RICHIESTA: ${tipoRichiesta}\nTIPO CLIENTE: ${tipoCliente}\nCATEGORIA: ${catTxt}\nDISPOSITIVO: ${document.getElementById('formDispositivo').value.trim()}\n`;

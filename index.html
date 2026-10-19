@@ -55,7 +55,6 @@
     .confetti-piece { position:absolute; top:-12px; width:8px; height:14px; opacity:0; border-radius:2px; }
     .modal-pop .confetti-piece { animation:confettiFall 1.5s ease-out forwards; }
     @keyframes confettiFall { 0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:0; transform:translateY(260px) rotate(540deg);} }
-    /* HONEYPOT: Oculto visualmente pero accesible para bots */
     .hp-field { position:absolute; left:-9999px; opacity:0; height:0; width:0; overflow:hidden; }
   </style>
 </head>
@@ -106,12 +105,12 @@
         <div class="flex items-start gap-3"><span class="text-2xl">🏠</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Intervento a domicilio</h4><p class="text-xs text-neutral-500">Veniamo direttamente da te, senza spostamenti.</p></div></div>
         <div class="flex items-start gap-3"><span class="text-2xl">📍</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Nel cuore del Roero</h4><p class="text-xs text-neutral-500">A pochi chilometri da Bra, Alba e Cuneo.</p></div></div>
       </div>
-      <div class="flex flex-col md:flex-row gap-4 mb-12 reveal-up" style="transition-delay:400ms;">
-        <a href="#contatti" onclick="selezionaTipo('Particolare')" class="hoverable flex-1 px-8 py-4 border border-white/20 bg-white/5 text-white font-bold uppercase tracking-[0.2em] text-sm hover:bg-white hover:text-black transition-all text-center cursor-pointer">👤 Sei un Particolare?</a>
-        <a href="#contatti" onclick="selezionaTipo('Azienda')" class="hoverable flex-1 px-8 py-4 border border-roero-gold/30 bg-roero-gold/10 text-roero-gold font-bold uppercase tracking-[0.2em] text-sm hover:bg-roero-gold hover:text-black transition-all text-center cursor-pointer">🏢 Sei un'Azienda?</a>
-      </div>
-      <div class="reveal-up" style="transition-delay:500ms;">
-        <a href="#contatti" class="hoverable inline-flex items-center gap-4 text-white font-bold uppercase tracking-[0.2em] text-sm group">Inizia Ora <span class="w-8 h-px bg-white group-hover:w-16 transition-all duration-500"></span></a>
+      
+      <!-- UNICO BOTÓN LIMPIO EN EL HERO -->
+      <div class="reveal-up" style="transition-delay:400ms;">
+        <a href="#contatti" class="hoverable inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-sm hover:bg-neutral-200 transition-colors rounded">
+          Richiedi Assistenza o Preventivo <span class="text-xl">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -179,7 +178,7 @@
           </div>
         </div>
 
-        <div id="tipoClienteIndicator" class="hidden mb-8 p-4 border border-roero-gold/30 bg-roero-gold/5 reveal-up visible">
+        <div id="tipoClienteIndicator" class="hidden mb-6 p-4 border border-roero-gold/30 bg-roero-gold/5 reveal-up visible rounded">
           <span class="text-xs uppercase tracking-[0.2em] text-roero-gold mb-1 block">Cliente</span>
           <span id="tipoClienteText" class="text-xl font-bold uppercase tracking-tighter text-white">Particolare</span>
           <button type="button" onclick="cambiaTipoCliente()" class="ml-4 text-xs text-neutral-500 hover:text-white underline">Cambia</button>
@@ -189,17 +188,35 @@
           <input type="hidden" id="formTipoCliente" value="">
           <input type="hidden" id="formTipoRichiesta" value="">
           
-          <!-- HONEYPOT: Campo trampa invisible para bots -->
+          <!-- HONEYPOT -->
           <div class="hp-field" aria-hidden="true">
             <label for="website">Website</label>
             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
           </div>
 
+          <!-- PASO 1: CHI SEI? (UNIFICADO) -->
+          <div class="group">
+            <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Chi sei? *</label>
+            <div class="grid md:grid-cols-2 gap-4">
+              <button type="button" onclick="selezionaTipo('Particolare')" class="tipo-card hoverable p-5 bg-dark/50 border border-border text-left cursor-pointer rounded">
+                <span class="text-2xl block mb-2">👤</span>
+                <span class="text-sm font-bold uppercase tracking-wide text-white block">Particolare</span>
+                <span class="text-xs text-neutral-500 block mt-1">Privato cittadino</span>
+              </button>
+              <button type="button" onclick="selezionaTipo('Azienda')" class="tipo-card hoverable p-5 bg-dark/50 border border-border text-left cursor-pointer rounded">
+                <span class="text-2xl block mb-2"></span>
+                <span class="text-sm font-bold uppercase tracking-wide text-white block">Azienda</span>
+                <span class="text-xs text-neutral-500 block mt-1">Impresa o professionista</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- PASO 2: COSA TI SERVE? -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa ti serve oggi? *</label>
             <div class="grid md:grid-cols-2 gap-4">
               <button type="button" id="btnRiparazione" onclick="selezionaRichiesta('Riparazione')" class="tipo-card hoverable p-5 bg-dark/50 border border-border text-left cursor-pointer rounded">
-                <span class="text-2xl block mb-2">🔧</span>
+                <span class="text-2xl block mb-2"></span>
                 <span class="text-sm font-bold uppercase tracking-wide text-white block">Lasciare in riparazione</span>
                 <span class="text-xs text-neutral-500 block mt-1">Ricevi un codice per seguirne lo stato.</span>
               </button>
@@ -211,6 +228,7 @@
             </div>
           </div>
 
+          <!-- PASO 3: CATEGORIA -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa dobbiamo riparare o configurare? *</label>
             <select id="formCategoria" onchange="mostrarCamposEspecificos(); toggleAltro(this,'boxAltroCategoria')" required class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -222,6 +240,7 @@
             </div>
           </div>
 
+          <!-- PASO 4: DETTAGLI DINÁMICOS -->
           <div id="camposDinamicos" class="hidden space-y-8 pt-4 border-t border-border">
             <div id="extraPC" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di computer</label>
@@ -279,9 +298,11 @@
                 <div id="boxAltroSito" class="hidden mt-3"><input type="text" id="formAltroSito" placeholder="Descrivi il tipo di sito..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
               </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-10">
+            
+            <!-- DATOS DE CONTACTO -->
+            <div class="grid md:grid-cols-2 gap-10 pt-4 border-t border-border">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Modello / Riferimento *</label>
-                <input type="text" id="formDispositivo" required placeholder="Es. PS5 Digital, iPhone 13, nome attività per siti web" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
+                <input type="text" id="formDispositivo" required placeholder="Es. PS5 Digital, iPhone 13, nome attività" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Nome e Cognome / Ragione Sociale *</label>
                 <input type="text" id="formCliente" required class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
             </div>
@@ -293,7 +314,8 @@
             </div>
             <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Dettagli aggiuntivi (Opzionale)</label>
               <textarea id="formDescrizione" rows="3" placeholder="Raccontaci cosa succede..." class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"></textarea></div>
-            <button type="submit" id="btnSubmit" class="hoverable w-full md:w-auto px-12 py-5 bg-white text-black font-black uppercase tracking-[0.2em] hover:bg-neutral-200 transition-colors mt-4">Invia Richiesta</button>
+            
+            <button type="submit" id="btnSubmit" class="hoverable w-full md:w-auto px-12 py-5 bg-white text-black font-black uppercase tracking-[0.2em] hover:bg-neutral-200 transition-colors mt-4 rounded">Invia Richiesta</button>
             <div id="formFeedback" class="hidden mt-8 p-6 text-center rounded"></div>
           </div>
         </form>
@@ -368,7 +390,7 @@
     const categorieParticolare=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza casa'},{value:'Altro',label:'Altro / Non sono sicuro'}];
     const categorieAzienda=[{value:'PC/Mac',label:'Computer aziendali (PC / Mac)'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web aziendale'},{value:'Videosorveglianza',label:'Videosorveglianza business'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Consulenza'}];
     const categorieTutte=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Non sono sicuro'}];
-    function selezionaTipo(tipo){document.getElementById('formTipoCliente').value=tipo;document.getElementById('tipoClienteIndicator').classList.remove('hidden');document.getElementById('tipoClienteText').textContent=tipo;caricaCategorie(tipo);setTimeout(()=>{const f=document.getElementById('contatti');if(f)f.scrollIntoView({behavior:'smooth'});},100);}
+    function selezionaTipo(tipo){document.getElementById('formTipoCliente').value=tipo;document.getElementById('tipoClienteIndicator').classList.remove('hidden');document.getElementById('tipoClienteText').textContent=tipo;caricaCategorie(tipo);}
     function caricaCategorie(tipo){const select=document.getElementById('formCategoria');let cat=(tipo==='Particolare')?categorieParticolare:(tipo==='Azienda')?categorieAzienda:categorieTutte;select.innerHTML='<option value="" class="bg-dark text-neutral-500">Seleziona una categoria...</option>';cat.forEach(c=>{const o=document.createElement('option');o.value=c.value;o.textContent=c.label;o.className='bg-dark';select.appendChild(o);});document.getElementById('camposDinamicos').classList.add('hidden');['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(id=>document.getElementById(id).classList.add('hidden'));resetAltro();}
     function cambiaTipoCliente(){document.getElementById('formTipoCliente').value='';document.getElementById('tipoClienteIndicator').classList.add('hidden');caricaCategorie('');}
     function selezionaRichiesta(tipo){document.getElementById('formTipoRichiesta').value=tipo;const bR=document.getElementById('btnRiparazione');const bP=document.getElementById('btnPreventivo');bR.classList.remove('selected');bP.classList.remove('selected');if(tipo==='Riparazione')bR.classList.add('selected');else bP.classList.add('selected');}
@@ -388,14 +410,11 @@
     window.addEventListener('DOMContentLoaded',()=>{const u=new URLSearchParams(window.location.search);const t=u.get('ticket');if(t){document.getElementById('ticketInput').value=t;setTimeout(()=>{document.getElementById('stato').scrollIntoView({behavior:'smooth'});buscarTicket();},500);}caricaCategorie('');});
     async function buscarTicket(){const ti=document.getElementById('ticketInput');const ticket=ti.value.trim().toUpperCase();const rd=document.getElementById('ticketResult');if(!ticket){alert('Inserisci un codice ticket valido.');return;}rd.classList.remove('hidden');rd.innerHTML='<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-2 border-neutral-800 border-t-white"></div></div>';try{const r=await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);const d=await r.json();if(r.ok){rd.innerHTML=`<div class="border border-border p-8 reveal-up visible"><div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-border"><div><span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-2 block">Ticket Attivo</span><h4 class="text-4xl font-black uppercase tracking-tighter">${escapeHTML(d.ticket)}</h4><p class="text-neutral-400 text-sm mt-2 uppercase tracking-wide">Dispositivo: <span class="text-white">${escapeHTML(d.dispositivo)}</span></p></div><div class="mt-4 md:mt-0 px-6 py-3 border border-white/20 rounded-full"><span class="text-sm font-bold uppercase tracking-[0.2em] ${d.stato.toLowerCase().includes('pronto')?'text-green-400':'text-roero-gold'}">${escapeHTML(d.stato)}</span></div></div><div class="grid md:grid-cols-2 gap-8"><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Preventivo</span><span class="text-2xl font-bold">${d.preventivo?'€ '+escapeHTML(d.preventivo):'In valutazione'}</span></div><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Consegna Prevista</span><span class="text-2xl font-bold">${escapeHTML(d.dataConsegna)||'Da definire'}</span></div></div>${d.descrizione?`<div class="mt-8 pt-8 border-t border-border"><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Note Tecniche</span><p class="text-neutral-300 leading-relaxed whitespace-pre-line">${escapeHTML(d.descrizione)}</p></div>`:''}</div>`;}else{rd.innerHTML=`<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">${escapeHTML(d.error||'Ticket non trovato.')}</p>`;}}catch(e){rd.innerHTML='<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">Errore di connessione. Riprova più tardi.</p>';}}
     async function enviarSolicitud(){
-      // VALIDACIÓN HONEYPOT: Si el campo trampa está lleno, es un bot
       const honeypot = document.getElementById('website').value;
-      if (honeypot) {
-        console.warn('Bot detectado');
-        return;
-      }
+      if (honeypot) { console.warn('Bot detectado'); return; }
       const btnSubmit=document.getElementById('btnSubmit');const feedback=document.getElementById('formFeedback');const tipoRichiesta=document.getElementById('formTipoRichiesta').value;const categoria=document.getElementById('formCategoria').value;const tipoCliente=document.getElementById('formTipoCliente').value||'Non specificato';
-      if(!tipoRichiesta){alert('Per favore, seleziona prima cosa ti serve: Riparazione o Preventivo.');return;}
+      if(!tipoCliente){alert('Per favore, seleziona prima chi sei (Particolare o Azienda).');return;}
+      if(!tipoRichiesta){alert('Per favore, seleziona cosa ti serve: Riparazione o Preventivo.');return;}
       let catTxt=categoria;if(categoria==='Altro'){const esp=otroTexto('formAltroCategoria');if(esp)catTxt+=' - '+esp;}
       let fichaTecnica=`TIPO RICHIESTA: ${tipoRichiesta}\nTIPO CLIENTE: ${tipoCliente}\nCATEGORIA: ${catTxt}\nDISPOSITIVO: ${document.getElementById('formDispositivo').value.trim()}\n`;
       if(categoria==='PC/Mac'){fichaTecnica+=`TIPO: ${document.getElementById('formTipoPC').value}\nPROBLEMA: ${problemaVal('formProblemaPC','formAltroPC')}\n`;}

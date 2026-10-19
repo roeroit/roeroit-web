@@ -37,14 +37,14 @@ export default async function handler(req, res) {
 
     const fields = data.records[0].fields;
 
+    // GDPR: NO devolver datos personales (cliente, telefono, email)
     return res.status(200).json({
       ticket: fields.Ticket,
-      cliente: fields.Cliente || 'N/D',
       dispositivo: fields.Dispositivo || 'N/D',
       stato: fields.Stato || 'Nuova Richiesta',
       preventivo: fields.Preventivo || null,
       dataConsegna: fields.DataConsegna || 'Da definire',
-      descrizione: fields.Descrizione || 'Nessuna descrizione disponibile.'
+      descripcion: fields.Descrizione || 'Nessuna descrizione disponibile.'
     });
 
   } catch (error) {

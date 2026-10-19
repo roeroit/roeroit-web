@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       stato: fields.Stato || 'Nuova Richiesta',
       preventivo: fields.Preventivo || null,
       dataConsegna: fields.DataConsegna || 'Da definire',
-      descripcion: fields.Descrizione || 'Nessuna descrizione disponibile.'
+      descrizione: fields.Descrizione || 'Nessuna descrizione disponibile.'
     });
 
   } catch (error) {

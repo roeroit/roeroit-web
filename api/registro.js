@@ -1,10 +1,12 @@
 // api/registro.js
-import Airtable from 'airtable';
 
-export default function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Metodo non consentito.' });
 
   // 1. VALIDACIÓN HONEYPOT DEL LADO DEL SERVIDOR
   if (req.body.website && req.body.website.trim() !== '') {
@@ -13,37 +15,57 @@ export default function handler(req, res) {
   }
 
   const { cliente, telefono, email, dispositivo, categoria, descrizione, accessori } = req.body;
+  const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
 
   if (!cliente || !telefono || !dispositivo || !categoria) {
-    return res.status(400).json({ error: 'Campi obbligatori mancanti' });
+    return res.status(400).json({ error: 'Campi obbligatori mancanti.' });
+  }
+  if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN || !AIRTABLE_TABLE_NAME) {
+    return res.status(500).json({ error: 'Errore di configurazione del server.' });
   }
 
   // Generar código de ticket único (ej: R-839201)
   const ticket = `R-${Math.floor(100000 + Math.random() * 900000)}`;
 
-  // Usar variables de entorno de Vercel
-  const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+  try {
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        records: [
+          {
+            fields: {
+              Ticket: ticket,
+              Cliente: cliente,
+              Telefono: telefono,
+              Email: email || '',
+              Dispositivo: dispositivo,
+              Categoria: categoria,
+              Descrizione: descrizione,
+              Accessori: accessori || '',
+              Stato: 'Nuova Richiesta',
+              DataCreazione: new Date().toISOString()
+            }
+          }
+        ]
+      })
+    });
 
-  base('Servizi').create([
-    {
-      fields: {
-        Ticket: ticket,
-        Cliente: cliente,
-        Telefono: telefono,
-        Email: email || '',
-        Dispositivo: dispositivo,
-        Categoria: categoria,
-        Descrizione: descrizione,
-        Accessori: accessori || '',
-        Stato: 'Nuovo',
-        DataCreazione: new Date().toISOString()
-      }
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Errore nella risposta di Airtable');
     }
-  ], function(err, records) {
-    if (err) {
-      console.error('Error Airtable:', err);
-      return res.status(500).json({ error: 'Errore durante il salvataggio' });
-    }
+
     return res.status(200).json({ success: true, ticket });
-  });
+
+  } catch (error) {
+    console.error('Error en API Registro:', error);
+    return res.status(500).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+  }
 }

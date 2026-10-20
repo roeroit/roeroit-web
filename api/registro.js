@@ -1,73 +1,192 @@
-// api/registro.js (VERSIÓN FINAL - PRODUCCIÓN)
+import { randomBytes } from 'node:crypto';
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+const MAX_LENGTHS = {
+  cliente: 120,
+  nomeAzienda: 120,
+  telefono: 30,
+  email: 254,
+  dispositivo: 100,
+  categoria: 80,
+  descrizione: 5000,
+  accessori: 1000,
+  quandoServe: 50,
+  contattoPreferito: 30,
+};
+
+const ALLOWED_CATEGORIES = new Set([
+  'PC/Mac', 'Smartphone/Tablet', 'Console', 'Rete/WiFi', 'Server/Rete',
+  'Backup/Cloud', 'SitoWeb', 'Videosorveglianza', 'Assistenza', 'Altro',
+]);
+
+const ALLOWED_QUANDO = new Set([
+  'Nei prossimi giorni', 'Il prima possibile', 'Sto valutando',
+]);
+
+const ALLOWED_CONTATTO = new Set([
+  'WhatsApp', 'Telefono', 'Email',
+]);
+
+function allowedOrigins() {
+  return (process.env.ALLOWED_ORIGINS || 'https://roeroit.it,https://www.roeroit.it')
+    .split(',').map((origin) => origin.trim()).filter(Boolean);
+}
+
+function setCors(req, res) {
+  const origin = req.headers.origin;
+  const allowed = allowedOrigins();
+  if (origin && allowed.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'no-store');
+  return !origin || allowed.includes(origin);
+}
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Metodo non consentito.' });
+function isPlainObject(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
 
-  // 1. VALIDACIÓN HONEYPOT DEL LADO DEL SERVIDOR
-  if (req.body.website && req.body.website.trim() !== '') {
-    console.warn('🤖 Bot detectado y bloqueado en registro');
-    return res.status(400).json({ error: 'Invalid request' });
+function cleanText(value, field, required = false) {
+  if (value == null) {
+    if (required) throw new Error(`missing:${field}`);
+    return '';
+  }
+  if (typeof value !== 'string') throw new Error(`type:${field}`);
+  const normalized = value.trim();
+  if (required && !normalized) throw new Error(`missing:${field}`);
+  if (normalized.length > MAX_LENGTHS[field]) throw new Error(`length:${field}`);
+  return normalized;
+}
+
+export default async function handler(req, res) {
+  const originAllowed = setCors(req, res);
+  if (req.method === 'OPTIONS') {
+    return originAllowed ? res.status(204).end() : res.status(403).end();
+  }
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST, OPTIONS');
+    return res.status(405).json({ error: 'Metodo non consentito.' });
+  }
+  if (!originAllowed) {
+    return res.status(403).json({ error: 'Origine non consentita.' });
+  }
+  if (!isPlainObject(req.body)) {
+    return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  const { cliente, telefono, email, dispositivo, categoria, descrizione, accessori } = req.body;
+  // Honeypot
+  const { website } = req.body;
+  if (website != null && typeof website !== 'string') {
+    return res.status(400).json({ error: 'Richiesta non valida.' });
+  }
+  if (typeof website === 'string' && website.trim() !== '') {
+    return res.status(400).json({ error: 'Richiesta non valida.' });
+  }
+
+  let cliente, nomeAzienda, telefono, email, dispositivo, categoria, descrizione, accessori, quandoServe, contattoPreferito;
+  try {
+    cliente = cleanText(req.body.cliente, 'cliente', true);
+    nomeAzienda = cleanText(req.body.nomeAzienda, 'nomeAzienda');
+    telefono = cleanText(req.body.telefono, 'telefono', true);
+    email = cleanText(req.body.email, 'email');
+    dispositivo = cleanText(req.body.dispositivo, 'dispositivo', true);
+    categoria = cleanText(req.body.categoria, 'categoria', true);
+    descrizione = cleanText(req.body.descrizione, 'descrizione');
+    accessori = cleanText(req.body.accessori, 'accessori');
+    quandoServe = cleanText(req.body.quandoServe, 'quandoServe');
+    contattoPreferito = cleanText(req.body.contattoPreferito, 'contattoPreferito');
+  } catch (error) {
+    const message = String(error.message || '');
+    if (message.startsWith('missing:')) {
+      return res.status(400).json({ error: 'Compila tutti i campi obbligatori.' });
+    }
+    return res.status(400).json({ error: 'Uno o più campi non sono validi o sono troppo lunghi.' });
+  }
+
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.status(400).json({ error: 'Indirizzo email non valido.' });
+  }
+  if (!ALLOWED_CATEGORIES.has(categoria)) {
+    return res.status(400).json({ error: 'Categoria non valida.' });
+  }
+  if (quandoServe && !ALLOWED_QUANDO.has(quandoServe)) {
+    return res.status(400).json({ error: 'Valore non valido per "quando serve".' });
+  }
+  if (contattoPreferito && !ALLOWED_CONTATTO.has(contattoPreferito)) {
+    return res.status(400).json({ error: 'Valore non valido per "contatto preferito".' });
+  }
+
   const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
-
-  if (!cliente || !telefono || !dispositivo || !categoria) {
-    return res.status(400).json({ error: 'Campi obbligatori mancanti.' });
-  }
   if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN || !AIRTABLE_TABLE_NAME) {
-    return res.status(500).json({ error: 'Errore di configurazione del server.' });
+    console.error('Configurazione Airtable mancante.');
+    return res.status(500).json({ error: 'Errore interno del server.' });
   }
 
-  // Generar código de ticket único (ej: R-839201)
-  const ticket = `R-${Math.floor(100000 + Math.random() * 900000)}`;
+  const ticket = `R-${randomBytes(16).toString('hex').toUpperCase()}`;
+
+  // Lógica inteligente: DescripciónPública sin datos personales (GDPR)
+  let descrizionePubblica = '';
+  if (descrizione) {
+    const lineas = descrizione.split('\n');
+    const lineasPublicas = lineas.filter(linea => {
+      const lower = linea.toLowerCase();
+      return !lower.includes('tipo cliente:') && 
+             !lower.includes('nome') && 
+             !lower.includes('telefono') && 
+             !lower.includes('email');
+    });
+    descrizionePubblica = lineasPublicas.join('\n').trim();
+  }
+
+  const url = `https://api.airtable.com/v0/${encodeURIComponent(AIRTABLE_BASE_ID)}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
   try {
-    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
-    
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+        'Content-Type': 'application/json',
       },
+      signal: AbortSignal.timeout(10000),
       body: JSON.stringify({
-        records: [
-          {
-            fields: {
-              Ticket: ticket,
-              Cliente: cliente,
-              Telefono: telefono,
-              Email: email || '',
-              Dispositivo: dispositivo,
-              Categoria: categoria,
-              Descrizione: descrizione,
-              Accessori: accessori || '',
-              Stato: 'Nuova Richiesta',
-              DataCreazione: new Date().toISOString()
-            }
-          }
-        ]
-      })
+        records: [{
+          fields: {
+            Ticket: ticket,
+            Cliente: cliente,
+            NomeAzienda: nomeAzienda,
+            Telefono: telefono,
+            Email: email,
+            Dispositivo: dispositivo,
+            Categoria: categoria,
+            Descrizione: descrizione, // Notas internas (privadas)
+            DescrizionePubblica: descrizionePubblica, // Lo que ve el cliente en el tracker
+            Accessori: accessori,
+            QuandoServe: quandoServe,
+            ContattoPreferito: contattoPreferito,
+            Stato: 'Nuova Richiesta',
+            DataCreazione: new Date().toISOString(),
+          },
+        }],
+      }),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      // En producción, NO exponemos el error detallado al usuario
-      console.error('Error Airtable:', data.error?.message);
-      return res.status(response.status).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+      const detail = await response.text().catch(() => '');
+      console.error('Airtable create failed:', response.status, detail.slice(0, 500));
+      return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
     }
 
-    return res.status(200).json({ success: true, ticket });
+    const data = await response.json();
+    if (!data.records?.[0]?.id) {
+      console.error('Risposta Airtable senza record ID.');
+      return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+    }
 
+    return res.status(201).json({ success: true, ticket });
   } catch (error) {
-    console.error('Error en API Registro:', error);
-    return res.status(500).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+    console.error('Errore API registro:', error.name || 'Error');
+    return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
   }
 }

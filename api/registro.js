@@ -78,9 +78,6 @@ export default async function handler(req, res) {
 
   // Honeypot
   const { website } = req.body;
-  if (website != null && typeof website !== 'string') {
-    return res.status(400).json({ error: 'Richiesta non valida.' });
-  }
   if (typeof website === 'string' && website.trim() !== '') {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
@@ -98,44 +95,30 @@ export default async function handler(req, res) {
     quandoServe = cleanText(req.body.quandoServe, 'quandoServe');
     contattoPreferito = cleanText(req.body.contattoPreferito, 'contattoPreferito');
   } catch (error) {
-    const message = String(error.message || '');
-    if (message.startsWith('missing:')) {
-      return res.status(400).json({ error: 'Compila tutti i campi obbligatori.' });
-    }
-    return res.status(400).json({ error: 'Uno o più campi non sono validi o sono troppo lunghi.' });
+    return res.status(400).json({ error: `DEBUG VALIDACIÓN: ${error.message}` });
   }
 
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Indirizzo email non valido.' });
+    return res.status(400).json({ error: 'DEBUG EMAIL: Indirizzo email non valido.' });
   }
   if (!ALLOWED_CATEGORIES.has(categoria)) {
-    return res.status(400).json({ error: 'Categoria non valida.' });
-  }
-  if (quandoServe && !ALLOWED_QUANDO.has(quandoServe)) {
-    return res.status(400).json({ error: 'Valore non valido per "quando serve".' });
-  }
-  if (contattoPreferito && !ALLOWED_CONTATTO.has(contattoPreferito)) {
-    return res.status(400).json({ error: 'Valore non valido per "contatto preferito".' });
+    return res.status(400).json({ error: `DEBUG CATEGORIA: "${categoria}" non è valida.` });
   }
 
   const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
   if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN || !AIRTABLE_TABLE_NAME) {
-    console.error('Configurazione Airtable mancante.');
-    return res.status(500).json({ error: 'Errore interno del server.' });
+    return res.status(500).json({ error: 'DEBUG SERVER: Configurazione Airtable mancante.' });
   }
 
   const ticket = `R-${randomBytes(16).toString('hex').toUpperCase()}`;
 
-  // Descripción pública sin datos personales (GDPR)
+  // Filtrar descripción para la versión pública (GDPR)
   let descrizionePubblica = '';
   if (descrizione) {
     const lineas = descrizione.split('\n');
     const lineasPublicas = lineas.filter(linea => {
       const lower = linea.toLowerCase();
-      return !lower.includes('tipo cliente:') &&
-             !lower.includes('nome') &&
-             !lower.includes('telefono') &&
-             !lower.includes('email');
+      return !lower.includes('tipo cliente:') && !lower.includes('nome') && !lower.includes('telefono') && !lower.includes('email');
     });
     descrizionePubblica = lineasPublicas.join('\n').trim();
   }
@@ -166,27 +149,32 @@ export default async function handler(req, res) {
             QuandoServe: quandoServe,
             ContattoPreferito: contattoPreferito,
             Stato: 'Nuova Richiesta',
-            DataCreazione: new Date().toISOString(), // Incluimos el campo que acabas de crear
+            DataCreazione: new Date().toISOString(),
           },
         }],
       }),
     });
 
+    // 🚨 AQUÍ ESTÁ LA MAGIA DEL DIAGNÓSTICO 🚨
     if (!response.ok) {
-      const detail = await response.text().catch(() => '');
-      console.error('Airtable create failed:', response.status, detail.slice(0, 500));
-      return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+      const detail = await response.json().catch(() => ({}));
+      const airtableError = detail.error?.message || detail.error?.type || await response.text();
+      console.error('🚨 ERROR REAL DE AIRTABLE:', airtableError);
+      
+      // Le mostramos el error EXACTO al usuario en la web
+      return res.status(response.status).json({ 
+        error: `🚨 DEBUG AIRTABLE: ${airtableError}` 
+      });
     }
 
     const data = await response.json();
     if (!data.records?.[0]?.id) {
-      console.error('Risposta Airtable senza record ID.');
-      return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+      return res.status(502).json({ error: 'DEBUG: Risposta Airtable senza record ID.' });
     }
 
     return res.status(201).json({ success: true, ticket });
   } catch (error) {
-    console.error('Errore API registro:', error.name || 'Error');
-    return res.status(502).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
+    console.error('🚨 ERROR DE RED O SERVIDOR:', error);
+    return res.status(502).json({ error: `🚨 DEBUG FETCH: ${error.message}` });
   }
 }

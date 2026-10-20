@@ -1,5 +1,12 @@
 import { randomBytes } from 'node:crypto';
 
+// ============================================================
+// Roero IT - API de registro
+// - No escribe campos calculados (DataCreazione, Created time...)
+// - Validacion estricta de inputs + honeypot + CORS restringido
+// - Autodiagnostico: identifica columnas rechazadas por Airtable
+// ============================================================
+
 const MAX_LENGTHS = {
   cliente: 120,
   nomeAzienda: 120,
@@ -19,16 +26,30 @@ const ALLOWED_CATEGORIES = new Set([
 ]);
 
 const ALLOWED_QUANDO = new Set([
-  'Nei prossimi giorni', 'Il prima possibile', 'Sto valutando',
+  'Nei prossimi giorni',
+  'Il prima possibile',
+  'Sto valutando',
+  'Sto valutando / chiedo informazioni',
 ]);
 
-const ALLOWED_CONTATTO = new Set([
-  'WhatsApp', 'Telefono', 'Email',
+const ALLOWED_CONTATTO = new Set(['WhatsApp', 'Telefono', 'Email']);
+
+// Estas columnas NUNCA se eliminan: si una falla, hay que corregirla.
+const PROTECTED_COLUMNS = new Set([
+  'Ticket', 'Cliente', 'Telefono', 'Dispositivo', 'Categoria', 'Stato',
 ]);
+
+const PISTAS = {
+  Stato: 'Creá la opción "Nuova Richiesta" en la columna Stato de Airtable (Single select).',
+  Categoria: 'Las opciones de Categoria deben coincidir exactamente con ALLOWED_CATEGORIES.',
+  QuandoServe: 'Las opciones de QuandoServe deben coincidir exactamente con los values del HTML.',
+  ContattoPreferito: 'Las opciones deben ser: WhatsApp, Telefono, Email.',
+  DataCreazione: 'Columna calculada o fecha sin hora: NO se escribe desde la API.',
+};
 
 function allowedOrigins() {
   return (process.env.ALLOWED_ORIGINS || 'https://roeroit.it,https://www.roeroit.it')
-    .split(',').map((origin) => origin.trim()).filter(Boolean);
+    .split(',').map((o) => o.trim()).filter(Boolean);
 }
 
 function setCors(req, res) {
@@ -38,7 +59,7 @@ function setCors(req, res) {
     res.setHeader('Access-Control-Allow-Origin', origin);
     res.setHeader('Vary', 'Origin');
   }
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Cache-Control', 'no-store');
   return !origin || allowed.includes(origin);
@@ -60,29 +81,70 @@ function cleanText(value, field, required = false) {
   return normalized;
 }
 
+// Extrae el nombre de la columna desde el mensaje real de Airtable.
+function detectarColumnaRechazada(mensaje) {
+  const patrones = [
+    /Field\s+"([^"]+)"\s+cannot accept/i,
+    /Unknown field name:?\s*"([^"]+)"/i,
+    /Unable to find a column named\s+"?([^"\n]+)"?/i,
+    /Cannot read field\s+"([^"]+)"/i,
+  ];
+  for (const patron of patrones) {
+    const match = mensaje.match(patron);
+    if (match && match[1]) return match[1].trim();
+  }
+  return null;
+}
+
 export default async function handler(req, res) {
   const originAllowed = setCors(req, res);
+
   if (req.method === 'OPTIONS') {
     return originAllowed ? res.status(204).end() : res.status(403).end();
   }
+  if (!originAllowed) {
+    return res.status(403).json({ error: 'Origine non consentita.' });
+  }
+
+  // Modo diagnostico TEMPORAL: /api/registro?debug=1
+  const debug = req.query?.debug === '1';
+
+  // GET = chequeo rapido de configuracion (no escribe nada)
+  if (req.method === 'GET') {
+    const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
+    return res.status(200).json({
+      servicio: 'Roero IT - API registro',
+      configuracion: {
+        AIRTABLE_BASE_ID: AIRTABLE_BASE_ID ? 'OK' : 'FALTA',
+        AIRTABLE_TOKEN: AIRTABLE_TOKEN ? 'OK (valor oculto)' : 'FALTA',
+        AIRTABLE_TABLE_NAME: AIRTABLE_TABLE_NAME ? 'OK' : 'FALTA',
+      },
+      nota: 'DataCreazione NO se escribe: Airtable registra la creacion automaticamente.',
+      uso: 'POST /api/registro | Diagnostico detallado: /api/registro?debug=1',
+    });
+  }
+
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST, OPTIONS');
     return res.status(405).json({ error: 'Metodo non consentito.' });
-  }
-  if (!originAllowed) {
-    return res.status(403).json({ error: 'Origine non consentita.' });
   }
   if (!isPlainObject(req.body)) {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  // Honeypot
+  // Honeypot: respuesta generica, no revelar el motivo al bot.
   const { website } = req.body;
+  if (website != null && typeof website !== 'string') {
+    return res.status(400).json({ error: 'Richiesta non valida.' });
+  }
   if (typeof website === 'string' && website.trim() !== '') {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  let cliente, nomeAzienda, telefono, email, dispositivo, categoria, descrizione, accessori, quandoServe, contattoPreferito;
+  // ---------- Validacion de campos ----------
+  let cliente, nomeAzienda, telefono, email, dispositivo, categoria;
+  let descrizione, accessori, quandoServe, contattoPreferito;
+
   try {
     cliente = cleanText(req.body.cliente, 'cliente', true);
     nomeAzienda = cleanText(req.body.nomeAzienda, 'nomeAzienda');
@@ -95,86 +157,150 @@ export default async function handler(req, res) {
     quandoServe = cleanText(req.body.quandoServe, 'quandoServe');
     contattoPreferito = cleanText(req.body.contattoPreferito, 'contattoPreferito');
   } catch (error) {
-    return res.status(400).json({ error: `DEBUG VALIDACIÓN: ${error.message}` });
+    const message = String(error.message || '');
+    if (message.startsWith('missing:')) {
+      return res.status(400).json({ error: 'Compila tutti i campi obbligatori.' });
+    }
+    return res.status(400).json({
+      error: 'Uno o più campi non sono validi o sono troppo lunghi.',
+    });
   }
 
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'DEBUG EMAIL: Indirizzo email non valido.' });
+    return res.status(400).json({ error: 'Indirizzo email non valido.' });
   }
   if (!ALLOWED_CATEGORIES.has(categoria)) {
-    return res.status(400).json({ error: `DEBUG CATEGORIA: "${categoria}" non è valida.` });
+    return res.status(400).json({ error: `Categoria non valida: "${categoria}".` });
+  }
+  if (quandoServe && !ALLOWED_QUANDO.has(quandoServe)) {
+    return res.status(400).json({ error: `QuandoServe non valido: "${quandoServe}".` });
+  }
+  if (contattoPreferito && !ALLOWED_CONTATTO.has(contattoPreferito)) {
+    return res.status(400).json({ error: `ContattoPreferito non valido: "${contattoPreferito}".` });
   }
 
   const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
   if (!AIRTABLE_BASE_ID || !AIRTABLE_TOKEN || !AIRTABLE_TABLE_NAME) {
-    return res.status(500).json({ error: 'DEBUG SERVER: Configurazione Airtable mancante.' });
+    console.error('Configurazione Airtable mancante.');
+    return res.status(500).json({ error: 'Errore interno del server.' });
   }
 
   const ticket = `R-${randomBytes(16).toString('hex').toUpperCase()}`;
 
-  // Filtrar descripción para la versión pública (GDPR)
+  // Version publica de las notas (sin datos personales)
   let descrizionePubblica = '';
   if (descrizione) {
-    const lineas = descrizione.split('\n');
-    const lineasPublicas = lineas.filter(linea => {
+    descrizionePubblica = descrizione.split('\n').filter((linea) => {
       const lower = linea.toLowerCase();
-      return !lower.includes('tipo cliente:') && !lower.includes('nome') && !lower.includes('telefono') && !lower.includes('email');
-    });
-    descrizionePubblica = lineasPublicas.join('\n').trim();
+      return !lower.includes('tipo cliente:') &&
+             !lower.includes('nome') &&
+             !lower.includes('telefono') &&
+             !lower.includes('email');
+    }).join('\n').trim();
   }
+
+  const campos = {
+    Ticket: ticket,
+    Cliente: cliente,
+    Telefono: telefono,
+    Dispositivo: dispositivo,
+    Categoria: categoria,
+    Stato: 'Nuova Richiesta',
+    Email: email,
+    Accessori: accessori,
+    Descrizione: descrizione,
+    NomeAzienda: nomeAzienda,
+    DescrizionePubblica: descrizionePubblica,
+    QuandoServe: quandoServe,
+    ContattoPreferito: contattoPreferito,
+    // NO DataCreazione: campo calculado / solo lectura en Airtable.
+  };
 
   const url = `https://api.airtable.com/v0/${encodeURIComponent(AIRTABLE_BASE_ID)}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      signal: AbortSignal.timeout(10000),
-      body: JSON.stringify({
-        records: [{
-          fields: {
-            Ticket: ticket,
-            Cliente: cliente,
-            NomeAzienda: nomeAzienda,
-            Telefono: telefono,
-            Email: email,
-            Dispositivo: dispositivo,
-            Categoria: categoria,
-            Descrizione: descrizione,
-            DescrizionePubblica: descrizionePubblica,
-            Accessori: accessori,
-            QuandoServe: quandoServe,
-            ContattoPreferito: contattoPreferito,
-            Stato: 'Nuova Richiesta',
-            DataCreazione: new Date().toISOString(),
-          },
-        }],
-      }),
-    });
+  const avisos = [];
+  let fallo = null;
 
-    // 🚨 AQUÍ ESTÁ LA MAGIA DEL DIAGNÓSTICO 🚨
-    if (!response.ok) {
-      const detail = await response.json().catch(() => ({}));
-      const airtableError = detail.error?.message || detail.error?.type || await response.text();
-      console.error('🚨 ERROR REAL DE AIRTABLE:', airtableError);
-      
-      // Le mostramos el error EXACTO al usuario en la web
-      return res.status(response.status).json({ 
-        error: `🚨 DEBUG AIRTABLE: ${airtableError}` 
+  // Airtable devuelve UN error a la vez. Reintentamos sin la columna
+  // rechazada (solo si es opcional) hasta encontrar una escritura valida.
+  for (let intento = 0; intento < 8; intento++) {
+    let response;
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        signal: AbortSignal.timeout(10000),
+        body: JSON.stringify({ records: [{ fields: campos }] }),
+      });
+    } catch (error) {
+      fallo = { etapa: 'fetch', tipo: error.name, mensaje: error.message };
+      console.error('Fallo de red hacia Airtable:', error.name);
+      break;
+    }
+
+    const raw = await response.text().catch(() => '');
+
+    if (response.ok) {
+      let data;
+      try { data = JSON.parse(raw); } catch { data = null; }
+      if (!data?.records?.[0]?.id) {
+        fallo = { etapa: 'respuesta', mensaje: 'Airtable no devolvio record ID' };
+        break;
+      }
+      if (avisos.length) {
+        console.warn('Columnas omitidas:', JSON.stringify(avisos));
+      }
+      return res.status(201).json({
+        success: true,
+        ticket,
+        ...(avisos.length ? { avisos } : {}),
       });
     }
 
-    const data = await response.json();
-    if (!data.records?.[0]?.id) {
-      return res.status(502).json({ error: 'DEBUG: Risposta Airtable senza record ID.' });
+    let parsed = null;
+    try { parsed = JSON.parse(raw); } catch { /* respuesta no JSON */ }
+
+    const type = parsed?.error?.type || 'UNKNOWN';
+    const mensaje = parsed?.error?.message || raw.slice(0, 400);
+    console.error(`Airtable ${response.status} [${type}]: ${mensaje}`);
+
+    // Auth, rate limit, server: no tiene sentido reintentar quitando campos.
+    if (response.status !== 422) {
+      fallo = { http: response.status, type, mensaje };
+      break;
     }
 
-    return res.status(201).json({ success: true, ticket });
-  } catch (error) {
-    console.error('🚨 ERROR DE RED O SERVIDOR:', error);
-    return res.status(502).json({ error: `🚨 DEBUG FETCH: ${error.message}` });
+    const columnaMala = detectarColumnaRechazada(mensaje);
+
+    if (!columnaMala ||
+        !Object.prototype.hasOwnProperty.call(campos, columnaMala) ||
+        PROTECTED_COLUMNS.has(columnaMala)) {
+      fallo = {
+        http: 422,
+        type,
+        mensaje,
+        columna: columnaMala || null,
+        pista: PISTAS[columnaMala] || null,
+      };
+      break;
+    }
+
+    // Columna opcional rechazada: la omitimos y seguimos.
+    avisos.push({
+      columna: columnaMala,
+      motivo: mensaje,
+      pista: PISTAS[columnaMala] || null,
+    });
+    delete campos[columnaMala];
   }
+
+  console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
+
+  return res.status(502).json({
+    error: 'Errore durante il salvataggio. Riprova più tardi.',
+    ...(debug ? { debug: { fallo, avisos, columnasIntentadas: Object.keys(campos) } } : {}),
+  });
 }

@@ -5,6 +5,7 @@ import { randomBytes } from 'node:crypto';
 // - No escribe campos calculados (DataCreazione, Created time...)
 // - Validacion estricta de inputs + honeypot + CORS restringido
 // - Autodiagnostico: identifica columnas rechazadas por Airtable
+// - CORREGIDO: no envía campos opcionales vacíos a Single Select
 // ============================================================
 
 const MAX_LENGTHS = {
@@ -34,7 +35,6 @@ const ALLOWED_QUANDO = new Set([
 
 const ALLOWED_CONTATTO = new Set(['WhatsApp', 'Telefono', 'Email']);
 
-// Estas columnas NUNCA se eliminan: si una falla, hay que corregirla.
 const PROTECTED_COLUMNS = new Set([
   'Ticket', 'Cliente', 'Telefono', 'Dispositivo', 'Categoria', 'Stato',
 ]);
@@ -44,7 +44,6 @@ const PISTAS = {
   Categoria: 'Las opciones de Categoria deben coincidir exactamente con ALLOWED_CATEGORIES.',
   QuandoServe: 'Las opciones de QuandoServe deben coincidir exactamente con los values del HTML.',
   ContattoPreferito: 'Las opciones deben ser: WhatsApp, Telefono, Email.',
-  DataCreazione: 'Columna calculada o fecha sin hora: NO se escribe desde la API.',
 };
 
 function allowedOrigins() {
@@ -81,13 +80,13 @@ function cleanText(value, field, required = false) {
   return normalized;
 }
 
-// Extrae el nombre de la columna desde el mensaje real de Airtable.
 function detectarColumnaRechazada(mensaje) {
   const patrones = [
     /Field\s+"([^"]+)"\s+cannot accept/i,
     /Unknown field name:?\s*"([^"]+)"/i,
     /Unable to find a column named\s+"?([^"\n]+)"?/i,
     /Cannot read field\s+"([^"]+)"/i,
+    /Insufficient permissions to create new select option/i,
   ];
   for (const patron of patrones) {
     const match = mensaje.match(patron);
@@ -106,10 +105,8 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Origine non consentita.' });
   }
 
-  // Modo diagnostico TEMPORAL: /api/registro?debug=1
   const debug = req.query?.debug === '1';
 
-  // GET = chequeo rapido de configuracion (no escribe nada)
   if (req.method === 'GET') {
     const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
     return res.status(200).json({
@@ -132,7 +129,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  // Honeypot: respuesta generica, no revelar el motivo al bot.
+  // Honeypot
   const { website } = req.body;
   if (website != null && typeof website !== 'string') {
     return res.status(400).json({ error: 'Richiesta non valida.' });
@@ -199,6 +196,11 @@ export default async function handler(req, res) {
     }).join('\n').trim();
   }
 
+  // ============================================================
+  // CORRECCIÓN CLAVE: Solo incluir campos opcionales si tienen valor.
+  // Esto evita enviar strings vacíos a columnas Single Select,
+  // que Airtable rechaza por falta de permisos para crear opciones.
+  // ============================================================
   const campos = {
     Ticket: ticket,
     Cliente: cliente,
@@ -206,23 +208,24 @@ export default async function handler(req, res) {
     Dispositivo: dispositivo,
     Categoria: categoria,
     Stato: 'Nuova Richiesta',
-    Email: email,
-    Accessori: accessori,
-    Descrizione: descrizione,
-    NomeAzienda: nomeAzienda,
-    DescrizionePubblica: descrizionePubblica,
-    QuandoServe: quandoServe,
-    ContattoPreferito: contattoPreferito,
-    // NO DataCreazione: campo calculado / solo lectura en Airtable.
   };
+
+  // Campos opcionales: solo se agregan si NO están vacíos
+  if (email) campi = null; // placeholder, se define abajo
+  const campiFinales = { ...campos };
+  if (email) campiFinales.Email = email;
+  if (accessori) campiFinales.Accessori = accessori;
+  if (descrizione) campiFinales.Descrizione = descrizione;
+  if (nomeAzienda) campiFinales.NomeAzienda = nomeAzienda;
+  if (descrizionePubblica) campiFinales.DescrizionePubblica = descrizionePubblica;
+  if (quandoServe) campiFinales.QuandoServe = quandoServe;
+  if (contattoPreferito) campiFinales.ContattoPreferito = contattoPreferito;
 
   const url = `https://api.airtable.com/v0/${encodeURIComponent(AIRTABLE_BASE_ID)}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
   const avisos = [];
   let fallo = null;
 
-  // Airtable devuelve UN error a la vez. Reintentamos sin la columna
-  // rechazada (solo si es opcional) hasta encontrar una escritura valida.
   for (let intento = 0; intento < 8; intento++) {
     let response;
     try {
@@ -233,7 +236,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         signal: AbortSignal.timeout(10000),
-        body: JSON.stringify({ records: [{ fields: campos }] }),
+        body: JSON.stringify({ records: [{ fields: campiFinales }] }),
       });
     } catch (error) {
       fallo = { etapa: 'fetch', tipo: error.name, mensaje: error.message };
@@ -267,7 +270,6 @@ export default async function handler(req, res) {
     const mensaje = parsed?.error?.message || raw.slice(0, 400);
     console.error(`Airtable ${response.status} [${type}]: ${mensaje}`);
 
-    // Auth, rate limit, server: no tiene sentido reintentar quitando campos.
     if (response.status !== 422) {
       fallo = { http: response.status, type, mensaje };
       break;
@@ -276,7 +278,7 @@ export default async function handler(req, res) {
     const columnaMala = detectarColumnaRechazada(mensaje);
 
     if (!columnaMala ||
-        !Object.prototype.hasOwnProperty.call(campos, columnaMala) ||
+        !Object.prototype.hasOwnProperty.call(campiFinales, columnaMala) ||
         PROTECTED_COLUMNS.has(columnaMala)) {
       fallo = {
         http: 422,
@@ -288,23 +290,22 @@ export default async function handler(req, res) {
       break;
     }
 
-    // Columna opcional rechazada: la omitimos y seguimos.
     avisos.push({
       columna: columnaMala,
       motivo: mensaje,
       pista: PISTAS[columnaMala] || null,
     });
-    delete campos[columnaMala];
+    delete campiFinales[columnaMala];
   }
 
-    console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
+  console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
 
-  // MODO DIAGNÓSTICO ACTIVO: Muestra el error exacto en la web
   const mensajeError = fallo?.mensaje || fallo?.type || 'Error desconocido de Airtable';
   const columnaError = fallo?.columna || 'No identificada';
   const pistaError = fallo?.pista || 'Revisá los Logs de Functions en Vercel para más detalles.';
 
   return res.status(502).json({
     error: `🚨 DEBUG: ${mensajeError} | Columna: ${columnaError} | Pista: ${pistaError}`,
+    ...(debug ? { debug: { fallo, avisos, columnasIntentadas: Object.keys(campiFinales) } } : {}),
   });
 }

@@ -76,6 +76,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
+  // Honeypot
   const { website } = req.body;
   if (website != null && typeof website !== 'string') {
     return res.status(400).json({ error: 'Richiesta non valida.' });
@@ -125,6 +126,7 @@ export default async function handler(req, res) {
 
   const ticket = `R-${randomBytes(16).toString('hex').toUpperCase()}`;
 
+  // Descripción pública sin datos personales (GDPR)
   let descrizionePubblica = '';
   if (descrizione) {
     const lineas = descrizione.split('\n');
@@ -164,6 +166,7 @@ export default async function handler(req, res) {
             QuandoServe: quandoServe,
             ContattoPreferito: contattoPreferito,
             Stato: 'Nuova Richiesta',
+            DataCreazione: new Date().toISOString(), // Incluimos el campo que acabas de crear
           },
         }],
       }),

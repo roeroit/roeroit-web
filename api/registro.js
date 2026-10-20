@@ -297,10 +297,14 @@ export default async function handler(req, res) {
     delete campos[columnaMala];
   }
 
-  console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
+    console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
+
+  // MODO DIAGNÓSTICO ACTIVO: Muestra el error exacto en la web
+  const mensajeError = fallo?.mensaje || fallo?.type || 'Error desconocido de Airtable';
+  const columnaError = fallo?.columna || 'No identificada';
+  const pistaError = fallo?.pista || 'Revisá los Logs de Functions en Vercel para más detalles.';
 
   return res.status(502).json({
-    error: 'Errore durante il salvataggio. Riprova più tardi.',
-    ...(debug ? { debug: { fallo, avisos, columnasIntentadas: Object.keys(campos) } } : {}),
+    error: `🚨 DEBUG: ${mensajeError} | Columna: ${columnaError} | Pista: ${pistaError}`,
   });
 }

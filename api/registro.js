@@ -86,7 +86,6 @@ function detectarColumnaRechazada(mensaje) {
     /Unknown field name:?\s*"([^"]+)"/i,
     /Unable to find a column named\s+"?([^"\n]+)"?/i,
     /Cannot read field\s+"([^"]+)"/i,
-    /Insufficient permissions to create new select option/i,
   ];
   for (const patron of patrones) {
     const match = mensaje.match(patron);
@@ -107,6 +106,7 @@ export default async function handler(req, res) {
 
   const debug = req.query?.debug === '1';
 
+  // GET = chequeo rápido de configuración (no escribe nada)
   if (req.method === 'GET') {
     const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
     return res.status(200).json({
@@ -116,8 +116,8 @@ export default async function handler(req, res) {
         AIRTABLE_TOKEN: AIRTABLE_TOKEN ? 'OK (valor oculto)' : 'FALTA',
         AIRTABLE_TABLE_NAME: AIRTABLE_TABLE_NAME ? 'OK' : 'FALTA',
       },
-      nota: 'DataCreazione NO se escribe: Airtable registra la creacion automaticamente.',
-      uso: 'POST /api/registro | Diagnostico detallado: /api/registro?debug=1',
+      nota: 'DataCreazione NO se escribe: Airtable registra la creación automáticamente.',
+      uso: 'POST /api/registro | Diagnóstico detallado: /api/registro?debug=1',
     });
   }
 
@@ -129,7 +129,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  // Honeypot
+  // Honeypot: respuesta genérica, no revelar el motivo al bot.
   const { website } = req.body;
   if (website != null && typeof website !== 'string') {
     return res.status(400).json({ error: 'Richiesta non valida.' });
@@ -138,7 +138,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Richiesta non valida.' });
   }
 
-  // ---------- Validacion de campos ----------
+  // ---------- Validación de campos ----------
   let cliente, nomeAzienda, telefono, email, dispositivo, categoria;
   let descrizione, accessori, quandoServe, contattoPreferito;
 
@@ -184,7 +184,7 @@ export default async function handler(req, res) {
 
   const ticket = `R-${randomBytes(16).toString('hex').toUpperCase()}`;
 
-  // Version publica de las notas (sin datos personales)
+  // Versión pública de las notas (sin datos personales)
   let descrizionePubblica = '';
   if (descrizione) {
     descrizionePubblica = descrizione.split('\n').filter((linea) => {
@@ -211,21 +211,21 @@ export default async function handler(req, res) {
   };
 
   // Campos opcionales: solo se agregan si NO están vacíos
-  if (email) campi = null; // placeholder, se define abajo
-  const campiFinales = { ...campos };
-  if (email) campiFinales.Email = email;
-  if (accessori) campiFinales.Accessori = accessori;
-  if (descrizione) campiFinales.Descrizione = descrizione;
-  if (nomeAzienda) campiFinales.NomeAzienda = nomeAzienda;
-  if (descrizionePubblica) campiFinales.DescrizionePubblica = descrizionePubblica;
-  if (quandoServe) campiFinales.QuandoServe = quandoServe;
-  if (contattoPreferito) campiFinales.ContattoPreferito = contattoPreferito;
+  if (email) campos.Email = email;
+  if (accessori) campi.Accessori = accessori;
+  if (descrizione) campi.Descrizione = descrizione;
+  if (nomeAzienda) campi.NomeAzienda = nomeAzienda;
+  if (descrizionePubblica) campi.DescrizionePubblica = descrizionePubblica;
+  if (quandoServe) campi.QuandoServe = quandoServe;
+  if (contattoPreferito) campi.ContattoPreferito = contattoPreferito;
 
   const url = `https://api.airtable.com/v0/${encodeURIComponent(AIRTABLE_BASE_ID)}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
 
   const avisos = [];
   let fallo = null;
 
+  // Airtable devuelve UN error a la vez. Reintentamos sin la columna
+  // rechazada (solo si es opcional) hasta encontrar una escritura válida.
   for (let intento = 0; intento < 8; intento++) {
     let response;
     try {
@@ -236,7 +236,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
         },
         signal: AbortSignal.timeout(10000),
-        body: JSON.stringify({ records: [{ fields: campiFinales }] }),
+        body: JSON.stringify({ records: [{ fields: campos }] }),
       });
     } catch (error) {
       fallo = { etapa: 'fetch', tipo: error.name, mensaje: error.message };
@@ -250,7 +250,7 @@ export default async function handler(req, res) {
       let data;
       try { data = JSON.parse(raw); } catch { data = null; }
       if (!data?.records?.[0]?.id) {
-        fallo = { etapa: 'respuesta', mensaje: 'Airtable no devolvio record ID' };
+        fallo = { etapa: 'respuesta', mensaje: 'Airtable no devolvió record ID' };
         break;
       }
       if (avisos.length) {
@@ -270,6 +270,7 @@ export default async function handler(req, res) {
     const mensaje = parsed?.error?.message || raw.slice(0, 400);
     console.error(`Airtable ${response.status} [${type}]: ${mensaje}`);
 
+    // Auth, rate limit, server: no tiene sentido reintentar quitando campos.
     if (response.status !== 422) {
       fallo = { http: response.status, type, mensaje };
       break;
@@ -278,7 +279,7 @@ export default async function handler(req, res) {
     const columnaMala = detectarColumnaRechazada(mensaje);
 
     if (!columnaMala ||
-        !Object.prototype.hasOwnProperty.call(campiFinales, columnaMala) ||
+        !Object.prototype.hasOwnProperty.call(campos, columnaMala) ||
         PROTECTED_COLUMNS.has(columnaMala)) {
       fallo = {
         http: 422,
@@ -290,12 +291,13 @@ export default async function handler(req, res) {
       break;
     }
 
+    // Columna opcional rechazada: la omitimos y seguimos.
     avisos.push({
       columna: columnaMala,
       motivo: mensaje,
       pista: PISTAS[columnaMala] || null,
     });
-    delete campiFinales[columnaMala];
+    delete campos[columnaMala];
   }
 
   console.error('Registro fallido:', JSON.stringify({ fallo, avisos }));
@@ -306,6 +308,6 @@ export default async function handler(req, res) {
 
   return res.status(502).json({
     error: `🚨 DEBUG: ${mensajeError} | Columna: ${columnaError} | Pista: ${pistaError}`,
-    ...(debug ? { debug: { fallo, avisos, columnasIntentadas: Object.keys(campiFinales) } } : {}),
+    ...(debug ? { debug: { fallo, avisos, columnasIntentadas: Object.keys(campos) } } : {}),
   });
 }

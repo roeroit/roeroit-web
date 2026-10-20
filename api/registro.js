@@ -48,8 +48,8 @@ export default async function handler(req, res) {
               Categoria: categoria,
               Descrizione: descrizione,
               Accessori: accessori || '',
-              Stato: 'Nuova Richiesta',
-              DataCreazione: new Date().toISOString()
+              Stato: 'Nuova Richiesta'
+              // DataCreazione eliminado porque la columna fue borrada en Airtable
             }
           }
         ]
@@ -59,7 +59,6 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
-      // En producción, NO exponemos el error detallado al usuario
       console.error('Error Airtable:', data.error?.message);
       return res.status(response.status).json({ error: 'Errore durante il salvataggio. Riprova più tardi.' });
     }

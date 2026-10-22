@@ -431,5 +431,11 @@
       }catch(e){feedback.className='mt-8 p-6 border border-red-500/30 bg-red-500/5 text-red-400 text-center rounded';feedback.innerHTML=`<span class="block text-xs uppercase tracking-[0.2em] mb-2 text-neutral-500">Errore</span><span class="text-xl font-bold uppercase tracking-tight">${e.message}</span>`;feedback.classList.remove('hidden');}
       finally{btnSubmit.disabled=false;}}
   </script>
+
+  <!-- Vercel Web Analytics -->
+  <script type="module">
+    import { inject } from 'https://cdn.jsdelivr.net/npm/@vercel/analytics@2.0.1/+esm';
+    inject();
+  </script>
 </body>
 </html>

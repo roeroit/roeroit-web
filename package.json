@@ -2,5 +2,7 @@
   "name": "roero-it",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {}
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
+  }
 }

@@ -73,7 +73,15 @@
   </div>
 
   <nav class="fixed top-12 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white">
-    <a href="#" class="hoverable flex items-center gap-3"><span class="text-xl font-black tracking-tighter uppercase">Roero<span class="font-light">IT</span></span></a>
+    <div class="flex items-center gap-4">
+      <a href="#" class="hoverable flex items-center gap-3"><span class="text-xl font-black tracking-tighter uppercase">Roero<span class="font-light">IT</span></span></a>
+      <div class="flex items-center gap-2 text-xs font-mono text-neutral-400 border-l border-white/20 pl-4">
+        <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+        <span class="font-bold text-white" id="live-clock">--:--:--</span>
+        <span class="text-neutral-600 hidden sm:inline">|</span>
+        <span class="hidden sm:inline" id="live-date">--/--/----</span>
+      </div>
+    </div>
     <div class="hidden md:flex items-center gap-8 text-xs font-bold tracking-[0.2em] uppercase">
       <a href="#servizi" class="hoverable hover:opacity-60 transition-opacity">Servizi</a>
       <a href="#stato" class="hoverable hover:opacity-60 transition-opacity">Stato</a>
@@ -158,7 +166,6 @@
   <section id="contatti" class="px-0 bg-surface">
     <div class="editorial-grid">
       
-      <!-- COLUMNA IZQUIERDA: INFO + PRECIOS + TRANSPARENCIA -->
       <div class="editorial-cell col-span-12 md:col-span-5 border-b border-border md:border-b-0 md:border-r border-border p-8 md:p-16">
         <span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-8 block">Contatti</span>
         <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-8">Parliamo del tuo progetto</h2>
@@ -169,7 +176,6 @@
           <div><div class="text-neutral-500 text-xs uppercase tracking-[0.2em] mb-2">Email</div><a href="mailto:it@roeroit.it" class="hoverable text-xl font-medium hover:text-roero-gold transition-colors">it@roeroit.it</a></div>
         </div>
 
-        <!-- PREZZI INDICATIVI Y TRANSPARENCIA -->
         <div class="p-6 border border-border bg-dark/50 rounded mb-8 reveal-up">
           <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-white mb-4 flex items-center gap-2"><span class="text-roero-gold">💰</span> Prezzi Indicativi (Zona Roero)</h3>
           <ul class="text-sm text-neutral-300 space-y-2 mb-4">
@@ -189,7 +195,6 @@
         </div>
       </div>
 
-      <!-- COLUMNA DERECHA: FORMULARIO DETALLADO ORIGINAL -->
       <div class="editorial-cell col-span-12 md:col-span-7 p-8 md:p-16">
         <div class="mb-8 p-6 border border-border bg-dark/50 reveal-up">
           <h3 class="text-sm font-bold uppercase tracking-[0.2em] text-white mb-4 flex items-center gap-2"><span class="text-roero-gold">⚡</span> Come funziona</h3>
@@ -204,13 +209,11 @@
           <input type="hidden" id="formTipoCliente" value="">
           <input type="hidden" id="formTipoRichiesta" value="">
           
-          <!-- HONEYPOT -->
           <div class="hp-field" aria-hidden="true">
             <label for="website">Website</label>
             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
           </div>
 
-          <!-- PASO 1: CHI SEI? -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Chi sei? *</label>
             <div class="grid md:grid-cols-2 gap-4">
@@ -227,13 +230,11 @@
             </div>
           </div>
 
-          <!-- CAMPO NOME AZIENDA (Condicional) -->
           <div id="boxNomeAzienda" class="hidden group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Nome azienda / attività</label>
             <input type="text" id="formNomeAzienda" maxlength="120" placeholder="Es. Rossi SRL, Studio Bianchi..." class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors">
           </div>
 
-          <!-- PASO 2: COSA TI SERVE? -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa ti serve oggi? *</label>
             <div class="grid md:grid-cols-2 gap-4">
@@ -250,7 +251,6 @@
             </div>
           </div>
 
-          <!-- PASO 3: CATEGORIA -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa dobbiamo riparare o configurare? *</label>
             <select id="formCategoria" onchange="mostrarCamposEspecificos(); toggleAltro(this,'boxAltroCategoria')" required class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -262,7 +262,6 @@
             </div>
           </div>
 
-          <!-- PASO 4: DETTAGLI DINÁMICOS (TU FORMULARIO ORIGINAL) -->
           <div id="camposDinamicos" class="hidden space-y-8 pt-4 border-t border-border">
             <div id="extraPC" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di computer</label>
@@ -321,7 +320,6 @@
               </div>
             </div>
             
-            <!-- DATOS DE CONTACTO -->
             <div class="grid md:grid-cols-2 gap-10 pt-4 border-t border-border">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Modello / Riferimento *</label>
                 <input type="text" id="formDispositivo" required maxlength="100" placeholder="Es. PS5 Digital, iPhone 13, nome attività" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
@@ -351,11 +349,7 @@
         <div class="flex items-center gap-3"><span class="text-lg font-black uppercase tracking-tighter">Roero<span class="font-light text-neutral-600">IT</span></span></div>
         <div class="text-neutral-600 text-xs uppercase tracking-[0.2em]">&copy; 2026 Roero IT</div>
       </div>
-      <div class="mt-6 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-center">
-        <div class="flex items-center gap-2 text-neutral-400 text-xs uppercase tracking-[0.2em]"><span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span><span class="font-bold text-white" id="live-clock">--:--:--</span></div>
-        <span class="text-neutral-700 hidden sm:block">|</span>
-        <div class="text-neutral-400 text-xs uppercase tracking-[0.2em] font-medium" id="live-date">--/--/----</div>
-        <span class="text-neutral-700 hidden sm:block">|</span>
+      <div class="mt-6 pt-6 border-t border-border flex items-center justify-center text-center">
         <div class="text-neutral-500 text-xs uppercase tracking-[0.2em]">Sommariva del Bosco</div>
       </div>
     </div>
@@ -398,262 +392,273 @@
   </div>
 
   <script>
-    // RELOJ
-    function updateClock(){const c=document.getElementById('live-clock');const d=document.getElementById('live-date');if(!c||!d)return;const n=new Date();c.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;const dd=['Domenica','Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato'];const mm=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];d.textContent=`${dd[n.getDay()]} ${n.getDate()} ${mm[n.getMonth()]} ${n.getFullYear()}`;}
-    if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',()=>{updateClock();setInterval(updateClock,1000);});}else{updateClock();setInterval(updateClock,1000);}
+    function updateClock(){
+      const c = document.getElementById('live-clock');
+      const d = document.getElementById('live-date');
+      if(!c || !d) return;
+      const now = new Date();
+      const options = { timeZone: 'Europe/Rome' };
+      const timeStr = now.toLocaleTimeString('it-IT', Object.assign({}, options, { hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }));
+      c.textContent = timeStr;
+      let dateStr = now.toLocaleDateString('it-IT', Object.assign({}, options, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
+      dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+      d.textContent = dateStr;
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ updateClock(); setInterval(updateClock, 1000); });
+    } else {
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
 
-    // CURSOR
-    const cursorDot=document.querySelector('.cursor-dot');const cursorOutline=document.querySelector('.cursor-outline');
-    if(cursorDot&&cursorOutline){window.addEventListener('mousemove',(e)=>{cursorDot.style.left=`${e.clientX}px`;cursorDot.style.top=`${e.clientY}px`;cursorOutline.animate({left:`${e.clientX}px`,top:`${e.clientY}px`},{duration:600,fill:"forwards",easing:"cubic-bezier(0.16, 1, 0.3, 1)"});});}
-    document.querySelectorAll('.hoverable').forEach(el=>{el.addEventListener('mouseenter',()=>cursorOutline&&cursorOutline.classList.add('hovered'));el.addEventListener('mouseleave',()=>cursorOutline&&cursorOutline.classList.remove('hovered'));});
+    const cursorDot = document.querySelector('.cursor-dot');
+    const cursorOutline = document.querySelector('.cursor-outline');
+    if(cursorDot && cursorOutline){
+      window.addEventListener('mousemove', function(e){
+        cursorDot.style.left = e.clientX + 'px';
+        cursorDot.style.top = e.clientY + 'px';
+        cursorOutline.animate({ left: e.clientX + 'px', top: e.clientY + 'px' }, { duration: 600, fill: "forwards", easing: "cubic-bezier(0.16, 1, 0.3, 1)" });
+      });
+    }
+    document.querySelectorAll('.hoverable').forEach(function(el){
+      el.addEventListener('mouseenter', function(){ if(cursorOutline) cursorOutline.classList.add('hovered'); });
+      el.addEventListener('mouseleave', function(){ if(cursorOutline) cursorOutline.classList.remove('hovered'); });
+    });
 
-    // ANIMACIONES SCROLL
-    const observer=new IntersectionObserver((en)=>{en.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1,rootMargin:"0px 0px -50px 0px"});
-    document.querySelectorAll('.reveal-up, .reveal-text').forEach(el=>observer.observe(el));
+    const observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+    document.querySelectorAll('.reveal-up, .reveal-text').forEach(function(el){ observer.observe(el); });
 
-    // TYPEWRITER
-    const frasi=["Ripariamo il tuo dispositivo in giornata.","Intervento direttamente a casa tua.","Ritiro e consegna gratuiti nel Roero.","Assistenza rapida per privati e aziende."];
-    let fraseIndex=0,charIndex=0,isDeleting=false;const tw=document.getElementById('typewriter-text');
-    function typeWriter(){if(!tw)return;const c=frasi[fraseIndex];if(isDeleting){tw.textContent=c.substring(0,charIndex-1);charIndex--;}else{tw.textContent=c.substring(0,charIndex+1);charIndex++;}let sp=isDeleting?30:80;if(!isDeleting&&charIndex===c.length){sp=2500;isDeleting=true;}else if(isDeleting&&charIndex===0){isDeleting=false;fraseIndex=(fraseIndex+1)%frasi.length;sp=500;}setTimeout(typeWriter,sp);}
-    setTimeout(typeWriter,1000);
+    const frasi = ["Ripariamo il tuo dispositivo in giornata.", "Intervento direttamente a casa tua.", "Ritiro e consegna gratuiti nel Roero.", "Assistenza rapida per privati e aziende."];
+    let fraseIndex = 0, charIndex = 0, isDeleting = false;
+    const tw = document.getElementById('typewriter-text');
+    function typeWriter(){
+      if(!tw) return;
+      const c = frasi[fraseIndex];
+      if(isDeleting){ tw.textContent = c.substring(0, charIndex - 1); charIndex--; }
+      else { tw.textContent = c.substring(0, charIndex + 1); charIndex++; }
+      let sp = isDeleting ? 30 : 80;
+      if(!isDeleting && charIndex === c.length){ sp = 2500; isDeleting = true; }
+      else if(isDeleting && charIndex === 0){ isDeleting = false; fraseIndex = (fraseIndex + 1) % frasi.length; sp = 500; }
+      setTimeout(typeWriter, sp);
+    }
+    setTimeout(typeWriter, 1000);
 
-    // CATEGORÍAS POR TIPO DE CLIENTE
-    const categorieParticolare=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza casa'},{value:'Altro',label:'Altro / Non sono sicuro'}];
-    const categorieAzienda=[{value:'PC/Mac',label:'Computer aziendali (PC / Mac)'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web aziendale'},{value:'Videosorveglianza',label:'Videosorveglianza business'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Consulenza'}];
-    const categorieTutte=[{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Non sono sicuro'}];
+    const categorieParticolare = [{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza casa'},{value:'Altro',label:'Altro / Non sono sicuro'}];
+    const categorieAzienda = [{value:'PC/Mac',label:'Computer aziendali (PC / Mac)'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web aziendale'},{value:'Videosorveglianza',label:'Videosorveglianza business'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Consulenza'}];
+    const categorieTutte = [{value:'PC/Mac',label:'Computer (PC / Mac)'},{value:'Smartphone/Tablet',label:'Smartphone o Tablet'},{value:'Console',label:'Console (PS4, PS5, Xbox, Nintendo)'},{value:'Rete/WiFi',label:'Rete domestica o Wi-Fi'},{value:'Server/Rete',label:'Server e Reti aziendali'},{value:'Backup/Cloud',label:'Backup e Cloud aziendale'},{value:'SitoWeb',label:'Sito Web / Pagina web'},{value:'Videosorveglianza',label:'Videosorveglianza'},{value:'Assistenza',label:'Assistenza contrattuale'},{value:'Altro',label:'Altro / Non sono sicuro'}];
 
     function selezionaTipo(tipo){
-      document.getElementById('formTipoCliente').value=tipo;
-      document.getElementById('tipoClienteIndicator').classList.remove('hidden');
-      document.getElementById('tipoClienteText').textContent=tipo;
-      
-      // Mostrar/ocultar campo Nome Azienda
+      document.getElementById('formTipoCliente').value = tipo;
       const boxAzienda = document.getElementById('boxNomeAzienda');
       if(tipo === 'Azienda'){ boxAzienda.classList.remove('hidden'); }
-      else { boxAzienda.classList.add('hidden'); document.getElementById('formNomeAzienda').value=''; }
-      
+      else { boxAzienda.classList.add('hidden'); document.getElementById('formNomeAzienda').value = ''; }
       caricaCategorie(tipo);
     }
 
     function caricaCategorie(tipo){
-      const select=document.getElementById('formCategoria');
-      let cat=(tipo==='Particolare')?categorieParticolare:(tipo==='Azienda')?categorieAzienda:categorieTutte;
-      select.innerHTML='<option value="" class="bg-dark text-neutral-500">Seleziona una categoria...</option>';
-      cat.forEach(c=>{
-        const o=document.createElement('option');
-        o.value=c.value;
-        o.textContent=c.label;
-        o.className='bg-dark';
+      const select = document.getElementById('formCategoria');
+      let cat = (tipo === 'Particolare') ? categorieParticolare : (tipo === 'Azienda') ? categorieAzienda : categorieTutte;
+      select.innerHTML = '<option value="" class="bg-dark text-neutral-500">Seleziona una categoria...</option>';
+      cat.forEach(function(c){
+        const o = document.createElement('option');
+        o.value = c.value;
+        o.textContent = c.label;
+        o.className = 'bg-dark';
         select.appendChild(o);
       });
       document.getElementById('camposDinamicos').classList.add('hidden');
-      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(function(id){ document.getElementById(id).classList.add('hidden'); });
       resetAltro();
     }
 
-    function cambiaTipoCliente(){
-      document.getElementById('formTipoCliente').value='';
-      document.getElementById('tipoClienteIndicator').classList.add('hidden');
-      document.getElementById('boxNomeAzienda').classList.add('hidden');
-      document.getElementById('formNomeAzienda').value='';
-      caricaCategorie('');
-    }
-
     function selezionaRichiesta(tipo){
-      document.getElementById('formTipoRichiesta').value=tipo;
-      const bR=document.getElementById('btnRiparazione');
-      const bP=document.getElementById('btnPreventivo');
+      document.getElementById('formTipoRichiesta').value = tipo;
+      const bR = document.getElementById('btnRiparazione');
+      const bP = document.getElementById('btnPreventivo');
       bR.classList.remove('selected');
       bP.classList.remove('selected');
-      if(tipo==='Riparazione')bR.classList.add('selected');
+      if(tipo === 'Riparazione') bR.classList.add('selected');
       else bP.classList.add('selected');
     }
 
-    function toggleAltro(sel,boxId){
-      const box=document.getElementById(boxId);
-      const input=box.querySelector('input');
-      if(sel.value==='Altro'){box.classList.remove('hidden');}
-      else{box.classList.add('hidden');input.value='';}
+    function toggleAltro(sel, boxId){
+      const box = document.getElementById(boxId);
+      const input = box.querySelector('input');
+      if(sel.value === 'Altro'){ box.classList.remove('hidden'); }
+      else { box.classList.add('hidden'); input.value = ''; }
     }
 
     function resetAltro(){
-      ['boxAltroCategoria','boxAltroPC','boxAltroMobile','boxAltroConsole','boxAltroWiFi','boxAltroSito'].forEach(id=>{
-        const b=document.getElementById(id);
-        if(b){b.classList.add('hidden');const i=b.querySelector('input');if(i)i.value='';}
+      ['boxAltroCategoria','boxAltroPC','boxAltroMobile','boxAltroConsole','boxAltroWiFi','boxAltroSito'].forEach(function(id){
+        const b = document.getElementById(id);
+        if(b){ b.classList.add('hidden'); const i = b.querySelector('input'); if(i) i.value = ''; }
       });
     }
 
-    function otroTexto(id){const e=document.getElementById(id);return e?e.value.trim():'';}
-    function problemaVal(selId,altroId){
-      const v=document.getElementById(selId).value;
-      if(v==='Altro'){return otroTexto(altroId)||'Altro (non specificato)';}
+    function otroTexto(id){
+      const e = document.getElementById(id);
+      return e ? e.value.trim() : '';
+    }
+
+    function problemaVal(selId, altroId){
+      const v = document.getElementById(selId).value;
+      if(v === 'Altro'){ return otroTexto(altroId) || 'Altro (non specificato)'; }
       return v;
     }
 
     function mostrarCamposEspecificos(){
-      const categoria=document.getElementById('formCategoria').value;
-      const campos=document.getElementById('camposDinamicos');
-      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+      const categoria = document.getElementById('formCategoria').value;
+      const campos = document.getElementById('camposDinamicos');
+      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(function(id){ document.getElementById(id).classList.add('hidden'); });
       if(categoria){
         campos.classList.remove('hidden');
-        setTimeout(()=>campos.classList.add('visible'),50);
-        if(categoria==='PC/Mac')document.getElementById('extraPC').classList.remove('hidden');
-        else if(categoria==='Smartphone/Tablet')document.getElementById('extraMobile').classList.remove('hidden');
-        else if(categoria==='Console')document.getElementById('extraConsole').classList.remove('hidden');
-        else if(categoria==='Rete/WiFi'||categoria==='Server/Rete')document.getElementById('extraWiFi').classList.remove('hidden');
-        else if(categoria==='SitoWeb')document.getElementById('extraSito').classList.remove('hidden');
-      }else{
+        setTimeout(function(){ campos.classList.add('visible'); }, 50);
+        if(categoria === 'PC/Mac') document.getElementById('extraPC').classList.remove('hidden');
+        else if(categoria === 'Smartphone/Tablet') document.getElementById('extraMobile').classList.remove('hidden');
+        else if(categoria === 'Console') document.getElementById('extraConsole').classList.remove('hidden');
+        else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete') document.getElementById('extraWiFi').classList.remove('hidden');
+        else if(categoria === 'SitoWeb') document.getElementById('extraSito').classList.remove('hidden');
+      } else {
         campos.classList.add('hidden');
         campos.classList.remove('visible');
       }
     }
 
-    function escapeHTML(str){if(!str)return '';return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
+    function escapeHTML(str){
+      if(!str) return '';
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    }
 
-    // MODAL
-    function mostrarExito(tipoRichiesta,ticket,nombre){
-      const modal=document.getElementById('successModal');
-      const msg=document.getElementById('successModalMsg');
-      const tBox=document.getElementById('successModalTicket');
-      const tBtn=document.getElementById('successModalTrackBtn');
-      
-      if(tipoRichiesta==='Preventivo'){
-        msg.textContent=`Grazie ${nombre}! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.`;
+    function mostrarExito(tipoRichiesta, ticket, nombre){
+      const modal = document.getElementById('successModal');
+      const msg = document.getElementById('successModalMsg');
+      const tBox = document.getElementById('successModalTicket');
+      const tBtn = document.getElementById('successModalTrackBtn');
+      if(tipoRichiesta === 'Preventivo'){
+        msg.textContent = 'Grazie ' + nombre + '! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.';
         tBox.classList.add('hidden');
         tBtn.classList.add('hidden');
-      }else{
-        msg.textContent='La tua richiesta è stata inviata. Salva il codice per seguire lo stato della riparazione.';
-        document.getElementById('successModalTicketCode').textContent=ticket;
+      } else {
+        msg.textContent = 'La tua richiesta è stata inviata. Salva il codice per seguire lo stato della riparazione.';
+        document.getElementById('successModalTicketCode').textContent = ticket;
         tBox.classList.remove('hidden');
         tBtn.classList.remove('hidden');
       }
-      
       modal.classList.remove('hidden');
       modal.classList.add('flex');
-      const card=document.getElementById('successModalCard');
+      const card = document.getElementById('successModalCard');
       card.classList.remove('modal-pop');
       void card.offsetWidth;
       card.classList.add('modal-pop');
     }
 
     function cerrarModal(){
-      const modal=document.getElementById('successModal');
+      const modal = document.getElementById('successModal');
       modal.classList.add('hidden');
       modal.classList.remove('flex');
     }
 
     function irATracking(){
-      const code=document.getElementById('successModalTicketCode').textContent;
+      const code = document.getElementById('successModalTicketCode').textContent;
       cerrarModal();
-      document.getElementById('ticketInput').value=code;
-      setTimeout(()=>{
-        document.getElementById('stato').scrollIntoView({behavior:'smooth'});
+      document.getElementById('ticketInput').value = code;
+      setTimeout(function(){
+        document.getElementById('stato').scrollIntoView({ behavior: 'smooth' });
         buscarTicket();
-      },300);
+      }, 300);
     }
 
-    window.addEventListener('DOMContentLoaded',()=>{
-      const u=new URLSearchParams(window.location.search);
-      const t=u.get('ticket');
+    window.addEventListener('DOMContentLoaded', function(){
+      const u = new URLSearchParams(window.location.search);
+      const t = u.get('ticket');
       if(t){
-        document.getElementById('ticketInput').value=t;
-        setTimeout(()=>{
-          document.getElementById('stato').scrollIntoView({behavior:'smooth'});
+        document.getElementById('ticketInput').value = t;
+        setTimeout(function(){
+          document.getElementById('stato').scrollIntoView({ behavior: 'smooth' });
           buscarTicket();
-        },500);
+        }, 500);
       }
       caricaCategorie('');
     });
 
     async function buscarTicket(){
-      const ti=document.getElementById('ticketInput');
-      const ticket=ti.value.trim().toUpperCase();
-      const rd=document.getElementById('ticketResult');
-      if(!ticket){alert('Inserisci un codice ticket valido.');return;}
-      
+      const ti = document.getElementById('ticketInput');
+      const ticket = ti.value.trim().toUpperCase();
+      const rd = document.getElementById('ticketResult');
+      if(!ticket){ alert('Inserisci un codice ticket valido.'); return; }
       rd.classList.remove('hidden');
-      rd.innerHTML='<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-2 border-neutral-800 border-t-white"></div></div>';
-      
+      rd.innerHTML = '<div class="flex justify-center py-8"><div class="animate-spin rounded-full h-8 w-8 border-2 border-neutral-800 border-t-white"></div></div>';
       try{
-        const r=await fetch(`/api/ticket?ticket=${encodeURIComponent(ticket)}`);
-        const d=await r.json();
+        const r = await fetch('/api/ticket?ticket=' + encodeURIComponent(ticket));
+        const d = await r.json();
         if(r.ok){
-          rd.innerHTML=`<div class="border border-border p-8 reveal-up visible"><div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-border"><div><span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-2 block">Ticket Attivo</span><h4 class="text-4xl font-black uppercase tracking-tighter">${escapeHTML(d.ticket)}</h4><p class="text-neutral-400 text-sm mt-2 uppercase tracking-wide">Dispositivo: <span class="text-white">${escapeHTML(d.dispositivo)}</span></p></div><div class="mt-4 md:mt-0 px-6 py-3 border border-white/20 rounded-full"><span class="text-sm font-bold uppercase tracking-[0.2em] ${String(d.stato).toLowerCase().includes('pronto')?'text-green-400':'text-roero-gold'}">${escapeHTML(d.stato)}</span></div></div><div class="grid md:grid-cols-2 gap-8"><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Preventivo</span><span class="text-2xl font-bold">${d.preventivo?'€ '+escapeHTML(d.preventivo):'In valutazione'}</span></div><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Consegna Prevista</span><span class="text-2xl font-bold">${escapeHTML(d.dataConsegna)||'Da definire'}</span></div></div>${d.descrizione?`<div class="mt-8 pt-8 border-t border-border"><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Note Tecniche</span><p class="text-neutral-300 leading-relaxed whitespace-pre-line">${escapeHTML(d.descrizione)}</p></div>`:''}</div>`;
-        }else{
-          rd.innerHTML=`<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">${escapeHTML(d.error||'Ticket non trovato.')}</p>`;
+          rd.innerHTML = '<div class="border border-border p-8 reveal-up visible"><div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-8 border-b border-border"><div><span class="text-xs font-bold tracking-[0.3em] uppercase text-roero-gold mb-2 block">Ticket Attivo</span><h4 class="text-4xl font-black uppercase tracking-tighter">' + escapeHTML(d.ticket) + '</h4><p class="text-neutral-400 text-sm mt-2 uppercase tracking-wide">Dispositivo: <span class="text-white">' + escapeHTML(d.dispositivo) + '</span></p></div><div class="mt-4 md:mt-0 px-6 py-3 border border-white/20 rounded-full"><span class="text-sm font-bold uppercase tracking-[0.2em] ' + (String(d.stato).toLowerCase().includes('pronto') ? 'text-green-400' : 'text-roero-gold') + '">' + escapeHTML(d.stato) + '</span></div></div><div class="grid md:grid-cols-2 gap-8"><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Preventivo</span><span class="text-2xl font-bold">' + (d.preventivo ? '€ ' + escapeHTML(d.preventivo) : 'In valutazione') + '</span></div><div><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Consegna Prevista</span><span class="text-2xl font-bold">' + (escapeHTML(d.dataConsegna) || 'Da definire') + '</span></div></div>' + (d.descrizione ? '<div class="mt-8 pt-8 border-t border-border"><span class="text-neutral-500 block text-xs uppercase tracking-[0.2em] mb-2">Note Tecniche</span><p class="text-neutral-300 leading-relaxed whitespace-pre-line">' + escapeHTML(d.descrizione) + '</p></div>' : '') + '</div>';
+        } else {
+          rd.innerHTML = '<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">' + escapeHTML(d.error || 'Ticket non trovato.') + '</p>';
         }
-      }catch(e){
-        rd.innerHTML='<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">Errore di connessione. Riprova più tardi.</p>';
+      } catch(e){
+        rd.innerHTML = '<p class="text-neutral-400 text-center py-8 uppercase tracking-[0.2em] text-sm">Errore di connessione. Riprova più tardi.</p>';
       }
     }
 
     async function enviarSolicitud(){
-      // HONEYPOT
       const honeypot = document.getElementById('website').value;
-      if (honeypot) { console.warn('Bot detectado'); return; }
-
-      const btnSubmit=document.getElementById('btnSubmit');
-      const feedback=document.getElementById('formFeedback');
-      const tipoRichiesta=document.getElementById('formTipoRichiesta').value;
-      const categoria=document.getElementById('formCategoria').value;
-      const tipoCliente=document.getElementById('formTipoCliente').value||'';
-
-      if(!tipoCliente){alert('Per favore, seleziona prima chi sei (Particolare o Azienda).');return;}
-      if(!tipoRichiesta){alert('Per favore, seleziona cosa ti serve: Riparazione o Preventivo.');return;}
-      if(!categoria){alert('Per favore, seleziona una categoria.');return;}
-
-      let catTxt=categoria;
-      if(categoria==='Altro'){const esp=otroTexto('formAltroCategoria');if(esp)catTxt+=' - '+esp;}
-
-      let fichaTecnica=`TIPO RICHIESTA: ${tipoRichiesta}\nTIPO CLIENTE: ${tipoCliente}\nCATEGORIA: ${catTxt}\nDISPOSITIVO: ${document.getElementById('formDispositivo').value.trim()}\n`;
-      if(categoria==='PC/Mac'){fichaTecnica+=`TIPO: ${document.getElementById('formTipoPC').value}\nPROBLEMA: ${problemaVal('formProblemaPC','formAltroPC')}\n`;}
-      else if(categoria==='Smartphone/Tablet'){fichaTecnica+=`SISTEMA: ${document.getElementById('formTipoMobile').value}\nDANNO: ${problemaVal('formProblemaMobile','formAltroMobile')}\n`;}
-      else if(categoria==='Console'){fichaTecnica+=`MODELLO: ${document.getElementById('formModelloConsole').value}\nPROBLEMA: ${problemaVal('formProblemaConsole','formAltroConsole')}\n`;}
-      else if(categoria==='Rete/WiFi'||categoria==='Server/Rete'){fichaTecnica+=`AMBIENTE: ${document.getElementById('formTipoWiFi').value}\nPROBLEMA: ${problemaVal('formProblemaWiFi','formAltroWiFi')}\n`;}
-      else if(categoria==='SitoWeb'){fichaTecnica+=`TIPO SITO: ${problemaVal('formTipoSito','formAltroSito')}\n`;}
-
-      const detallesExtra=document.getElementById('formDescrizione').value.trim();
-      if(detallesExtra)fichaTecnica+=`\nDETTAGLI AGGIUNTIVI:\n${detallesExtra}`;
-
-      const payload={
-        cliente:document.getElementById('formCliente').value.trim(),
-        nomeAzienda:document.getElementById('formNomeAzienda').value.trim(),
-        telefono:document.getElementById('formTelefono').value.trim(),
-        email:document.getElementById('formEmail').value.trim(),
-        dispositivo:document.getElementById('formDispositivo').value.trim(),
-        categoria:categoria,
-        descrizione:fichaTecnica,
-        accessori:''
+      if(honeypot){ console.warn('Bot detectado'); return; }
+      const btnSubmit = document.getElementById('btnSubmit');
+      const feedback = document.getElementById('formFeedback');
+      const tipoRichiesta = document.getElementById('formTipoRichiesta').value;
+      const categoria = document.getElementById('formCategoria').value;
+      const tipoCliente = document.getElementById('formTipoCliente').value || '';
+      if(!tipoCliente){ alert('Per favore, seleziona prima chi sei (Particolare o Azienda).'); return; }
+      if(!tipoRichiesta){ alert('Per favore, seleziona cosa ti serve: Riparazione o Preventivo.'); return; }
+      if(!categoria){ alert('Per favore, seleziona una categoria.'); return; }
+      let catTxt = categoria;
+      if(categoria === 'Altro'){ const esp = otroTexto('formAltroCategoria'); if(esp) catTxt += ' - ' + esp; }
+      let fichaTecnica = 'TIPO RICHIESTA: ' + tipoRichiesta + '\nTIPO CLIENTE: ' + tipoCliente + '\nCATEGORIA: ' + catTxt + '\nDISPOSITIVO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+      if(categoria === 'PC/Mac'){ fichaTecnica += 'TIPO: ' + document.getElementById('formTipoPC').value + '\nPROBLEMA: ' + problemaVal('formProblemaPC','formAltroPC') + '\n'; }
+      else if(categoria === 'Smartphone/Tablet'){ fichaTecnica += 'SISTEMA: ' + document.getElementById('formTipoMobile').value + '\nDANNO: ' + problemaVal('formProblemaMobile','formAltroMobile') + '\n'; }
+      else if(categoria === 'Console'){ fichaTecnica += 'MODELLO: ' + document.getElementById('formModelloConsole').value + '\nPROBLEMA: ' + problemaVal('formProblemaConsole','formAltroConsole') + '\n'; }
+      else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete'){ fichaTecnica += 'AMBIENTE: ' + document.getElementById('formTipoWiFi').value + '\nPROBLEMA: ' + problemaVal('formProblemaWiFi','formAltroWiFi') + '\n'; }
+      else if(categoria === 'SitoWeb'){ fichaTecnica += 'TIPO SITO: ' + problemaVal('formTipoSito','formAltroSito') + '\n'; }
+      const detallesExtra = document.getElementById('formDescrizione').value.trim();
+      if(detallesExtra) fichaTecnica += '\nDETTAGLI AGGIUNTIVI:\n' + detallesExtra;
+      const payload = {
+        cliente: document.getElementById('formCliente').value.trim(),
+        nomeAzienda: document.getElementById('formNomeAzienda').value.trim(),
+        telefono: document.getElementById('formTelefono').value.trim(),
+        email: document.getElementById('formEmail').value.trim(),
+        dispositivo: document.getElementById('formDispositivo').value.trim(),
+        categoria: categoria,
+        descrizione: fichaTecnica,
+        accessori: ''
       };
-
-      btnSubmit.disabled=true;
-      btnSubmit.innerHTML='<div class="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mx-auto"></div>';
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mx-auto"></div>';
       feedback.classList.add('hidden');
-
       try{
-        const r=await fetch('/api/registro',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-        const d=await r.json();
-        
-        if(r.ok&&d.success){
-          mostrarExito(tipoRichiesta,d.ticket,payload.cliente);
+        const r = await fetch('/api/registro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const d = await r.json();
+        if(r.ok && d.success){
+          mostrarExito(tipoRichiesta, d.ticket, payload.cliente);
           document.getElementById('registroForm').reset();
           document.getElementById('camposDinamicos').classList.add('hidden');
-          document.getElementById('tipoClienteIndicator').classList.add('hidden');
           document.getElementById('boxNomeAzienda').classList.add('hidden');
           document.getElementById('btnRiparazione').classList.remove('selected');
           document.getElementById('btnPreventivo').classList.remove('selected');
           resetAltro();
           caricaCategorie('');
-          btnSubmit.innerHTML='Invia Richiesta';
-        }else{
-          throw new Error(d.error||'Errore durante il salvataggio.');
+          btnSubmit.innerHTML = 'Invia Richiesta';
+        } else {
+          throw new Error(d.error || 'Errore durante il salvataggio.');
         }
-      }catch(e){
-        feedback.className='mt-8 p-6 border border-red-500/30 bg-red-500/5 text-red-400 text-center rounded';
-        feedback.innerHTML=`<span class="block text-xs uppercase tracking-[0.2em] mb-2 text-neutral-500">Errore</span><span class="text-xl font-bold uppercase tracking-tight">${escapeHTML(e.message)}</span>`;
+      } catch(e){
+        feedback.className = 'mt-8 p-6 border border-red-500/30 bg-red-500/5 text-red-400 text-center rounded';
+        feedback.innerHTML = '<span class="block text-xs uppercase tracking-[0.2em] mb-2 text-neutral-500">Errore</span><span class="text-xl font-bold uppercase tracking-tight">' + escapeHTML(e.message) + '</span>';
         feedback.classList.remove('hidden');
-      }finally{
-        btnSubmit.disabled=false;
+      } finally {
+        btnSubmit.disabled = false;
       }
     }
   </script>

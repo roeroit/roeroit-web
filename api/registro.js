@@ -15,6 +15,7 @@ export default async function handler(req, res) {
   }
 
   const { cliente, telefono, email, dispositivo, categoria, descrizione, accessori } = req.body;
+  const urgente = req.body.urgente === true;
   const { AIRTABLE_BASE_ID, AIRTABLE_TOKEN, AIRTABLE_TABLE_NAME } = process.env;
 
   if (!cliente || !telefono || !dispositivo || !categoria) {
@@ -48,8 +49,8 @@ export default async function handler(req, res) {
               Categoria: categoria,
               Descrizione: descrizione,
               Accessori: accessori || '',
-              Stato: 'Nuova Richiesta'
-              // DataCreazione eliminado porque la columna fue borrada en Airtable
+              Stato: 'Nuova Richiesta',
+              Urgente: urgente
             }
           }
         ]

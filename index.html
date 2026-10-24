@@ -223,7 +223,6 @@
             <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
           </div>
 
-          <!-- NUEVO: Tipo di richiesta (3 opciones) -->
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Di cosa hai bisogno? *</label>
             <div class="grid md:grid-cols-3 gap-3">
@@ -247,7 +246,7 @@
 
           <div class="group">
             <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Cosa dobbiamo riparare o configurare? *</label>
-            <select id="formCategoria" onchange="mostrarCamposEspecificos(); toggleAltro(this,'boxAltroCategoria')" required class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+            <select id="formCategoria" onchange="aggiornaFormulario()" required class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
               <option value="" class="bg-dark text-neutral-500">Seleziona una categoria...</option>
               <option value="PC/Mac" class="bg-dark">Computer (PC / Mac)</option>
               <option value="Smartphone/Tablet" class="bg-dark">Smartphone o Tablet</option>
@@ -260,84 +259,142 @@
               <option value="Assistenza" class="bg-dark">Assistenza contrattuale</option>
               <option value="Altro" class="bg-dark">Altro / Non sono sicuro</option>
             </select>
-            <div id="boxAltroCategoria" class="hidden mt-4">
-              <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-2">Specifica la categoria</label>
-              <input type="text" id="formAltroCategoria" maxlength="80" placeholder="Es. Stampante, Smart TV, ecc." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white">
-            </div>
           </div>
 
+          <!-- CAMPOS DINÁMICOS SEGÚN CATEGORÍA -->
           <div id="camposDinamicos" class="hidden space-y-8 pt-4 border-t border-border">
+            
+            <!-- Campo inteligente que cambia según categoría -->
+            <div class="grid md:grid-cols-2 gap-10">
+              <div class="group">
+                <label id="labelDispositivo" class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Modello / Riferimento *</label>
+                <input type="text" id="formDispositivo" required maxlength="100" placeholder="Es. MacBook Pro 2020, iPhone 13" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors">
+              </div>
+              <div class="group">
+                <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Nome e Cognome / Ragione Sociale *</label>
+                <input type="text" id="formCliente" required maxlength="120" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors">
+              </div>
+            </div>
+
+            <!-- Campos técnicos para PC/Mac -->
             <div id="extraPC" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di computer</label>
                 <select id="formTipoPC" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Notebook / Portatile" class="bg-dark">Notebook / Portatile</option><option value="PC Fisso / Desktop" class="bg-dark">PC Fisso / Desktop</option><option value="Apple Mac (MacBook/iMac)" class="bg-dark">Apple Mac (MacBook/iMac)</option>
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Notebook / Portatile" class="bg-dark">Notebook / Portatile</option>
+                  <option value="PC Fisso / Desktop" class="bg-dark">PC Fisso / Desktop</option>
+                  <option value="Apple Mac (MacBook/iMac)" class="bg-dark">Apple Mac (MacBook/iMac)</option>
                 </select></div>
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di problema</label>
-                <select id="formProblemaPC" onchange="toggleAltro(this,'boxAltroPC')" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Non si accende / Schermo nero" class="bg-dark">Non si accende / Schermo nero</option><option value="Lento / Si blocca spesso" class="bg-dark">Lento / Si blocca spesso</option><option value="Virus / Malware / Pubblicità" class="bg-dark">Virus / Malware / Pubblicità</option><option value="Reinstallazione Windows / macOS" class="bg-dark">Reinstallazione Windows / macOS</option><option value="Installazione Office / Programmi" class="bg-dark">Installazione Office / Programmi</option><option value="Recupero Dati" class="bg-dark">Recupero Dati</option><option value="Altro" class="bg-dark">Altro</option>
+                <select id="formProblemaPC" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Non si accende / Schermo nero" class="bg-dark">Non si accende / Schermo nero</option>
+                  <option value="Lento / Si blocca spesso" class="bg-dark">Lento / Si blocca spesso</option>
+                  <option value="Virus / Malware / Pubblicità" class="bg-dark">Virus / Malware / Pubblicità</option>
+                  <option value="Reinstallazione Windows / macOS" class="bg-dark">Reinstallazione Windows / macOS</option>
+                  <option value="Installazione Office / Programmi" class="bg-dark">Installazione Office / Programmi</option>
+                  <option value="Recupero Dati" class="bg-dark">Recupero Dati</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
-                <div id="boxAltroPC" class="hidden mt-3"><input type="text" id="formAltroPC" maxlength="500" placeholder="Descrivi il problema..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
               </div>
             </div>
+
+            <!-- Campos técnicos para Smartphone -->
             <div id="extraMobile" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Sistema Operativo</label>
                 <select id="formTipoMobile" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Apple iPhone / iPad" class="bg-dark">Apple iPhone / iPad</option><option value="Android (Samsung, Xiaomi, ecc.)" class="bg-dark">Android (Samsung, Xiaomi, ecc.)</option>
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Apple iPhone / iPad" class="bg-dark">Apple iPhone / iPad</option>
+                  <option value="Android (Samsung, Xiaomi, ecc.)" class="bg-dark">Android (Samsung, Xiaomi, ecc.)</option>
                 </select></div>
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di danno / Richiesta</label>
-                <select id="formProblemaMobile" onchange="toggleAltro(this,'boxAltroMobile')" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Schermo rotto / Non tocca" class="bg-dark">Schermo rotto / Non tocca</option><option value="Batteria / Non carica" class="bg-dark">Batteria / Non carica</option><option value="Caduto in acqua" class="bg-dark">Caduto in acqua</option><option value="Configurazione iniziale / Trasferimento dati" class="bg-dark">Configurazione iniziale / Trasferimento dati</option><option value="Altro" class="bg-dark">Altro</option>
+                <select id="formProblemaMobile" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Schermo rotto / Non tocca" class="bg-dark">Schermo rotto / Non tocca</option>
+                  <option value="Batteria / Non carica" class="bg-dark">Batteria / Non carica</option>
+                  <option value="Caduto in acqua" class="bg-dark">Caduto in acqua</option>
+                  <option value="Configurazione iniziale / Trasferimento dati" class="bg-dark">Configurazione iniziale / Trasferimento dati</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
-                <div id="boxAltroMobile" class="hidden mt-3"><input type="text" id="formAltroMobile" maxlength="500" placeholder="Descrivi il danno..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
               </div>
             </div>
+
+            <!-- Campos técnicos para Console -->
             <div id="extraConsole" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Modello di Console</label>
                 <select id="formModelloConsole" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="PlayStation 4 (PS4)" class="bg-dark">PlayStation 4 (PS4)</option><option value="PlayStation 5 (PS5)" class="bg-dark">PlayStation 5 (PS5)</option><option value="Xbox One / Series X|S" class="bg-dark">Xbox One / Series X|S</option><option value="Nintendo Switch" class="bg-dark">Nintendo Switch</option>
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="PlayStation 4 (PS4)" class="bg-dark">PlayStation 4 (PS4)</option>
+                  <option value="PlayStation 5 (PS5)" class="bg-dark">PlayStation 5 (PS5)</option>
+                  <option value="Xbox One / Series X|S" class="bg-dark">Xbox One / Series X|S</option>
+                  <option value="Nintendo Switch" class="bg-dark">Nintendo Switch</option>
                 </select></div>
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Problema principale</label>
-                <select id="formProblemaConsole" onchange="toggleAltro(this,'boxAltroConsole')" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="No video / Problema HDMI" class="bg-dark">No video / Problema HDMI</option><option value="Surriscaldamento / Ventola rumorosa" class="bg-dark">Surriscaldamento / Ventola rumorosa</option><option value="Non legge i dischi" class="bg-dark">Non legge i dischi</option><option value="Si spegne da solo" class="bg-dark">Si spegne da solo</option><option value="Altro" class="bg-dark">Altro</option>
+                <select id="formProblemaConsole" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="No video / Problema HDMI" class="bg-dark">No video / Problema HDMI</option>
+                  <option value="Surriscaldamento / Ventola rumorosa" class="bg-dark">Surriscaldamento / Ventola rumorosa</option>
+                  <option value="Non legge i dischi" class="bg-dark">Non legge i dischi</option>
+                  <option value="Si spegne da solo" class="bg-dark">Si spegne da solo</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
-                <div id="boxAltroConsole" class="hidden mt-3"><input type="text" id="formAltroConsole" maxlength="500" placeholder="Descrivi il problema..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
               </div>
             </div>
+
+            <!-- Campos técnicos para Rete/WiFi/Server -->
             <div id="extraWiFi" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di ambiente</label>
                 <select id="formTipoWiFi" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Casa / Appartamento" class="bg-dark">Casa / Appartamento</option><option value="Ufficio / Azienda" class="bg-dark">Ufficio / Azienda</option><option value="Negozio / Locale pubblico" class="bg-dark">Negozio / Locale pubblico</option>
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Casa / Appartamento" class="bg-dark">Casa / Appartamento</option>
+                  <option value="Ufficio / Azienda" class="bg-dark">Ufficio / Azienda</option>
+                  <option value="Negozio / Locale pubblico" class="bg-dark">Negozio / Locale pubblico</option>
                 </select></div>
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Problema attuale</label>
-                <select id="formProblemaWiFi" onchange="toggleAltro(this,'boxAltroWiFi')" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Non prende in alcune stanze" class="bg-dark">Non prende in alcune stanze</option><option value="Connessione molto lenta" class="bg-dark">Connessione molto lenta</option><option value="Nuova installazione da zero" class="bg-dark">Nuova installazione da zero</option><option value="Altro" class="bg-dark">Altro</option>
+                <select id="formProblemaWiFi" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Non prende in alcune stanze" class="bg-dark">Non prende in alcune stanze</option>
+                  <option value="Connessione molto lenta" class="bg-dark">Connessione molto lenta</option>
+                  <option value="Nuova installazione da zero" class="bg-dark">Nuova installazione da zero</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
-                <div id="boxAltroWiFi" class="hidden mt-3"><input type="text" id="formAltroWiFi" maxlength="500" placeholder="Descrivi il problema..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
               </div>
             </div>
+
+            <!-- Campos técnicos para Sito Web -->
             <div id="extraSito" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Che tipo di sito ti serve?</label>
-                <select id="formTipoSito" onchange="toggleAltro(this,'boxAltroSito')" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
-                  <option value="Non specificato" class="bg-dark">Seleziona...</option><option value="Sito Vetrina" class="bg-dark">Sito Vetrina</option><option value="E-commerce" class="bg-dark">E-commerce</option><option value="Landing Page" class="bg-dark">Landing Page</option><option value="Altro" class="bg-dark">Altro</option>
+                <select id="formTipoSito" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
+                  <option value="Non specificato" class="bg-dark">Seleziona...</option>
+                  <option value="Sito Vetrina" class="bg-dark">Sito Vetrina</option>
+                  <option value="E-commerce" class="bg-dark">E-commerce</option>
+                  <option value="Landing Page" class="bg-dark">Landing Page</option>
+                  <option value="Altro" class="bg-dark">Altro</option>
                 </select>
-                <div id="boxAltroSito" class="hidden mt-3"><input type="text" id="formAltroSito" maxlength="500" placeholder="Descrivi il tipo di sito..." class="hoverable w-full bg-transparent border-b border-border py-2 text-white focus:outline-none focus:border-white"></div>
+              </div>
+              <div class="group">
+                <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Hai già un sito di riferimento?</label>
+                <input type="text" id="formSitoRif" maxlength="200" placeholder="Es. www.rossi.it (opzionale)" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors">
               </div>
             </div>
+
+            <!-- Campos para Videosorveglianza, Backup, Assistenza, Altro -->
+            <div id="extraGeneric" class="hidden group">
+              <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Dettagli del progetto</label>
+              <textarea id="formDettagliGenerici" rows="3" maxlength="1500" placeholder="Raccontaci di cosa hai bisogno, dimensioni, esigenze specifiche..." class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"></textarea>
+            </div>
             
+            <!-- Contacto -->
             <div class="grid md:grid-cols-2 gap-10 pt-4 border-t border-border">
-              <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Modello / Riferimento *</label>
-                <input type="text" id="formDispositivo" required maxlength="100" placeholder="Es. PS5 Digital, iPhone 13, nome attività" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
-              <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Nome e Cognome / Ragione Sociale *</label>
-                <input type="text" id="formCliente" required maxlength="120" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
+              <div class="group">
+                <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Telefono *</label>
+                <input type="tel" id="formTelefono" required maxlength="30" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors">
+              </div>
+              <div class="group">
+                <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Email</label>
+                <input type="email" id="formEmail" maxlength="254" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors">
+              </div>
             </div>
-            <div class="grid md:grid-cols-2 gap-10">
-              <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Telefono *</label>
-                <input type="tel" id="formTelefono" required maxlength="30" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
-              <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Email</label>
-                <input type="email" id="formEmail" maxlength="254" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors"></div>
-            </div>
-            <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Dettagli aggiuntivi (Opzionale)</label>
-              <textarea id="formDescrizione" rows="3" maxlength="5000" placeholder="Raccontaci cosa succede..." class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"></textarea></div>
             
             <button type="submit" id="btnSubmit" class="hoverable w-full md:w-auto px-12 py-5 bg-white text-black font-black uppercase tracking-[0.2em] hover:bg-neutral-200 transition-colors mt-4 rounded">Invia Richiesta</button>
             <div id="formFeedback" class="hidden mt-8 p-6 text-center rounded"></div>
@@ -396,6 +453,7 @@
   </div>
 
   <script>
+    // RELOJ ITALIA
     function updateClock(){
       const c = document.getElementById('live-clock');
       const d = document.getElementById('live-date');
@@ -415,6 +473,7 @@
       setInterval(updateClock, 1000);
     }
 
+    // CURSOR
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     if(cursorDot && cursorOutline){
@@ -429,11 +488,13 @@
       el.addEventListener('mouseleave', function(){ if(cursorOutline) cursorOutline.classList.remove('hovered'); });
     });
 
+    // ANIMACIONES
     const observer = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
     document.querySelectorAll('.reveal-up, .reveal-text').forEach(function(el){ observer.observe(el); });
 
+    // TYPEWRITER
     const frasi = ["Ripariamo il tuo dispositivo in giornata.", "Intervento direttamente a casa tua.", "Ritiro e consegna gratuiti nel Roero.", "Assistenza rapida per privati e aziende."];
     let fraseIndex = 0, charIndex = 0, isDeleting = false;
     const tw = document.getElementById('typewriter-text');
@@ -449,8 +510,19 @@
     }
     setTimeout(typeWriter, 1000);
 
-    // Las categorías están hardcodeadas en el HTML para evitar errores de carga dinámica.
-    // Los valores coinciden EXACTAMENTE con los permitidos en registro.js (ALLOWED_CATEGORIES)
+    // MAPEO DE CATEGORÍAS A LABELS Y PLACEHOLDERS DINÁMICOS
+    const configCategorie = {
+      'PC/Mac': { label: 'Modello del computer *', placeholder: 'Es. MacBook Pro 2020, Dell XPS 15, HP Pavilion...' },
+      'Smartphone/Tablet': { label: 'Modello del dispositivo *', placeholder: 'Es. iPhone 13, Samsung S22, iPad Pro...' },
+      'Console': { label: 'Modello di console *', placeholder: 'Es. PS5 Digital, Xbox Series X, Nintendo Switch OLED...' },
+      'Rete/WiFi': { label: 'Tipo di router / ambiente *', placeholder: 'Es. Router TIM, TP-Link Mesh, appartamento 90mq...' },
+      'Server/Rete': { label: 'Tipo di infrastruttura *', placeholder: 'Es. Server Dell, 5 PC in rete, firewall Fortinet...' },
+      'Backup/Cloud': { label: 'Sistema attuale *', placeholder: 'Es. NAS Synology, OneDrive, 3 PC aziendali...' },
+      'SitoWeb': { label: 'Nome attività / progetto *', placeholder: 'Es. Ristorante Da Mario, Studio Legale Bianchi...' },
+      'Videosorveglianza': { label: 'Tipo di proprietà *', placeholder: 'Es. Casa privata, negozio, capannone 500mq...' },
+      'Assistenza': { label: 'Tipo di assistenza richiesta *', placeholder: 'Es. Manutenzione mensile, supporto on-demand...' },
+      'Altro': { label: 'Specificare il servizio *', placeholder: 'Descrivi brevemente cosa ti serve...' }
+    };
 
     function selezionaRichiesta(tipo){
       document.getElementById('formTipoRichiesta').value = tipo;
@@ -465,46 +537,42 @@
       else if(tipo === 'Urgenza') bU.classList.add('selected-urg');
     }
 
-    function toggleAltro(sel, boxId){
-      const box = document.getElementById(boxId);
-      const input = box.querySelector('input');
-      if(sel.value === 'Altro'){ box.classList.remove('hidden'); }
-      else { box.classList.add('hidden'); input.value = ''; }
-    }
-
-    function resetAltro(){
-      ['boxAltroCategoria','boxAltroPC','boxAltroMobile','boxAltroConsole','boxAltroWiFi','boxAltroSito'].forEach(function(id){
-        const b = document.getElementById(id);
-        if(b){ b.classList.add('hidden'); const i = b.querySelector('input'); if(i) i.value = ''; }
-      });
-    }
-
-    function otroTexto(id){
-      const e = document.getElementById(id);
-      return e ? e.value.trim() : '';
-    }
-
-    function problemaVal(selId, altroId){
-      const v = document.getElementById(selId).value;
-      if(v === 'Altro'){ return otroTexto(altroId) || 'Altro (non specificato)'; }
-      return v;
-    }
-
-    function mostrarCamposEspecificos(){
+    function aggiornaFormulario(){
       const categoria = document.getElementById('formCategoria').value;
       const campos = document.getElementById('camposDinamicos');
-      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito'].forEach(function(id){ document.getElementById(id).classList.add('hidden'); });
-      if(categoria){
-        campos.classList.remove('hidden');
-        setTimeout(function(){ campos.classList.add('visible'); }, 50);
-        if(categoria === 'PC/Mac') document.getElementById('extraPC').classList.remove('hidden');
-        else if(categoria === 'Smartphone/Tablet') document.getElementById('extraMobile').classList.remove('hidden');
-        else if(categoria === 'Console') document.getElementById('extraConsole').classList.remove('hidden');
-        else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete') document.getElementById('extraWiFi').classList.remove('hidden');
-        else if(categoria === 'SitoWeb') document.getElementById('extraSito').classList.remove('hidden');
-      } else {
+      const labelDisp = document.getElementById('labelDispositivo');
+      const inputDisp = document.getElementById('formDispositivo');
+
+      // Ocultar todos los campos técnicos
+      ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito','extraGeneric'].forEach(function(id){
+        const el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+      });
+
+      if(!categoria){
         campos.classList.add('hidden');
-        campos.classList.remove('visible');
+        return;
+      }
+
+      // Mostrar campos dinámicos
+      campos.classList.remove('hidden');
+      setTimeout(function(){ campos.classList.add('visible'); }, 50);
+
+      // Actualizar label y placeholder del campo "dispositivo" según la categoría
+      const config = configCategorie[categoria];
+      if(config){
+        labelDisp.textContent = config.label;
+        inputDisp.placeholder = config.placeholder;
+      }
+
+      // Mostrar campos técnicos específicos según categoría
+      if(categoria === 'PC/Mac') document.getElementById('extraPC').classList.remove('hidden');
+      else if(categoria === 'Smartphone/Tablet') document.getElementById('extraMobile').classList.remove('hidden');
+      else if(categoria === 'Console') document.getElementById('extraConsole').classList.remove('hidden');
+      else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete') document.getElementById('extraWiFi').classList.remove('hidden');
+      else if(categoria === 'SitoWeb') document.getElementById('extraSito').classList.remove('hidden');
+      else if(categoria === 'Videosorveglianza' || categoria === 'Backup/Cloud' || categoria === 'Assistenza' || categoria === 'Altro') {
+        document.getElementById('extraGeneric').classList.remove('hidden');
       }
     }
 
@@ -523,7 +591,7 @@
         tBox.classList.add('hidden');
         tBtn.classList.add('hidden');
       } else if(tipoRichiesta === 'Preventivo'){
-        msg.textContent = 'Grazie ' + nombre + '! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.';
+        msg.textContent = 'Grazie ' + nome + '! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.';
         tBox.classList.add('hidden');
         tBtn.classList.add('hidden');
       } else {
@@ -597,16 +665,41 @@
       const categoria = document.getElementById('formCategoria').value;
       if(!tipoRichiesta){ alert('Per favore, seleziona il tipo di richiesta (Riparazione, Preventivo o Urgenza).'); return; }
       if(!categoria){ alert('Per favore, seleziona una categoria.'); return; }
-      let catTxt = categoria;
-      if(categoria === 'Altro'){ const esp = otroTexto('formAltroCategoria'); if(esp) catTxt += ' - ' + esp; }
-      let fichaTecnica = 'TIPO RICHIESTA: ' + tipoRichiesta + '\nCATEGORIA: ' + catTxt + '\nDISPOSITIVO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
-      if(categoria === 'PC/Mac'){ fichaTecnica += 'TIPO: ' + document.getElementById('formTipoPC').value + '\nPROBLEMA: ' + problemaVal('formProblemaPC','formAltroPC') + '\n'; }
-      else if(categoria === 'Smartphone/Tablet'){ fichaTecnica += 'SISTEMA: ' + document.getElementById('formTipoMobile').value + '\nDANNO: ' + problemaVal('formProblemaMobile','formAltroMobile') + '\n'; }
-      else if(categoria === 'Console'){ fichaTecnica += 'MODELLO: ' + document.getElementById('formModelloConsole').value + '\nPROBLEMA: ' + problemaVal('formProblemaConsole','formAltroConsole') + '\n'; }
-      else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete'){ fichaTecnica += 'AMBIENTE: ' + document.getElementById('formTipoWiFi').value + '\nPROBLEMA: ' + problemaVal('formProblemaWiFi','formAltroWiFi') + '\n'; }
-      else if(categoria === 'SitoWeb'){ fichaTecnica += 'TIPO SITO: ' + problemaVal('formTipoSito','formAltroSito') + '\n'; }
-      const detallesExtra = document.getElementById('formDescrizione').value.trim();
-      if(detallesExtra) fichaTecnica += '\nDETTAGLI AGGIUNTIVI:\n' + detallesExtra;
+
+      let fichaTecnica = 'TIPO RICHIESTA: ' + tipoRichiesta + '\nCATEGORIA: ' + categoria + '\n';
+
+      // Campos específicos por categoría
+      if(categoria === 'PC/Mac'){
+        fichaTecnica += 'MODELLO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        fichaTecnica += 'TIPO: ' + document.getElementById('formTipoPC').value + '\n';
+        fichaTecnica += 'PROBLEMA: ' + document.getElementById('formProblemaPC').value + '\n';
+      } else if(categoria === 'Smartphone/Tablet'){
+        fichaTecnica += 'MODELLO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        fichaTecnica += 'SISTEMA: ' + document.getElementById('formTipoMobile').value + '\n';
+        fichaTecnica += 'DANNO: ' + document.getElementById('formProblemaMobile').value + '\n';
+      } else if(categoria === 'Console'){
+        fichaTecnica += 'MODELLO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        fichaTecnica += 'TIPO: ' + document.getElementById('formModelloConsole').value + '\n';
+        fichaTecnica += 'PROBLEMA: ' + document.getElementById('formProblemaConsole').value + '\n';
+      } else if(categoria === 'Rete/WiFi' || categoria === 'Server/Rete'){
+        fichaTecnica += 'AMBIENTE: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        fichaTecnica += 'TIPO: ' + document.getElementById('formTipoWiFi').value + '\n';
+        fichaTecnica += 'PROBLEMA: ' + document.getElementById('formProblemaWiFi').value + '\n';
+      } else if(categoria === 'SitoWeb'){
+        fichaTecnica += 'PROGETTO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        fichaTecnica += 'TIPO SITO: ' + document.getElementById('formTipoSito').value + '\n';
+        const sitoRif = document.getElementById('formSitoRif').value.trim();
+        if(sitoRif) fichaTecnica += 'SITO RIFERIMENTO: ' + sitoRif + '\n';
+      } else if(categoria === 'Videosorveglianza' || categoria === 'Backup/Cloud' || categoria === 'Assistenza' || categoria === 'Altro'){
+        fichaTecnica += 'RICHIESTA: ' + document.getElementById('formDispositivo').value.trim() + '\n';
+        const dettagliGen = document.getElementById('formDettagliGenerici').value.trim();
+        if(dettagliGen) fichaTecnica += 'DETTAGLI: ' + dettagliGen + '\n';
+      }
+
+      feedback.classList.add('hidden');
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mx-auto"></div>';
+
       const payload = {
         cliente: document.getElementById('formCliente').value.trim(),
         telefono: document.getElementById('formTelefono').value.trim(),
@@ -616,9 +709,7 @@
         descrizione: fichaTecnica,
         accessori: ''
       };
-      btnSubmit.disabled = true;
-      btnSubmit.innerHTML = '<div class="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent mx-auto"></div>';
-      feedback.classList.add('hidden');
+
       try{
         const r = await fetch('/api/registro', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
         const d = await r.json();
@@ -629,7 +720,6 @@
           document.getElementById('btnRiparazione').classList.remove('selected');
           document.getElementById('btnPreventivo').classList.remove('selected');
           document.getElementById('btnUrgenza').classList.remove('selected-urg');
-          resetAltro();
           btnSubmit.innerHTML = 'Invia Richiesta';
         } else {
           throw new Error(d.error || 'Errore durante il salvataggio.');

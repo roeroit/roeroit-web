@@ -73,19 +73,18 @@
     </div>
   </div>
 
-  <nav class="fixed top-12 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white">
-    <div class="flex items-center gap-4">
-      <a href="#" class="hoverable flex items-center gap-3">
-        <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <nav class="fixed top-12 w-full z-50 px-6 py-4 md:py-6 flex justify-between items-center mix-blend-difference text-white">
+    <div class="flex items-center gap-3 md:gap-4">
+      <a href="#" class="hoverable flex items-center gap-2 md:gap-3">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="md:w-9 md:h-9">
           <path d="M20 20 L20 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
           <path d="M20 20 L60 20 C75 20 85 30 85 45 C85 60 75 70 60 70 L20 70" stroke="#D97706" stroke-width="8" stroke-linecap="round" fill="none"/>
           <path d="M60 70 L80 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
           <circle cx="60" cy="45" r="4" fill="#D97706"/>
-          <path d="M75 85 L85 85 L90 80 L85 75 L75 75" stroke="#D97706" stroke-width="3" stroke-linecap="round" fill="none"/>
         </svg>
-        <span class="text-xl font-black tracking-tighter uppercase">Roero<span class="font-light">IT</span></span>
+        <span class="text-lg md:text-xl font-black tracking-tighter uppercase">Roero<span class="font-light">IT</span></span>
       </a>
-      <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-neutral-400 border-l border-white/20 pl-4">
+      <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-neutral-400 border-l border-white/20 pl-3 md:pl-4">
         <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
         <span class="font-bold text-white" id="live-clock">--:--:--</span>
         <span class="text-neutral-600">|</span>
@@ -99,35 +98,56 @@
     </div>
   </nav>
 
-  <section class="relative min-h-screen flex flex-col justify-center pt-32 pb-20 px-6 bg-dark overflow-hidden">
+  <section class="relative min-h-screen flex flex-col justify-center pt-28 md:pt-32 pb-12 md:pb-20 px-6 bg-dark overflow-hidden">
     <div class="absolute inset-0 w-full h-full unseen-img-container z-0 opacity-20 md:opacity-30 pointer-events-none">
       <img src="/roero-sunset.jpg" alt="Paesaggio del Roero" class="unseen-img w-full h-full object-cover">
     </div>
     <div class="absolute inset-0 bg-gradient-to-b from-dark via-dark/80 to-dark z-10 pointer-events-none"></div>
     <div class="relative z-20 max-w-[90vw] mx-auto w-full">
-      <div class="mb-8 reveal-up">
-        <span class="inline-flex items-center gap-2 px-4 py-2 border border-green-500/30 bg-green-500/10 rounded-full text-xs font-bold uppercase tracking-[0.2em] text-green-400">
+      <div class="mb-5 md:mb-8 reveal-up">
+        <span class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 border border-green-500/30 bg-green-500/10 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-green-400">
           <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Disponibile Oggi - Diagnosi in 24h
         </span>
       </div>
-      <h1 class="text-[9vw] md:text-[6.5vw] leading-[0.9] font-black tracking-tighter uppercase text-white mb-8">
+
+      <h1 class="text-[10vw] md:text-[6vw] leading-[0.95] font-black tracking-tighter uppercase text-white mb-6 md:mb-8">
         <div class="reveal-text"><span>Assistenza</span></div>
         <div class="reveal-text"><span class="text-neutral-600">Informatica</span></div>
         <div class="reveal-text"><span>Artigianale</span></div>
       </h1>
-      <div class="mb-12 h-8 reveal-up" style="transition-delay:200ms;">
-        <p class="text-xl md:text-2xl font-light text-neutral-300"><span id="typewriter-text"></span><span class="animate-pulse text-roero-gold">|</span></p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 reveal-up" style="transition-delay:300ms;">
-        <div class="flex items-start gap-3"><span class="text-2xl">⚡</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Riparazione in giornata</h4><p class="text-xs text-neutral-500">La maggior parte dei lavori completati in 24 ore.</p></div></div>
-        <div class="flex items-start gap-3"><span class="text-2xl">🏠</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Intervento a domicilio</h4><p class="text-xs text-neutral-500">Veniamo direttamente da te, senza spostamenti.</p></div></div>
-        <div class="flex items-start gap-3"><span class="text-2xl">📍</span><div><h4 class="text-sm font-bold uppercase tracking-wide text-white mb-1">Nel cuore del Roero</h4><p class="text-xs text-neutral-500">A pochi chilometri da Bra, Alba e Cuneo.</p></div></div>
-      </div>
-      
-      <div class="reveal-up" style="transition-delay:400ms;">
-        <a href="#contatti" class="hoverable inline-flex items-center gap-4 px-10 py-5 bg-white text-black font-black uppercase tracking-[0.2em] text-sm hover:bg-neutral-200 transition-colors rounded">
-          Richiedi Assistenza o Preventivo <span class="text-xl">→</span>
+
+      <div class="reveal-up mb-6 md:mb-10" style="transition-delay:200ms;">
+        <a href="#contatti" class="hoverable inline-flex items-center gap-3 md:gap-4 px-6 md:px-10 py-3.5 md:py-5 bg-white text-black font-black uppercase tracking-[0.15em] md:tracking-[0.2em] text-xs md:text-sm hover:bg-neutral-200 transition-colors rounded">
+          Richiedi Assistenza o Preventivo <span class="text-lg md:text-xl">→</span>
         </a>
+      </div>
+
+      <div class="hidden md:block mb-12 h-8 reveal-up" style="transition-delay:300ms;">
+        <p class="text-2xl font-light text-neutral-300"><span id="typewriter-text"></span><span class="animate-pulse text-roero-gold">|</span></p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8 reveal-up" style="transition-delay:400ms;">
+        <div class="flex items-start gap-2 md:gap-3">
+          <span class="text-lg md:text-2xl mt-0.5">⚡</span>
+          <div>
+            <h4 class="text-xs md:text-sm font-bold uppercase tracking-wide text-white mb-0.5 md:mb-1">Riparazione in giornata</h4>
+            <p class="text-[10px] md:text-xs text-neutral-500 hidden sm:block">La maggior parte dei lavori completati in 24 ore.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 md:gap-3">
+          <span class="text-lg md:text-2xl mt-0.5">🏠</span>
+          <div>
+            <h4 class="text-xs md:text-sm font-bold uppercase tracking-wide text-white mb-0.5 md:mb-1">Intervento a domicilio</h4>
+            <p class="text-[10px] md:text-xs text-neutral-500 hidden sm:block">Veniamo direttamente da te, senza spostamenti.</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-2 md:gap-3">
+          <span class="text-lg md:text-2xl mt-0.5">📍</span>
+          <div>
+            <h4 class="text-xs md:text-sm font-bold uppercase tracking-wide text-white mb-0.5 md:mb-1">Nel cuore del Roero</h4>
+            <p class="text-[10px] md:text-xs text-neutral-500 hidden sm:block">A pochi chilometri da Bra, Alba e Cuneo.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -211,7 +231,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-neutral-400 uppercase tracking-wide">
             <div class="flex flex-col gap-2"><span class="text-white font-bold text-lg">01</span><p>Compila il questionario tecnico.</p></div>
             <div class="flex flex-col gap-2"><span class="text-white font-bold text-lg">02</span><p>Ricevi subito il tuo <span class="text-roero-gold">Codice Ticket</span>.</p></div>
-            <div class="flex flex-col gap-2"><span class="text-white font-bold text-lg">03</span><p>Ti contattiamo entro 24 ore (urgente: il prima possibile).</p></div>
+            <div class="flex flex-col gap-2"><span class="text-white font-bold text-lg">03</span><p>Ti contattiamo entro 24 ore.</p></div>
           </div>
         </div>
 
@@ -261,10 +281,8 @@
             </select>
           </div>
 
-          <!-- CAMPOS DINÁMICOS SEGÚN CATEGORÍA -->
           <div id="camposDinamicos" class="hidden space-y-8 pt-4 border-t border-border">
             
-            <!-- Campo inteligente que cambia según categoría -->
             <div class="grid md:grid-cols-2 gap-10">
               <div class="group">
                 <label id="labelDispositivo" class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Modello / Riferimento *</label>
@@ -276,7 +294,6 @@
               </div>
             </div>
 
-            <!-- Campos técnicos para PC/Mac -->
             <div id="extraPC" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di computer</label>
                 <select id="formTipoPC" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -299,7 +316,6 @@
               </div>
             </div>
 
-            <!-- Campos técnicos para Smartphone -->
             <div id="extraMobile" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Sistema Operativo</label>
                 <select id="formTipoMobile" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -319,7 +335,6 @@
               </div>
             </div>
 
-            <!-- Campos técnicos para Console -->
             <div id="extraConsole" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Modello di Console</label>
                 <select id="formModelloConsole" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -341,7 +356,6 @@
               </div>
             </div>
 
-            <!-- Campos técnicos para Rete/WiFi/Server -->
             <div id="extraWiFi" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Tipo di ambiente</label>
                 <select id="formTipoWiFi" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -361,7 +375,6 @@
               </div>
             </div>
 
-            <!-- Campos técnicos para Sito Web -->
             <div id="extraSito" class="hidden grid md:grid-cols-2 gap-10">
               <div class="group"><label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Che tipo di sito ti serve?</label>
                 <select id="formTipoSito" class="hoverable w-full bg-transparent border-b border-border py-3 text-lg text-white focus:outline-none focus:border-white transition-colors cursor-pointer">
@@ -378,13 +391,11 @@
               </div>
             </div>
 
-            <!-- Campos para Videosorveglianza, Backup, Assistenza, Altro -->
             <div id="extraGeneric" class="hidden group">
               <label class="block text-xs uppercase tracking-[0.2em] text-roero-gold mb-3">Dettagli del progetto</label>
               <textarea id="formDettagliGenerici" rows="3" maxlength="1500" placeholder="Raccontaci di cosa hai bisogno, dimensioni, esigenze specifiche..." class="hoverable w-full bg-transparent border-b border-border py-3 text-lg focus:outline-none focus:border-white transition-colors resize-none"></textarea>
             </div>
             
-            <!-- Contacto -->
             <div class="grid md:grid-cols-2 gap-10 pt-4 border-t border-border">
               <div class="group">
                 <label class="block text-xs uppercase tracking-[0.2em] text-neutral-500 mb-3">Telefono *</label>
@@ -453,7 +464,6 @@
   </div>
 
   <script>
-    // RELOJ ITALIA
     function updateClock(){
       const c = document.getElementById('live-clock');
       const d = document.getElementById('live-date');
@@ -473,7 +483,6 @@
       setInterval(updateClock, 1000);
     }
 
-    // CURSOR
     const cursorDot = document.querySelector('.cursor-dot');
     const cursorOutline = document.querySelector('.cursor-outline');
     if(cursorDot && cursorOutline){
@@ -488,13 +497,11 @@
       el.addEventListener('mouseleave', function(){ if(cursorOutline) cursorOutline.classList.remove('hovered'); });
     });
 
-    // ANIMACIONES
     const observer = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
     document.querySelectorAll('.reveal-up, .reveal-text').forEach(function(el){ observer.observe(el); });
 
-    // TYPEWRITER
     const frasi = ["Ripariamo il tuo dispositivo in giornata.", "Intervento direttamente a casa tua.", "Ritiro e consegna gratuiti nel Roero.", "Assistenza rapida per privati e aziende."];
     let fraseIndex = 0, charIndex = 0, isDeleting = false;
     const tw = document.getElementById('typewriter-text');
@@ -510,7 +517,6 @@
     }
     setTimeout(typeWriter, 1000);
 
-    // MAPEO DE CATEGORÍAS A LABELS Y PLACEHOLDERS DINÁMICOS
     const configCategorie = {
       'PC/Mac': { label: 'Modello del computer *', placeholder: 'Es. MacBook Pro 2020, Dell XPS 15, HP Pavilion...' },
       'Smartphone/Tablet': { label: 'Modello del dispositivo *', placeholder: 'Es. iPhone 13, Samsung S22, iPad Pro...' },
@@ -543,7 +549,6 @@
       const labelDisp = document.getElementById('labelDispositivo');
       const inputDisp = document.getElementById('formDispositivo');
 
-      // Ocultar todos los campos técnicos
       ['extraPC','extraMobile','extraConsole','extraWiFi','extraSito','extraGeneric'].forEach(function(id){
         const el = document.getElementById(id);
         if(el) el.classList.add('hidden');
@@ -554,18 +559,15 @@
         return;
       }
 
-      // Mostrar campos dinámicos
       campos.classList.remove('hidden');
       setTimeout(function(){ campos.classList.add('visible'); }, 50);
 
-      // Actualizar label y placeholder del campo "dispositivo" según la categoría
       const config = configCategorie[categoria];
       if(config){
         labelDisp.textContent = config.label;
         inputDisp.placeholder = config.placeholder;
       }
 
-      // Mostrar campos técnicos específicos según categoría
       if(categoria === 'PC/Mac') document.getElementById('extraPC').classList.remove('hidden');
       else if(categoria === 'Smartphone/Tablet') document.getElementById('extraMobile').classList.remove('hidden');
       else if(categoria === 'Console') document.getElementById('extraConsole').classList.remove('hidden');
@@ -591,7 +593,7 @@
         tBox.classList.add('hidden');
         tBtn.classList.add('hidden');
       } else if(tipoRichiesta === 'Preventivo'){
-        msg.textContent = 'Grazie ' + nome + '! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.';
+        msg.textContent = 'Grazie ' + nombre + '! Abbiamo ricevuto la tua richiesta. Ti contatteremo entro 24 ore con il nostro preventivo.';
         tBox.classList.add('hidden');
         tBtn.classList.add('hidden');
       } else {
@@ -668,7 +670,6 @@
 
       let fichaTecnica = 'TIPO RICHIESTA: ' + tipoRichiesta + '\nCATEGORIA: ' + categoria + '\n';
 
-      // Campos específicos por categoría
       if(categoria === 'PC/Mac'){
         fichaTecnica += 'MODELLO: ' + document.getElementById('formDispositivo').value.trim() + '\n';
         fichaTecnica += 'TIPO: ' + document.getElementById('formTipoPC').value + '\n';
@@ -707,7 +708,8 @@
         dispositivo: document.getElementById('formDispositivo').value.trim(),
         categoria: categoria,
         descrizione: fichaTecnica,
-        accessori: ''
+        accessori: '',
+        urgente: tipoRichiesta === 'Urgenza'
       };
 
       try{

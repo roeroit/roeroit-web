@@ -45,9 +45,16 @@
     .noise { position:fixed; inset:0; pointer-events:none; z-index:1; opacity:.022;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 
-    .glow-gold { background:radial-gradient(600px circle at 80% 10%, rgba(217,119,6,.10), transparent 60%); }
     .text-gold-grad { background:linear-gradient(115deg,#F59E0B 0%,#D97706 55%,#B45309 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .glass { background:rgba(20,20,22,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.08); }
+
+    /* FONDO DEL HERO: foto en B/N + halo de luz cálida sobre la iglesia */
+    .hero-bg-img { filter:grayscale(100%) contrast(1.08) brightness(.85); }
+    .hero-glow {
+      background:
+        radial-gradient(480px circle at 80% 62%, rgba(245,158,11,.30), transparent 55%),
+        radial-gradient(900px circle at 72% 52%, rgba(217,119,6,.13), transparent 65%);
+    }
 
     .reveal-up { opacity:0; transform:translateY(34px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
     .reveal-up.visible { opacity:1; transform:translateY(0); }
@@ -124,10 +131,16 @@
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="relative pt-32 md:pt-44 pb-20 md:pb-28 overflow-hidden glow-gold">
-    <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-14 lg:gap-10 items-center relative z-10">
-      <div class="lg:col-span-7">
+  <!-- HERO con foto de fondo en B/N y luz cálida sobre la iglesia -->
+  <section class="relative pt-32 md:pt-44 pb-24 md:pb-32 overflow-hidden">
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <img src="/roero-sunset.jpg" alt="" class="hero-bg-img w-full h-full object-cover opacity-[0.30]" style="object-position:70% 55%;">
+      <div class="absolute inset-0 bg-gradient-to-b from-dark/85 via-dark/55 to-dark"></div>
+      <div class="absolute inset-0 hero-glow"></div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6">
+      <div class="max-w-3xl">
         <div class="reveal-up mb-7">
           <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500/25 bg-green-500/10 text-[11px] font-bold uppercase tracking-[0.18em] text-green-400">
             <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span> Disponibili oggi · Diagnosi in 24h
@@ -140,9 +153,9 @@
           Artigianale
         </h1>
 
-        <p class="reveal-up text-base md:text-lg text-neutral-400 max-w-xl leading-relaxed mb-9" style="transition-delay:160ms;">
+        <p class="reveal-up text-base md:text-lg text-neutral-300 max-w-xl leading-relaxed mb-9" style="transition-delay:160ms;">
           Ripariamo, proteggiamo e facciamo crescere la tecnologia di casa e azienda tua.
-          <span class="text-neutral-200 font-medium">Nel cuore del Roero,</span> con la cura di un artigiano e la precisione di un laboratorio.
+          <span class="text-white font-medium">Nel cuore del Roero,</span> con la cura di un artigiano e la precisione di un laboratorio.
         </p>
 
         <div class="reveal-up flex flex-col sm:flex-row gap-4 mb-12" style="transition-delay:240ms;">
@@ -155,30 +168,9 @@
         </div>
 
         <div class="reveal-up grid grid-cols-3 gap-6 max-w-lg" style="transition-delay:320ms;">
-          <div><div class="text-2xl md:text-3xl font-black text-white">24h</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mt-1">Tempo di risposta</div></div>
-          <div><div class="text-2xl md:text-3xl font-black text-white">100%</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mt-1">Garanzia scritta</div></div>
-          <div><div class="text-2xl md:text-3xl font-black text-white">📸</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500 mt-1">Foto in tempo reale</div></div>
-        </div>
-      </div>
-
-      <div class="lg:col-span-5 relative hidden lg:block reveal-up" style="transition-delay:200ms;">
-        <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl shadow-black/70">
-          <img src="/roero-sunset.jpg" alt="Paesaggio delle colline del Roero al tramonto" class="w-full h-[440px] object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/20 to-transparent"></div>
-          <div class="absolute bottom-0 inset-x-0 p-7">
-            <div class="text-[11px] uppercase tracking-[0.2em] text-roero-light font-bold mb-1">Il nostro territorio</div>
-            <div class="text-2xl font-black uppercase tracking-tight text-white">Nel cuore del Roero</div>
-            <div class="text-sm text-neutral-400 mt-1">Sommariva del Bosco · Bra · Alba · Cuneo</div>
-          </div>
-        </div>
-        <div class="glass absolute -bottom-9 -left-9 rounded-2xl px-6 py-5 shadow-xl shadow-black/60 animate-float">
-          <div class="flex items-center gap-3">
-            <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
-            <div>
-              <div class="text-sm font-bold text-white">Laboratorio operativo</div>
-              <div class="text-[11px] text-neutral-400 uppercase tracking-[0.12em]">Ritiro & consegna gratuiti</div>
-            </div>
-          </div>
+          <div><div class="text-2xl md:text-3xl font-black text-white">24h</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Tempo di risposta</div></div>
+          <div><div class="text-2xl md:text-3xl font-black text-white">100%</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Garanzia scritta</div></div>
+          <div><div class="text-2xl md:text-3xl font-black text-white">📸</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Foto in tempo reale</div></div>
         </div>
       </div>
     </div>

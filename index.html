@@ -5,6 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Roero IT — Assistenza Informatica Artigianale nel Roero</title>
   <meta name="description" content="Assistenza informatica professionale nel Roero: riparazioni PC, Mac e smartphone, reti Wi-Fi, videosorveglianza, console e siti web. Diagnosi in 24h, garanzia scritta e trasparenza con foto.">
+  
+  <!-- Open Graph para compartir en redes/WhatsApp -->
+  <meta property="og:title" content="Roero IT — Assistenza Informatica Artigianale">
+  <meta property="og:description" content="Riparazioni, reti, console, siti web e videosorveglianza nel Roero. Diagnosi in 24h con foto in tempo reale.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.roeroit.it">
+  <meta property="og:image" content="https://www.roeroit.it/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  
+  <!-- Favicon SVG inline -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M20 20 L20 80' stroke='%23D97706' stroke-width='8' stroke-linecap='round'/%3E%3Cpath d='M20 20 L60 20 C75 20 85 30 85 45 C85 60 75 70 60 70 L20 70' stroke='%23D97706' stroke-width='8' stroke-linecap='round' fill='none'/%3E%3Cpath d='M60 70 L80 80' stroke='%23D97706' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='60' cy='45' r='4' fill='%23F59E0B'/%3E%3C/svg%3E">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -48,13 +60,13 @@
     .text-gold-grad { background:linear-gradient(115deg,#F59E0B 0%,#D97706 55%,#B45309 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .glass { background:rgba(20,20,22,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.08); }
 
-    /* FONDO DEL HERO: foto en B/N + halo de luz cálida sobre la iglesia */
-    .hero-bg-img { filter:grayscale(100%) contrast(1.08) brightness(.85); }
+    .hero-bg-img, .stato-bg-img { filter:grayscale(100%) contrast(1.08) brightness(.85); }
     .hero-glow {
       background:
         radial-gradient(480px circle at 80% 62%, rgba(245,158,11,.30), transparent 55%),
         radial-gradient(900px circle at 72% 52%, rgba(217,119,6,.13), transparent 65%);
     }
+    .stato-glow { background:radial-gradient(620px circle at 50% 45%, rgba(245,158,11,.17), transparent 62%); }
 
     .reveal-up { opacity:0; transform:translateY(34px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
     .reveal-up.visible { opacity:1; transform:translateY(0); }
@@ -80,9 +92,41 @@
     .svc-card { transition:all .3s cubic-bezier(.16,1,.3,1); border:1px solid rgba(255,255,255,.06); background:rgba(20,20,22,.45); border-radius:1.1rem; }
     .svc-card:hover { border-color:rgba(217,119,6,.35); background:rgba(24,24,27,.85); transform:translateY(-4px); box-shadow:0 20px 44px -22px rgba(0,0,0,.9); }
 
+    /* Iconos SVG de servicios */
+    .svc-icon { width:28px; height:28px; stroke:#D97706; stroke-width:1.8; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+
+    /* Menú hamburguesa */
+    #menuBtn span { transition:all .3s ease; }
+    #menuBtn.open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
+    #menuBtn.open span:nth-child(2){ opacity:0; }
+    #menuBtn.open span:nth-child(3){ transform:translateY(-6px) rotate(-45deg); }
+    #mobileMenu { transition:opacity .3s ease, transform .3s ease; }
+    #mobileMenu.hidden { opacity:0; transform:translateY(-10px); pointer-events:none; }
+
+    /* FAQ acordeón */
+    .faq-item { border-bottom:1px solid rgba(255,255,255,.06); }
+    .faq-question { cursor:pointer; transition:color .2s; }
+    .faq-question:hover { color:#F59E0B; }
+    .faq-answer { max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s ease; }
+    .faq-item.open .faq-answer { max-height:500px; padding-top:1rem; }
+    .faq-item.open .faq-icon { transform:rotate(45deg); }
+    .faq-icon { transition:transform .3s ease; }
+
+    /* Logos marcas */
+    .brand-logo { filter:grayscale(100%) brightness(1.5); opacity:.55; transition:all .3s ease; font-weight:800; letter-spacing:-.02em; }
+    .brand-logo:hover { opacity:1; filter:grayscale(0%) brightness(1); }
+
+    /* Testimonios */
+    .testimonial { transition:all .3s ease; }
+    .testimonial:hover { transform:translateY(-3px); border-color:rgba(217,119,6,.35) !important; }
+
     .whatsapp-float { position:fixed; bottom:26px; right:26px; width:58px; height:58px; background:#25D366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 26px rgba(37,211,102,.45); z-index:60; text-decoration:none; transition:transform .25s, box-shadow .25s; }
     .whatsapp-float:hover { transform:scale(1.08); box-shadow:0 12px 34px rgba(37,211,102,.6); }
     .whatsapp-float svg { width:30px; height:30px; fill:#fff; }
+
+    /* Banner cookies */
+    #cookieBanner { transition:transform .5s ease, opacity .5s ease; }
+    #cookieBanner.hidden { transform:translateY(100%); opacity:0; pointer-events:none; }
 
     #successModal { background:rgba(9,9,11,.86); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); }
     .modal-pop { animation:modalPop .5s cubic-bezier(.16,1,.3,1); }
@@ -95,6 +139,9 @@
     .modal-pop .confetti-piece { animation:confettiFall 1.5s ease-out forwards; }
     @keyframes confettiFall { 0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:0; transform:translateY(260px) rotate(540deg);} }
     .hp-field { position:absolute; left:-9999px; opacity:0; height:0; width:0; overflow:hidden; }
+
+    /* Stats counter */
+    .stat-number { font-variant-numeric:tabular-nums; }
   </style>
 </head>
 <body>
@@ -124,17 +171,39 @@
           <a href="#servizi" class="hover:text-white transition-colors">Servizi</a>
           <a href="#processo" class="hover:text-white transition-colors">Processo</a>
           <a href="#stato" class="hover:text-white transition-colors">Stato</a>
+          <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
           <a href="#contatti" class="hover:text-white transition-colors">Contatti</a>
         </nav>
         <a href="#contatti" class="hidden md:inline-flex btn-gold items-center px-5 py-2.5 text-[11px] font-bold uppercase tracking-[0.15em]">Preventivo</a>
+
+        <button type="button" id="menuBtn" onclick="toggleMenu()" aria-label="Apri menu" class="md:hidden flex flex-col justify-center items-center gap-1.5 w-10 h-10 rounded-lg border border-white/10 bg-white/5">
+          <span class="block w-5 h-0.5 bg-white"></span>
+          <span class="block w-5 h-0.5 bg-white"></span>
+          <span class="block w-5 h-0.5 bg-white"></span>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden absolute inset-x-0 top-full bg-dark/98 backdrop-blur-xl border-b border-white/5 px-6 py-6 space-y-4">
+      <a href="#servizi" onclick="cerrarMenu()" class="block text-sm font-bold uppercase tracking-[0.18em] text-neutral-300 hover:text-roero-light transition-colors py-2">Servizi</a>
+      <a href="#processo" onclick="cerrarMenu()" class="block text-sm font-bold uppercase tracking-[0.18em] text-neutral-300 hover:text-roero-light transition-colors py-2">Processo</a>
+      <a href="#stato" onclick="cerrarMenu()" class="block text-sm font-bold uppercase tracking-[0.18em] text-neutral-300 hover:text-roero-light transition-colors py-2">Stato</a>
+      <a href="#faq" onclick="cerrarMenu()" class="block text-sm font-bold uppercase tracking-[0.18em] text-neutral-300 hover:text-roero-light transition-colors py-2">FAQ</a>
+      <a href="#contatti" onclick="cerrarMenu()" class="block text-sm font-bold uppercase tracking-[0.18em] text-neutral-300 hover:text-roero-light transition-colors py-2">Contatti</a>
+      <a href="#contatti" onclick="cerrarMenu()" class="btn-gold block text-center px-5 py-3 text-xs font-bold uppercase tracking-[0.15em] mt-4">Preventivo</a>
+      <div class="flex items-center gap-2 text-xs font-mono text-neutral-500 pt-3 border-t border-white/5">
+        <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+        <span id="live-clock-mobile" class="text-neutral-300 font-semibold">--:--:--</span>
+        <span class="text-neutral-700">·</span>
+        <span id="live-date-mobile">--/--/----</span>
       </div>
     </div>
   </header>
 
-  <!-- HERO con foto de fondo en B/N y luz cálida sobre la iglesia -->
+  <!-- HERO -->
   <section class="relative pt-32 md:pt-44 pb-24 md:pb-32 overflow-hidden">
     <div class="absolute inset-0 z-0 pointer-events-none">
-      <img src="/roero-sunset.jpg" alt="" class="hero-bg-img w-full h-full object-cover opacity-[0.30]" style="object-position:70% 55%;">
+      <img src="/roero-sunset.jpg" alt="" onerror="this.style.display='none'" class="hero-bg-img w-full h-full object-cover opacity-[0.30]" style="object-position:70% 55%;" loading="eager">
       <div class="absolute inset-0 bg-gradient-to-b from-dark/85 via-dark/55 to-dark"></div>
       <div class="absolute inset-0 hero-glow"></div>
     </div>
@@ -162,15 +231,24 @@
           <a href="#contatti" class="btn-gold inline-flex justify-center items-center gap-3 px-8 py-4 text-sm uppercase tracking-[0.15em]">
             Richiedi Assistenza <span class="text-lg">→</span>
           </a>
-          <a href="https://wa.me/393287971003" target="_blank" class="btn-ghost inline-flex justify-center items-center gap-3 px-8 py-4 text-sm uppercase tracking-[0.15em] font-semibold">
+          <a href="https://wa.me/393287971003" target="_blank" rel="noopener" class="btn-ghost inline-flex justify-center items-center gap-3 px-8 py-4 text-sm uppercase tracking-[0.15em] font-semibold">
             Scrivici su WhatsApp
           </a>
         </div>
 
         <div class="reveal-up grid grid-cols-3 gap-6 max-w-lg" style="transition-delay:320ms;">
-          <div><div class="text-2xl md:text-3xl font-black text-white">24h</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Tempo di risposta</div></div>
-          <div><div class="text-2xl md:text-3xl font-black text-white">100%</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Garanzia scritta</div></div>
-          <div><div class="text-2xl md:text-3xl font-black text-white">📸</div><div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Foto in tempo reale</div></div>
+          <div>
+            <div class="stat-number text-2xl md:text-3xl font-black text-white" data-count="24" data-suffix="h">0h</div>
+            <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Tempo di risposta</div>
+          </div>
+          <div>
+            <div class="stat-number text-2xl md:text-3xl font-black text-white" data-count="100" data-suffix="%">0%</div>
+            <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Garanzia scritta</div>
+          </div>
+          <div>
+            <div class="text-2xl md:text-3xl font-black text-white">📸</div>
+            <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-400 mt-1">Foto in tempo reale</div>
+          </div>
         </div>
       </div>
     </div>
@@ -190,7 +268,28 @@
     </div>
   </div>
 
-  <!-- SERVICIOS -->
+  <!-- MARCAS/TECNOLOGÍAS -->
+  <section class="py-14 md:py-16 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="text-center text-[11px] font-bold uppercase tracking-[0.25em] text-neutral-500 mb-8 reveal-up">Tecnologie e marchi che gestiamo</p>
+      <div class="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 reveal-up">
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Apple</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Microsoft</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">HP</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Dell</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Lenovo</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">ASUS</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">TP-Link</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Ubiquiti</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Synology</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">PlayStation</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Xbox</span>
+        <span class="brand-logo text-2xl md:text-3xl text-neutral-300">Nintendo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS (con iconos SVG) -->
   <section id="servizi" class="py-24 md:py-32">
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 reveal-up">
@@ -203,32 +302,44 @@
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <div class="svc-card p-8 reveal-up">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">🔧</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Riparazione Dispositivi</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Diagnosi precisa e riparazione di PC, Mac e smartphone. Recupero dati, formattazione e upgrade SSD/RAM con garanzia scritta.</p>
         </div>
         <div class="svc-card p-8 reveal-up" style="transition-delay:80ms;">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">📶</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Reti e Wi-Fi</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Progettazione di reti domestiche e aziendali. Cablaggio strutturato Ethernet e sistemi Wi-Fi Mesh per copertura totale.</p>
         </div>
         <div class="svc-card p-8 reveal-up" style="transition-delay:160ms;">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">📹</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Videosorveglianza</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Impianti di sicurezza con telecamere IP/Wi-Fi. Monitoraggio in tempo reale e registrazione locale o cloud sul tuo smartphone.</p>
         </div>
         <div class="svc-card p-8 reveal-up">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">🎮</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" y2="13"/><line x1="15" y1="12" x2="18" y2="12"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Console & Gaming</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Assistenza PS4, PS5, Xbox e Nintendo. Pulizia profonda, cambio pasta termica, riparazione porte HDMI e ottimizzazione.</p>
         </div>
         <div class="svc-card p-8 reveal-up" style="transition-delay:80ms;">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">🌐</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" y1="2" x2="12" y2="22" opacity=".3"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Siti Web</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Siti professionali, e-commerce e landing page. Design moderno, ottimizzazione SEO e integrazione con WhatsApp.</p>
         </div>
         <div class="svc-card p-8 reveal-up" style="transition-delay:160ms;">
-          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center text-2xl mb-6">🛡️</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-6">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
           <h3 class="text-xl font-bold uppercase tracking-tight mb-3">Backup & Sicurezza</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Copie di sicurezza automatiche, protezione da virus e ransomware, messa in sicurezza di dati aziendali e privati.</p>
         </div>
@@ -248,19 +359,25 @@
       <div class="grid md:grid-cols-3 gap-6">
         <div class="relative rounded-2xl border border-white/6 bg-card/50 p-8 reveal-up">
           <span class="text-6xl font-black text-neutral-800 absolute top-6 right-7">01</span>
-          <div class="text-3xl mb-5">📸</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-5">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
           <h3 class="text-lg font-bold uppercase tracking-tight mb-3">Diagnosi con foto</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Apriamo il dispositivo e ti mostriamo con foto esattamente il problema riscontrato. Vedi con i tuoi occhi cosa non funzionava.</p>
         </div>
         <div class="relative rounded-2xl border border-white/6 bg-card/50 p-8 reveal-up" style="transition-delay:100ms;">
           <span class="text-6xl font-black text-neutral-800 absolute top-6 right-7">02</span>
-          <div class="text-3xl mb-5">✅</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-5">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
           <h3 class="text-lg font-bold uppercase tracking-tight mb-3">Preventivo approvato da te</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Manodopera chiara fin dall'inizio. Ogni ricambio viene quotato a parte e acquistato solo dopo la tua approvazione.</p>
         </div>
         <div class="relative rounded-2xl border border-white/6 bg-card/50 p-8 reveal-up" style="transition-delay:200ms;">
           <span class="text-6xl font-black text-neutral-800 absolute top-6 right-7">03</span>
-          <div class="text-3xl mb-5">📄</div>
+          <div class="w-12 h-12 rounded-xl bg-roero-gold/10 border border-roero-gold/25 flex items-center justify-center mb-5">
+            <svg class="svc-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
           <h3 class="text-lg font-bold uppercase tracking-tight mb-3">Riparazione documentata</h3>
           <p class="text-neutral-400 text-sm leading-relaxed">Segui lo stato online con il tuo codice ticket. Alla consegna ricevi garanzia scritta e il dispositivo testato.</p>
         </div>
@@ -268,12 +385,72 @@
     </div>
   </section>
 
-  <!-- TRACKING -->
-  <section id="stato" class="py-24 md:py-32">
-    <div class="max-w-3xl mx-auto px-6 text-center">
+  <!-- TESTIMONIOS -->
+  <section class="py-24 md:py-32">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center max-w-2xl mx-auto mb-14 reveal-up">
+        <span class="text-[11px] font-bold uppercase tracking-[0.25em] text-roero-light mb-4 block">Cosa dicono di noi</span>
+        <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter">I nostri <span class="text-gold-grad">clienti</span></h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="testimonial rounded-2xl border border-white/6 bg-card/40 p-7 reveal-up">
+          <div class="flex gap-1 text-roero-light mb-4">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-neutral-300 text-sm leading-relaxed mb-5 italic">"Mi ha salvato il PC in giornata quando avevo una scadenza importante. Professionale, veloce e onesto nel preventivo. Consigliatissimo."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-white/6">
+            <div class="w-10 h-10 rounded-full bg-roero-gold/15 flex items-center justify-center font-bold text-roero-light">M</div>
+            <div>
+              <div class="text-sm font-bold text-white">Marco R.</div>
+              <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Bra</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial rounded-2xl border border-white/6 bg-card/40 p-7 reveal-up" style="transition-delay:100ms;">
+          <div class="flex gap-1 text-roero-light mb-4">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-neutral-300 text-sm leading-relaxed mb-5 italic">"Le telecamere di videosorveglianza funzionano perfettamente, anche dal telefono quando sono fuori. Installazione pulita e senza fili a vista."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-white/6">
+            <div class="w-10 h-10 rounded-full bg-roero-gold/15 flex items-center justify-center font-bold text-roero-light">A</div>
+            <div>
+              <div class="text-sm font-bold text-white">Anna G.</div>
+              <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Sommariva del Bosco</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial rounded-2xl border border-white/6 bg-card/40 p-7 reveal-up" style="transition-delay:200ms;">
+          <div class="flex gap-1 text-roero-light mb-4">
+            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+          </div>
+          <p class="text-neutral-300 text-sm leading-relaxed mb-5 italic">"Ha sistemato la rete Wi-Fi del nostro ufficio che non funzionava da mesi. Ora prende ovunque. Finalmente un tecnico che spiega le cose in modo chiaro."</p>
+          <div class="flex items-center gap-3 pt-4 border-t border-white/6">
+            <div class="w-10 h-10 rounded-full bg-roero-gold/15 flex items-center justify-center font-bold text-roero-light">S</div>
+            <div>
+              <div class="text-sm font-bold text-white">Studio Legale B.</div>
+              <div class="text-[11px] uppercase tracking-[0.14em] text-neutral-500">Alba</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRACKING con foto laboratorio -->
+  <section id="stato" class="relative py-24 md:py-32 overflow-hidden">
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <img src="/laboratorio.jpg" alt="" onerror="this.style.display='none'" class="stato-bg-img w-full h-full object-cover opacity-[0.22]" style="object-position:center 40%;" loading="lazy">
+      <div class="absolute inset-0 bg-gradient-to-b from-dark/90 via-dark/75 to-dark"></div>
+      <div class="absolute inset-0 stato-glow"></div>
+    </div>
+
+    <div class="relative z-10 max-w-3xl mx-auto px-6 text-center">
       <span class="text-[11px] font-bold uppercase tracking-[0.25em] text-roero-light mb-4 block reveal-up">Tracking</span>
-      <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 reveal-up">Stato <span class="text-neutral-600">Riparazione</span></h2>
-      <p class="text-neutral-400 text-sm mb-10 reveal-up">Inserisci il tuo codice ticket per seguire il dispositivo in tempo reale.</p>
+      <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 reveal-up">Stato <span class="text-gold-grad">Riparazione</span></h2>
+      <p class="text-neutral-300 text-sm mb-10 reveal-up">Inserisci il tuo codice ticket per seguire il dispositivo in tempo reale.</p>
 
       <form onsubmit="event.preventDefault(); buscarTicket();" class="reveal-up glass rounded-2xl p-3 flex flex-col sm:flex-row gap-3">
         <input type="text" id="ticketInput" placeholder="R-XXXXXX" class="flex-1 bg-transparent px-5 py-4 text-lg md:text-xl font-black uppercase tracking-tight text-white placeholder-neutral-700 focus:outline-none rounded-xl">
@@ -283,8 +460,80 @@
     </div>
   </section>
 
+  <!-- FAQ -->
+  <section id="faq" class="py-24 md:py-32 bg-surface border-t border-white/5">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-14 reveal-up">
+        <span class="text-[11px] font-bold uppercase tracking-[0.25em] text-roero-light mb-4 block">Domande frequenti</span>
+        <h2 class="text-4xl md:text-5xl font-black uppercase tracking-tighter">FAQ</h2>
+      </div>
+
+      <div class="space-y-0 reveal-up">
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">Quanto costa l'uscita a domicilio?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">L'uscita e la diagnosi a domicilio costano <strong class="text-white">40€</strong> nella zona del Roero. Questo costo viene <strong class="text-roero-light">completamente scontato</strong> se accetti il preventivo e procediamo con la riparazione.</p>
+          </div>
+        </div>
+
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">I preventivi sono gratuiti?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">Sì, i preventivi per nuovi progetti (siti web, videosorveglianza, reti) sono <strong class="text-white">completamente gratuiti e senza impegno</strong>. Per le riparazioni, la diagnosi è compresa nel costo di uscita (40€) che viene scontata se accetti il lavoro.</p>
+          </div>
+        </div>
+
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">Ritirate voi il dispositivo o devo portarlo io?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">Offriamo <strong class="text-white">ritiro e consegna gratuiti</strong> in tutta la zona del Roero (Sommariva, Bra, Alba, Ceresole e dintorni). Non devi muoverti da casa: veniamo noi, ritiriamo il dispositivo e te lo riportiamo riparato.</p>
+          </div>
+        </div>
+
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">Quanto tempo ci vuole per una riparazione?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">La maggior parte delle riparazioni viene completata in <strong class="text-white">24-48 ore</strong>. Solo nei casi in cui servano ricambi specifici da ordinare i tempi possono allungarsi, ma ti avvisiamo sempre prima di procedere.</p>
+          </div>
+        </div>
+
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">Che garanzia offrite sui lavori?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">Ogni intervento è coperto da <strong class="text-white">garanzia scritta di 12 mesi</strong> sulla manodopera. I ricambi hanno la garanzia del produttore (solitamente 24 mesi). Ricevi tutto nero su bianco al momento della consegna.</p>
+          </div>
+        </div>
+
+        <div class="faq-item py-6">
+          <div class="faq-question flex items-center justify-between gap-4" onclick="toggleFaq(this)">
+            <span class="text-base md:text-lg font-semibold text-white">Accettate pagamenti rateali?</span>
+            <span class="faq-icon text-roero-light text-2xl font-light flex-shrink-0">+</span>
+          </div>
+          <div class="faq-answer">
+            <p class="text-neutral-400 text-sm leading-relaxed">Sì, per progetti di importo superiore ai 500€ (siti web, impianti di videosorveglianza, reti aziendali) offriamo la possibilità di <strong class="text-white">pagamento rateale</strong> senza interessi. Contattaci per i dettagli.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CONTACTOS + FORMULARIO -->
-  <section id="contatti" class="py-24 md:py-32 bg-surface border-t border-white/5">
+  <section id="contatti" class="py-24 md:py-32 border-t border-white/5">
     <div class="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 lg:gap-16">
 
       <div class="reveal-up">
@@ -336,7 +585,7 @@
 
           <div>
             <span class="label">Di cosa hai bisogno? *</span>
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button type="button" id="btnRiparazione" onclick="selezionaRichiesta('Riparazione')" class="tipo-card p-4 text-left cursor-pointer">
                 <span class="text-xl block mb-1.5">🔧</span>
                 <span class="text-xs font-bold uppercase tracking-wide text-white block">Riparazione</span>
@@ -458,26 +707,85 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="py-12 border-t border-white/5 bg-dark">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-3">
-        <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M20 20 L20 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
-          <path d="M20 20 L60 20 C75 20 85 30 85 45 C85 60 75 70 60 70 L20 70" stroke="#D97706" stroke-width="8" stroke-linecap="round" fill="none"/>
-          <path d="M60 70 L80 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
-          <circle cx="60" cy="45" r="4" fill="#F59E0B"/>
-        </svg>
-        <span class="font-black uppercase tracking-tighter">Roero<span class="text-neutral-600">IT</span></span>
+  <!-- FOOTER EXPANDIDO -->
+  <footer class="pt-16 pb-10 border-t border-white/5 bg-dark">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-10 mb-12">
+        <div>
+          <div class="flex items-center gap-3 mb-5">
+            <svg width="28" height="28" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 20 L20 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
+              <path d="M20 20 L60 20 C75 20 85 30 85 45 C85 60 75 70 60 70 L20 70" stroke="#D97706" stroke-width="8" stroke-linecap="round" fill="none"/>
+              <path d="M60 70 L80 80" stroke="#D97706" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="60" cy="45" r="4" fill="#F59E0B"/>
+            </svg>
+            <span class="text-lg font-black uppercase tracking-tighter">Roero<span class="text-neutral-600">IT</span></span>
+          </div>
+          <p class="text-sm text-neutral-400 leading-relaxed mb-5 max-w-xs">Assistenza informatica artigianale nel cuore del Roero. Riparazioni, reti, videosorveglianza e sviluppo web con trasparenza assoluta.</p>
+          <div class="flex gap-3">
+            <a href="#" aria-label="Instagram" class="w-9 h-9 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center hover:border-roero-gold hover:text-roero-light transition-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+            <a href="#" aria-label="LinkedIn" class="w-9 h-9 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center hover:border-roero-gold hover:text-roero-light transition-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" aria-label="Facebook" class="w-9 h-9 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center hover:border-roero-gold hover:text-roero-light transition-all">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-[0.2em] text-white mb-5">Navigazione</h4>
+          <ul class="space-y-3 text-sm text-neutral-400">
+            <li><a href="#servizi" class="hover:text-roero-light transition-colors">Servizi</a></li>
+            <li><a href="#processo" class="hover:text-roero-light transition-colors">Processo di lavoro</a></li>
+            <li><a href="#stato" class="hover:text-roero-light transition-colors">Stato riparazione</a></li>
+            <li><a href="#faq" class="hover:text-roero-light transition-colors">Domande frequenti</a></li>
+            <li><a href="#contatti" class="hover:text-roero-light transition-colors">Contatti</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-[0.2em] text-white mb-5">Contatti rapidi</h4>
+          <ul class="space-y-3 text-sm text-neutral-400">
+            <li class="flex items-start gap-2"><span class="text-roero-light">📍</span> Via Torino 25, Sommariva del Bosco (CN)</li>
+            <li class="flex items-start gap-2"><span class="text-roero-light">📞</span> <a href="https://wa.me/393287971003" class="hover:text-roero-light transition-colors">328 797 1003</a></li>
+            <li class="flex items-start gap-2"><span class="text-roero-light">✉️</span> <a href="mailto:it@roeroit.it" class="hover:text-roero-light transition-colors">it@roeroit.it</a></li>
+            <li class="flex items-start gap-2"><span class="text-roero-light">⏰</span> Lun-Ven 9:00-18:00</li>
+          </ul>
+        </div>
       </div>
-      <div class="text-neutral-500 text-xs uppercase tracking-[0.18em] text-center">Sommariva del Bosco · Roero · Piemonte</div>
-      <div class="text-neutral-600 text-xs uppercase tracking-[0.18em]">&copy; 2026 Roero IT</div>
+
+      <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="text-neutral-600 text-xs uppercase tracking-[0.15em]">&copy; 2026 Roero IT · P.IVA XXXXXXXXXXX</div>
+        <div class="flex gap-5 text-xs text-neutral-500">
+          <a href="#" class="hover:text-roero-light transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-roero-light transition-colors">Cookie Policy</a>
+          <a href="#" class="hover:text-roero-light transition-colors">Termini</a>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <a href="https://wa.me/393287971003?text=Ciao%20Roero%20IT,%20vorrei%20informazioni%20sui%20vostri%20servizi." target="_blank" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
+  <!-- WhatsApp float -->
+  <a href="https://wa.me/393287971003?text=Ciao%20Roero%20IT,%20vorrei%20informazioni%20sui%20vostri%20servizi." target="_blank" rel="noopener" class="whatsapp-float" aria-label="Contattaci su WhatsApp">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
   </a>
+
+  <!-- Banner cookies GDPR -->
+  <div id="cookieBanner" class="fixed bottom-0 inset-x-0 z-50 p-4 md:p-6">
+    <div class="max-w-5xl mx-auto glass rounded-2xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4">
+      <div class="flex-1">
+        <h4 class="text-sm font-bold text-white mb-1">🍪 Utilizziamo i cookie</h4>
+        <p class="text-xs text-neutral-400 leading-relaxed">Usiamo cookie tecnici per il funzionamento del sito e, con il tuo consenso, cookie analitici per migliorare l'esperienza. <a href="#" class="text-roero-light underline">Leggi la Cookie Policy</a>.</p>
+      </div>
+      <div class="flex gap-2 flex-shrink-0">
+        <button type="button" onclick="rechazarCookies()" class="px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-neutral-400 hover:text-white transition-colors">Rifiuta</button>
+        <button type="button" onclick="aceptarCookies()" class="btn-gold px-5 py-2 text-xs font-bold uppercase tracking-[0.12em]">Accetta</button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL ÉXITO -->
   <div id="successModal" class="fixed inset-0 z-[100] hidden items-center justify-center px-4">
@@ -513,24 +821,82 @@
   </div>
 
   <script>
+    // RELOJ ITALIA
     function updateClock(){
-      const c = document.getElementById('live-clock');
-      const d = document.getElementById('live-date');
-      if(!c || !d) return;
+      const targets = [
+        { c: document.getElementById('live-clock'), d: document.getElementById('live-date') },
+        { c: document.getElementById('live-clock-mobile'), d: document.getElementById('live-date-mobile') }
+      ];
       const now = new Date();
       const options = { timeZone: 'Europe/Rome' };
-      c.textContent = now.toLocaleTimeString('it-IT', Object.assign({}, options, { hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23' }));
+      const timeStr = now.toLocaleTimeString('it-IT', Object.assign({}, options, { hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23' }));
       let dateStr = now.toLocaleDateString('it-IT', Object.assign({}, options, { weekday:'long', day:'numeric', month:'long', year:'numeric' }));
-      d.textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+      dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+      targets.forEach(function(t){
+        if(t.c) t.c.textContent = timeStr;
+        if(t.d) t.d.textContent = dateStr;
+      });
     }
     if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', function(){ updateClock(); setInterval(updateClock,1000); }); }
     else { updateClock(); setInterval(updateClock,1000); }
 
+    // MENÚ HAMBURGUESA
+    function toggleMenu(){
+      const btn = document.getElementById('menuBtn');
+      const menu = document.getElementById('mobileMenu');
+      btn.classList.toggle('open');
+      menu.classList.toggle('hidden');
+    }
+    function cerrarMenu(){
+      document.getElementById('menuBtn').classList.remove('open');
+      document.getElementById('mobileMenu').classList.add('hidden');
+    }
+
+    // FAQ
+    function toggleFaq(el){
+      el.parentElement.classList.toggle('open');
+    }
+
+    // CONTADORES ANIMADOS
+    function animarContadores(){
+      document.querySelectorAll('[data-count]').forEach(function(el){
+        const target = parseInt(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        let current = 0;
+        const step = Math.max(1, Math.ceil(target / 40));
+        const interval = setInterval(function(){
+          current += step;
+          if(current >= target){ current = target; clearInterval(interval); }
+          el.textContent = current + suffix;
+        }, 30);
+      });
+    }
+
+    // OBSERVER DE ANIMACIONES
     const observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('visible'); });
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          e.target.classList.add('visible');
+          if(e.target.classList.contains('stats-trigger')) animarContadores();
+        }
+      });
     }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
     document.querySelectorAll('.reveal-up').forEach(function(el){ observer.observe(el); });
 
+    // COOKIES GDPR
+    function aceptarCookies(){
+      localStorage.setItem('roero-cookies', 'accepted');
+      document.getElementById('cookieBanner').classList.add('hidden');
+    }
+    function rechazarCookies(){
+      localStorage.setItem('roero-cookies', 'rejected');
+      document.getElementById('cookieBanner').classList.add('hidden');
+    }
+    if(localStorage.getItem('roero-cookies')){
+      document.getElementById('cookieBanner').classList.add('hidden');
+    }
+
+    // FORMULARIO
     const configCategorie = {
       'PC/Mac': { label: 'Modello del computer *', placeholder: 'Es. MacBook Pro 2020, Dell XPS 15, HP Pavilion...' },
       'Smartphone/Tablet': { label: 'Modello del dispositivo *', placeholder: 'Es. iPhone 13, Samsung S22, iPad Pro...' },

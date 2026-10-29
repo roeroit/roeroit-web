@@ -60,9 +60,14 @@
     .text-gold-grad { background:linear-gradient(115deg,#F59E0B 0%,#D97706 55%,#B45309 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
     .glass { background:rgba(20,20,22,.72); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.08); }
 
+    .hero-bg-img { filter:grayscale(100%) contrast(1.08) brightness(.85); }
     .stato-bg-img { filter:grayscale(100%) contrast(1.15) brightness(1); }
-.stato-glow { background:radial-gradient(700px circle at 50% 50%, rgba(245,158,11,.22), transparent 60%); }
-    .stato-glow { background:radial-gradient(620px circle at 50% 45%, rgba(245,158,11,.17), transparent 62%); }
+    .hero-glow {
+      background:
+        radial-gradient(480px circle at 80% 62%, rgba(245,158,11,.30), transparent 55%),
+        radial-gradient(900px circle at 72% 52%, rgba(217,119,6,.13), transparent 65%);
+    }
+    .stato-glow { background:radial-gradient(700px circle at 50% 50%, rgba(245,158,11,.22), transparent 60%); }
 
     .reveal-up { opacity:0; transform:translateY(34px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
     .reveal-up.visible { opacity:1; transform:translateY(0); }
@@ -88,10 +93,8 @@
     .svc-card { transition:all .3s cubic-bezier(.16,1,.3,1); border:1px solid rgba(255,255,255,.06); background:rgba(20,20,22,.45); border-radius:1.1rem; }
     .svc-card:hover { border-color:rgba(217,119,6,.35); background:rgba(24,24,27,.85); transform:translateY(-4px); box-shadow:0 20px 44px -22px rgba(0,0,0,.9); }
 
-    /* Iconos SVG de servicios */
     .svc-icon { width:28px; height:28px; stroke:#D97706; stroke-width:1.8; fill:none; stroke-linecap:round; stroke-linejoin:round; }
 
-    /* Menú hamburguesa */
     #menuBtn span { transition:all .3s ease; }
     #menuBtn.open span:nth-child(1){ transform:translateY(6px) rotate(45deg); }
     #menuBtn.open span:nth-child(2){ opacity:0; }
@@ -99,7 +102,6 @@
     #mobileMenu { transition:opacity .3s ease, transform .3s ease; }
     #mobileMenu.hidden { opacity:0; transform:translateY(-10px); pointer-events:none; }
 
-    /* FAQ acordeón */
     .faq-item { border-bottom:1px solid rgba(255,255,255,.06); }
     .faq-question { cursor:pointer; transition:color .2s; }
     .faq-question:hover { color:#F59E0B; }
@@ -108,11 +110,9 @@
     .faq-item.open .faq-icon { transform:rotate(45deg); }
     .faq-icon { transition:transform .3s ease; }
 
-    /* Logos marcas */
     .brand-logo { filter:grayscale(100%) brightness(1.5); opacity:.55; transition:all .3s ease; font-weight:800; letter-spacing:-.02em; }
     .brand-logo:hover { opacity:1; filter:grayscale(0%) brightness(1); }
 
-    /* Testimonios */
     .testimonial { transition:all .3s ease; }
     .testimonial:hover { transform:translateY(-3px); border-color:rgba(217,119,6,.35) !important; }
 
@@ -120,7 +120,6 @@
     .whatsapp-float:hover { transform:scale(1.08); box-shadow:0 12px 34px rgba(37,211,102,.6); }
     .whatsapp-float svg { width:30px; height:30px; fill:#fff; }
 
-    /* Banner cookies */
     #cookieBanner { transition:transform .5s ease, opacity .5s ease; }
     #cookieBanner.hidden { transform:translateY(100%); opacity:0; pointer-events:none; }
 
@@ -136,7 +135,6 @@
     @keyframes confettiFall { 0%{opacity:1; transform:translateY(0) rotate(0deg);} 100%{opacity:0; transform:translateY(260px) rotate(540deg);} }
     .hp-field { position:absolute; left:-9999px; opacity:0; height:0; width:0; overflow:hidden; }
 
-    /* Stats counter */
     .stat-number { font-variant-numeric:tabular-nums; }
   </style>
 </head>
@@ -439,7 +437,7 @@
   <section id="stato" class="relative py-24 md:py-32 overflow-hidden">
     <div class="absolute inset-0 z-0 pointer-events-none">
       <img src="/laboratorio.jpg" alt="" onerror="this.style.display='none'" class="stato-bg-img w-full h-full object-cover opacity-[0.35]" style="object-position:center 50%;" loading="lazy">
-      <div class="absolute inset-0 bg-gradient-to-b from-dark/90 via-dark/75 to-dark"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/50 to-dark/80"></div>
       <div class="absolute inset-0 stato-glow"></div>
     </div>
 
@@ -553,7 +551,7 @@
         </div>
 
         <div class="rounded-2xl border border-white/8 bg-card/50 p-7">
-          <h3 class="text-sm font-bold uppercase tracking-[0.18em] text-white mb-5 flex items-center gap-2"><span class="text-roero-light">💰</span> Prezzi indicativi (Zona Roero)</h3>
+          <h3 class="text-sm font-bold uppercase tracking-[0.18em] text-white mb-5 flex items-center gap-2"><span class="text-roero-light"></span> Prezzi indicativi (Zona Roero)</h3>
           <ul class="text-sm text-neutral-300 space-y-2.5 mb-5">
             <li class="flex justify-between gap-4"><span>🔧 PC / Mac</span><span class="text-white font-bold whitespace-nowrap">50€ – 90€</span></li>
             <li class="flex justify-between gap-4"><span>📱 Smartphone / Tablet</span><span class="text-white font-bold whitespace-nowrap">70€ – 130€</span></li>
@@ -746,7 +744,7 @@
           <h4 class="text-xs font-bold uppercase tracking-[0.2em] text-white mb-5">Contatti rapidi</h4>
           <ul class="space-y-3 text-sm text-neutral-400">
             <li class="flex items-start gap-2"><span class="text-roero-light">📍</span> Via Torino 25, Sommariva del Bosco (CN)</li>
-            <li class="flex items-start gap-2"><span class="text-roero-light">📞</span> <a href="https://wa.me/393287971003" class="hover:text-roero-light transition-colors">328 797 1003</a></li>
+            <li class="flex items-start gap-2"><span class="text-roero-light"></span> <a href="https://wa.me/393287971003" class="hover:text-roero-light transition-colors">328 797 1003</a></li>
             <li class="flex items-start gap-2"><span class="text-roero-light">✉️</span> <a href="mailto:it@roeroit.it" class="hover:text-roero-light transition-colors">it@roeroit.it</a></li>
             <li class="flex items-start gap-2"><span class="text-roero-light">⏰</span> Lun-Ven 9:00-18:00</li>
           </ul>
@@ -817,7 +815,6 @@
   </div>
 
   <script>
-    // RELOJ ITALIA
     function updateClock(){
       const targets = [
         { c: document.getElementById('live-clock'), d: document.getElementById('live-date') },
@@ -836,7 +833,6 @@
     if(document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', function(){ updateClock(); setInterval(updateClock,1000); }); }
     else { updateClock(); setInterval(updateClock,1000); }
 
-    // MENÚ HAMBURGUESA
     function toggleMenu(){
       const btn = document.getElementById('menuBtn');
       const menu = document.getElementById('mobileMenu');
@@ -848,12 +844,10 @@
       document.getElementById('mobileMenu').classList.add('hidden');
     }
 
-    // FAQ
     function toggleFaq(el){
       el.parentElement.classList.toggle('open');
     }
 
-    // CONTADORES ANIMADOS
     function animarContadores(){
       document.querySelectorAll('[data-count]').forEach(function(el){
         const target = parseInt(el.dataset.count);
@@ -868,7 +862,6 @@
       });
     }
 
-    // OBSERVER DE ANIMACIONES
     const observer = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         if(e.isIntersecting){
@@ -879,7 +872,6 @@
     }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
     document.querySelectorAll('.reveal-up').forEach(function(el){ observer.observe(el); });
 
-    // COOKIES GDPR
     function aceptarCookies(){
       localStorage.setItem('roero-cookies', 'accepted');
       document.getElementById('cookieBanner').classList.add('hidden');
@@ -892,7 +884,6 @@
       document.getElementById('cookieBanner').classList.add('hidden');
     }
 
-    // FORMULARIO
     const configCategorie = {
       'PC/Mac': { label: 'Modello del computer *', placeholder: 'Es. MacBook Pro 2020, Dell XPS 15, HP Pavilion...' },
       'Smartphone/Tablet': { label: 'Modello del dispositivo *', placeholder: 'Es. iPhone 13, Samsung S22, iPad Pro...' },

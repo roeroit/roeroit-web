@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diagnóstico de Imagen - Roero IT</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #0a0a0a;
+      color: #00ff00;
+      padding: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1 { color: #D97706; border-bottom: 2px solid #D97706; padding-bottom: 10px; }
+    .test { 
+      background: #1a1a1a; 
+      border: 1px solid #333; 
+      padding: 15px; 
+      margin: 15px 0; 
+      border-radius: 5px;
+    }
+    .success { color: #00ff00; font-weight: bold; }
+    .error { color: #ff4444; font-weight: bold; }
+    .warning { color: #ffaa00; font-weight: bold; }
+    img { 
+      max-width: 100%; 
+      border: 2px solid #D97706; 
+      margin: 10px 0;
+      display: block;
+    }
+    code { 
+      background: #000; 
+      padding: 2px 6px; 
+      border-radius: 3px;
+      color: #F59E0B;
+    }
+    button {
+      background: #D97706;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 5px;
+      border-radius: 5px;
+    }
+    button:hover { background: #F59E0B; }
+  </style>
+</head>
+<body>
+  <h1>🔍 Diagnóstico de Imagen - laboratorio.jpg</h1>
+  
+  <div class="test">
+    <h2>📋 Información del sitio</h2>
+    <p><strong>URL actual:</strong> <code id="currentUrl"></code></p>
+    <p><strong>Protocolo:</strong> <code id="protocol"></code></p>
+    <p><strong>Dominio:</strong> <code id="domain"></code></p>
+  </div>
+
+  <div class="test">
+    <h2>🧪 Test 1: Ruta absoluta /laboratorio.jpg</h2>
+    <p>Probando: <code>/laboratorio.jpg</code></p>
+    <img id="img1" src="/laboratorio.jpg" alt="Test 1" onerror="this.style.display='none'; document.getElementById('result1').innerHTML='<span class=error>❌ FALLÓ - La imagen NO se cargó</span>'" onload="document.getElementById('result1').innerHTML='<span class=success>✅ FUNCIONA - La imagen se cargó correctamente</span>'">
+    <p id="result1"><span class="warning">⏳ Cargando...</span></p>
+  </div>
+
+  <div class="test">
+    <h2>🧪 Test 2: Ruta relativa laboratorio.jpg</h2>
+    <p>Probando: <code>laboratorio.jpg</code> (sin barra inicial)</p>
+    <img id="img2" src="laboratorio.jpg" alt="Test 2" onerror="this.style.display='none'; document.getElementById('result2').innerHTML='<span class=error>❌ FALLÓ - La imagen NO se cargó</span>'" onload="document.getElementById('result2').innerHTML='<span class=success>✅ FUNCIONA - La imagen se cargó correctamente</span>'">
+    <p id="result2"><span class="warning">⏳ Cargando...</span></p>
+  </div>
+
+  <div class="test">
+    <h2>🧪 Test 3: Con caché forzado</h2>
+    <p>Probando: <code>/laboratorio.jpg?v=123456</code> (evita caché)</p>
+    <img id="img3" src="/laboratorio.jpg?v=123456" alt="Test 3" onerror="this.style.display='none'; document.getElementById('result3').innerHTML='<span class=error>❌ FALLÓ - La imagen NO se cargó</span>'" onload="document.getElementById('result3').innerHTML='<span class=success>✅ FUNCIONA - La imagen se cargó correctamente</span>'">
+    <p id="result3"><span class="warning">⏳ Cargando...</span></p>
+  </div>
+
+  <div class="test">
+    <h2>🧪 Test 4: Verificar existencia con fetch</h2>
+    <p>Usando JavaScript para verificar si el archivo existe:</p>
+    <p id="fetchResult"><span class="warning">⏳ Verificando...</span></p>
+  </div>
+
+  <div class="test">
+    <h2>📊 Resultados de console.log</h2>
+    <p>Revisá la consola del navegador (F12) para ver mensajes de error detallados.</p>
+    <button onclick="verificarTodo()">🔄 Re-ejecutar todos los tests</button>
+    <button onclick="mostrarConsola()">📋 Mostrar información de consola</button>
+  </div>
+
+  <div class="test">
+    <h2>💡 Soluciones posibles</h2>
+    <div id="soluciones"></div>
+  </div>
+
+  <script>
+    // Información básica
+    document.getElementById('currentUrl').textContent = window.location.href;
+    document.getElementById('protocol').textContent = window.location.protocol;
+    document.getElementById('domain').textContent = window.location.hostname;
+
+    // Test 4: Fetch
+    async function verificarFetch() {
+      const resultEl = document.getElementById('fetchResult');
+      try {
+        const response = await fetch('/laboratorio.jpg', { method: 'HEAD' });
+        if (response.ok) {
+          resultEl.innerHTML = `<span class="success">✅ El archivo EXISTE en el servidor</span><br>
+            <strong>Status:</strong> ${response.status} ${response.statusText}<br>
+            <strong>Content-Type:</strong> ${response.headers.get('content-type') || 'No disponible'}<br>
+            <strong>Size:</strong> ${response.headers.get('content-length') || 'Desconocido'} bytes`;
+        } else {
+          resultEl.innerHTML = `<span class="error">❌ El archivo NO existe o hay un error</span><br>
+            <strong>Status:</strong> ${response.status} ${response.statusText}`;
+        }
+      } catch (error) {
+        resultEl.innerHTML = `<span class="error">❌ Error de red:</span> ${error.message}`;
+      }
+    }
+
+    // Ejecutar fetch al cargar
+    verificarFetch();
+
+    // Función para re-ejecutar
+    function verificarTodo() {
+      location.reload();
+    }
+
+    // Mostrar información de consola
+    function mostrarConsola() {
+      console.log('=== DIAGNÓSTICO DE IMAGEN ===');
+      console.log('URL actual:', window.location.href);
+      console.log('Probando rutas:');
+      console.log('1. /laboratorio.jpg');
+      console.log('2. laboratorio.jpg');
+      console.log('3. /laboratorio.jpg?v=123456');
+      console.log('Revisá la pestaña "Network" (Red) en las herramientas de desarrollador (F12) para ver los errores de carga.');
+      alert('Revisá la consola del navegador (F12) para ver los mensajes de diagnóstico.');
+    }
+
+    // Generar soluciones basadas en resultados
+    setTimeout(() => {
+      const soluciones = document.getElementById('soluciones');
+      const img1 = document.getElementById('img1');
+      const img2 = document.getElementById('img2');
+      const img3 = document.getElementById('img3');
+      
+      let html = '<ul>';
+      
+      if (img1.style.display === 'none' && img2.style.display === 'none') {
+        html += '<li class="error"><strong>Problema:</strong> La imagen no existe en ninguna ruta.</li>';
+        html += '<li><strong>Solución:</strong> Verificá que el archivo <code>laboratorio.jpg</code> esté en la misma carpeta que este archivo HTML.</li>';
+        html += '<li><strong>Verificar:</strong> El nombre debe ser exactamente <code>laboratorio.jpg</code> (minúsculas, sin espacios).</li>';
+      } else if (img1.style.display === 'none' && img2.style.display !== 'none') {
+        html += '<li class="warning"><strong>Problema:</strong> La ruta absoluta no funciona pero la relativa sí.</li>';
+        html += '<li><strong>Solución:</strong> En tu <code>index.html</code>, cambiá <code>src="/laboratorio.jpg"</code> por <code>src="laboratorio.jpg"</code> (sin la barra inicial).</li>';
+      } else if (img1.style.display !== 'none') {
+        html += '<li class="success"><strong>¡Perfecto!</strong> La imagen se carga correctamente con la ruta absoluta.</li>';
+        html += '<li>El problema en tu <code>index.html</code> puede ser de caché. Probá recargar con Ctrl+Shift+R.</li>';
+      }
+      
+      html += '<li><strong>Verificar en GitHub:</strong> El archivo debe estar en la raíz del repositorio, no dentro de una carpeta.</li>';
+      html += '<li><strong>Verificar en Vercel:</strong> A veces tarda 1-2 minutos en actualizar después de un push.</li>';
+      html += '</ul>';
+      
+      soluciones.innerHTML = html;
+    }, 2000);
+  </script>
+</body>
+</html>

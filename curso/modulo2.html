@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livello 2: Creazione di Siti Web Reali & Layout Avanzato - Riccardo</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #dbeafe;
+      --secondary: #0f172a;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-bg: #0b1329;
+      --sidebar-text: #f8fafc;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    #sidebar {
+      width: 320px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      border-right: 1px solid #1e293b;
+    }
+
+    #main-content {
+      flex: 1;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .btn-back-level {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #334155;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back-level:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      color: var(--primary);
+    }
+
+    .lang-selector {
+      display: flex;
+      background: var(--border);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar */
+    .sidebar-header {
+      padding: 1.75rem 1.5rem 1.25rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .student-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+    }
+
+    .student-badge strong { color: #38bdf8; }
+
+    .sidebar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .mentor-note {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
+    .progress-container {
+      padding: 1.25rem 1.5rem;
+      background: #090e1d;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #10b981);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.925rem;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-item:hover { background: #1e293b; color: #f8fafc; }
+    .nav-item.active { background: var(--primary); color: #ffffff; font-weight: 600; }
+    .nav-item .icon { font-size: 1.15rem; }
+    .nav-item .check { margin-left: auto; font-size: 0.85rem; color: var(--success); display: none; }
+    .nav-item.completed .check { display: inline-block; }
+
+    /* Module cards */
+    .module-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .module-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1 { font-size: 1.85rem; margin-bottom: 0.5rem; color: #0f172a; }
+    h2 { font-size: 1.35rem; margin: 1.5rem 0 0.75rem; color: #0f172a; }
+    h3 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem; color: #0f172a; }
+    p { margin-bottom: 1rem; color: #334155; }
+    ul, ol { margin: 0.5rem 0 1.25rem 1.5rem; color: #334155; }
+    li { margin-bottom: 0.4rem; }
+
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: #f0fdf4;
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.tip { border-left-color: #0ea5e9; background: #f0f9ff; }
+    .callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
+
+    .callout-title { font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 6px; }
+
+    .code-container {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 1.1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      position: relative;
+    }
+
+    .code-badge {
+      position: absolute;
+      top: 8px; right: 10px;
+      font-size: 0.7rem; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    .copy-btn {
+      position: absolute; bottom: 8px; right: 10px;
+      background: #334155; color: #f1f5f9;
+      border: none; border-radius: 4px; padding: 4px 10px;
+      font-size: 0.75rem; cursor: pointer; opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+    .copy-btn:hover { opacity: 1; }
+
+    /* Interactive Site Builder Workbench */
+    .builder-container {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+
+    .builder-toolbar {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .builder-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      padding: 16px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .control-group input, .control-group select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .viewport-selector {
+      display: flex;
+      gap: 6px;
+    }
+
+    .viewport-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .viewport-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .preview-frame-wrap {
+      padding: 20px;
+      background: #e2e8f0;
+      display: flex;
+      justify-content: center;
+      min-height: 480px;
+      transition: all 0.3s ease;
+    }
+
+    .preview-device {
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
+      width: 100%;
+      transition: width 0.3s ease;
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
+    }
+
+    .preview-device.mobile {
+      width: 375px;
+      border-radius: 24px;
+      border: 8px solid #0f172a;
+    }
+
+    /* Live Mini Web Components inside Preview */
+    .mock-site-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.85rem;
+    }
+    .mock-site-hero {
+      padding: 40px 20px;
+      text-align: center;
+      color: white;
+    }
+    .mock-site-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      padding: 24px 20px;
+    }
+    .mock-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+    .mock-site-contact {
+      padding: 24px 20px;
+      background: #f8fafc;
+      border-top: 1px solid #e2e8f0;
+    }
+    .mock-footer {
+      padding: 14px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Quiz styles */
+    .quiz-container {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-top: 2rem;
+    }
+
+    .quiz-title {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem;
+    }
+
+    .question-block {
+      background: #ffffff; padding: 1.25rem;
+      border-radius: 8px; border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+
+    .question-text { font-weight: 600; margin-bottom: 1rem; }
+
+    .options-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .option-btn {
+      text-align: left; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 6px;
+      background: #ffffff; cursor: pointer; font-size: 0.9rem;
+      transition: all 0.15s ease;
+    }
+    .option-btn:hover { background: #f1f5f9; }
+    .option-btn.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+    .option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
+    .option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
+
+    .feedback-box {
+      margin-top: 0.75rem; padding: 10px 14px;
+      border-radius: 6px; font-size: 0.875rem; display: none;
+    }
+    .feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
+    .feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
+
+    .btn-verify {
+      background: var(--primary); color: white; border: none;
+      padding: 10px 20px; border-radius: 6px; font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-verify:hover { background: var(--primary-hover); }
+
+    .btn-next-module {
+      background: var(--success); color: white; border: none;
+      padding: 12px 24px; border-radius: 8px; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center;
+      gap: 8px; margin-top: 1.5rem;
+    }
+    .btn-next-module:hover { background: #059669; }
+
+    .certificate-card {
+      border: 4px double #cbd5e1;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      padding: 3rem 2rem; text-align: center;
+      border-radius: 16px; box-shadow: var(--shadow-lg);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { width: 100%; height: auto; position: relative; }
+      #main-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="student-badge">
+        <span>🚀</span>
+        <span id="txt-student-badge">Livello 2: <strong>Riccardo</strong></span>
+      </div>
+      <div class="sidebar-title" id="txt-course-title">Creazione di Siti Web Reali</div>
+      <div class="mentor-note" id="txt-mentor-note">Con il tuo mentore argentino 🇦🇷🇮🇹</div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-info">
+        <span id="txt-progress-label">Progresso Livello 2</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchSection(0)">
+        <span class="icon">🏛️</span>
+        <span id="nav-s0">1. Anatomia di un Sito</span>
+        <span class="check" id="check-0">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(1)">
+        <span class="icon">📐</span>
+        <span id="nav-s1">2. Flexbox & CSS Grid</span>
+        <span class="check" id="check-1">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(2)">
+        <span class="icon">📱</span>
+        <span id="nav-s2">3. Responsive & Mobile</span>
+        <span class="check" id="check-2">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(3)">
+        <span class="icon">🛠️</span>
+        <span id="nav-s3">4. Site Builder dal Vivo</span>
+        <span class="check" id="check-3">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(4)">
+        <span class="icon">🎓</span>
+        <span id="nav-s4">5. Diploma Web Creator</span>
+        <span class="check" id="check-4">✓</span>
+      </li>
+    </ul>
+
+    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #64748b; border-top: 1px solid #1e293b;">
+      <a href="index.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;" id="lnk-back-lvl1">⬅️ Torna al Livello 1 (Fondamenti)</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+    <!-- Top Bar -->
+    <div class="top-controls">
+      <a href="index.html" class="btn-back-level" id="btn-top-back">
+        <span>⬅️</span>
+        <span id="txt-top-back">Torna al Livello 1 (Fondamenti & DB)</span>
+      </a>
+
+      <!-- Language Selector -->
+      <div class="lang-selector">
+        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+      </div>
+    </div>
+
+    <!-- SECTION 0: ANATOMY OF A REAL SITE -->
+    <section class="module-card" id="sec-0">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s0">Fase 1</span>
+        <h1 id="title-s0">L'Anatomia di una Pagina Web Professionale</h1>
+        <p id="sub-s0" style="color: var(--text-muted); font-size: 1.05rem;">
+          Come strutturano i loro progetti i professionisti usando HTML semantico.
+        </p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 <span id="tip-s0-title">Le 5 Sezioni Sacre di qualsiasi sito</span></div>
+        <div id="tip-s0-text">
+          Che si tratti del sito di un ristorante italiano, di uno studio di avvocati o di una landing page, c'è sempre uno schema vincente: <strong>Header</strong> (Logo e Menu) $\rightarrow$ <strong>Hero Section</strong> (Titolo d'impatto con pulsante d'azione) $\rightarrow$ <strong>Features / Servizi</strong> (Griglia a colonne) $\rightarrow$ <strong>Contatto</strong> (Form per ricevere clienti) $\rightarrow$ <strong>Footer</strong> (Copyright e contatti).
+        </div>
+      </div>
+
+      <h2 id="h2-s0-semantic">1. I Tag Semantici (Non usare solo &lt;div&gt;!)</h2>
+      <p id="p-s0-semantic">
+        Nel Livello 1 abbiamo visto i tag base. Ora vediamo i tag che fanno capire a Google e agli smartphone cosa c'è nella pagina:
+      </p>
+
+      <div class="code-container">
+        <span class="code-badge">HTML Semantico</span>
+        <pre><code>&lt;body&gt;
+  &lt;!-- 1. Intestazione con navigazione --&gt;
+  &lt;header&gt;
+    &lt;nav&gt;...menu con link...&lt;/nav&gt;
+  &lt;/header&gt;
+
+  &lt;!-- 2. Contenuto principale --&gt;
+  &lt;main&gt;
+    &lt;section class="hero"&gt;...copertina con titolo e bottone...&lt;/section&gt;
+    &lt;section class="servizi"&gt;...griglia delle offerte...&lt;/section&gt;
+    &lt;section class="contatti"&gt;...modulo email...&lt;/section&gt;
+  &lt;/main&gt;
+
+  &lt;!-- 3. Piè di pagina --&gt;
+  &lt;footer&gt;
+    &lt;p&gt;&copy; 2026 Creato da Riccardo&lt;/p&gt;
+  &lt;/footer&gt;
+&lt;/body&gt;</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <!-- Quiz Section 0 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-s0-title">Verifica Rapida: Sezione 1</span>
+        </div>
+
+        <div class="question-block" id="q-block-0-0">
+          <div class="question-text" id="q-0-0-text">1. Perché è molto meglio usare &lt;header&gt;, &lt;nav&gt; e &lt;footer&gt; invece di usare solo &lt;div&gt; dappertutto?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(0, 0, 0)">Perché rende il codice più pesante e lento</button>
+            <button class="option-btn" onclick="selectOption(0, 0, 1)">Perché Google capisce meglio il sito (SEO) e il codice è molto più ordinato e professionale</button>
+            <button class="option-btn" onclick="selectOption(0, 0, 2)">Perché senza di essi il CSS non funziona</button>
+          </div>
+          <div class="feedback-box" id="fb-0-0"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkSectionQuiz(0)" id="btn-check-0">Verifica Risposta</button>
+          <span id="score-badge-0" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(1)" id="btn-next-0">
+        <span id="txt-btn-next-0">Avanti alla Fase 2: Flexbox & CSS Grid ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 1: FLEXBOX & CSS GRID -->
+    <section class="module-card" id="sec-1" style="display: none;">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s1">Fase 2</span>
+        <h1 id="title-s1">I Due Grandi Maestri del Layout: Flexbox & CSS Grid</h1>
+        <p id="sub-s1" style="color: var(--text-muted); font-size: 1.05rem;">
+          Come mettere qualsiasi elemento dove vuoi senza impazzire.
+        </p>
+      </div>
+
+      <div class="callout mentor">
+        <div class="callout-title">🤝 <span id="mentor-s1-title">La Regola Chiara del tuo Mentor</span></div>
+        <div id="mentor-s1-text">
+          Riccardo, un tempo allineare elementi in CSS era un incubo. Oggi c'è una regola d'oro chiarissima:
+          <br>• Usa <strong>Flexbox</strong> per cose su <strong>una riga</strong> (es: menu con logo a sinistra e link a destra).
+          <br>• Usa <strong>CSS Grid</strong> per <strong>griglie a due dimensioni</strong> (es: schede prodotti 3x3 o gallerie di foto).
+        </div>
+      </div>
+
+      <h2 id="h2-s1-flex">1. Flexbox in 3 righe magiche</h2>
+      <div class="code-container">
+        <span class="code-badge">CSS Flexbox</span>
+        <pre><code>.menu-moderno {
+  display: flex;
+  justify-content: space-between; /* Spinge logo a sinistra e link a destra */
+  align-items: center;            /* Centra perfettamente in verticale */
+}</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <h2 id="h2-s1-grid">2. CSS Grid: Griglie Automatiche che si adattano da sole</h2>
+      <p id="p-s1-grid">
+        Questa riga singola è il segreto più potente del web moderno. Dice al browser: <em>"Crea colonne che si adattano automaticamente, con larghezza minima di 260px"</em>:
+      </p>
+
+      <div class="code-container">
+        <span class="code-badge">CSS Grid Magico</span>
+        <pre><code>.griglia-servizi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px; /* Spazio tra le card */
+}</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <!-- Quiz Section 1 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-s1-title">Verifica Rapida: Sezione 2</span>
+        </div>
+
+        <div class="question-block" id="q-block-1-0">
+          <div class="question-text" id="q-1-0-text">1. Qual è lo strumento perfetto per allineare gli elementi di una barra di navigazione orizzontale?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(1, 0, 0)">Flexbox (display: flex)</button>
+            <button class="option-btn" onclick="selectOption(1, 0, 1)">Database SQLite</button>
+            <button class="option-btn" onclick="selectOption(1, 0, 2)">Una tabella HTML antica &lt;table&gt;</button>
+          </div>
+          <div class="feedback-box" id="fb-1-0"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkSectionQuiz(1)" id="btn-check-1">Verifica Risposta</button>
+          <span id="score-badge-1" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(2)" id="btn-next-1">
+        <span id="txt-btn-next-1">Avanti alla Fase 3: Responsive & Mobile ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 2: RESPONSIVE DESIGN -->
+    <section class="module-card" id="sec-2" style="display: none;">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s2">Fase 3</span>
+        <h1 id="title-s2">Design Responsive: Funzionare su Cellulari & PC</h1>
+        <p id="sub-s2" style="color: var(--text-muted); font-size: 1.05rem;">
+          Più del 70% dei visitatori userà lo smartphone. Ecco come adattare il sito.
+        </p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">📱 <span id="tip-s2-title">La Media Query: L'interruttore del Design</span></div>
+        <div id="tip-s2-text">
+          Una <strong>Media Query</strong> è una condizione CSS che dice: <em>"Se lo schermo è più stretto di 768px (un cellulare o tablet verticale), applica queste nuove regole (es: metti il menu in colonna invece che in riga)"</em>.
+        </div>
+      </div>
+
+      <div class="code-container">
+        <span class="code-badge">CSS Responsive</span>
+        <pre><code>/* Per computer (schermi grandi) */
+.menu {
+  display: flex;
+  flex-direction: row;
+}
+
+/* Quando lo schermo è piccolo (Smartphone) */
+@media (max-width: 768px) {
+  .menu {
+    flex-direction: column; /* Gli elementi vanno uno sotto l'altro */
+    text-align: center;
+  }
+}</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <!-- Quiz Section 2 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-s2-title">Verifica Rapida: Sezione 3</span>
+        </div>
+
+        <div class="question-block" id="q-block-2-0">
+          <div class="question-text" id="q-2-0-text">1. A cosa serve la regola @media (max-width: 768px)?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(2, 0, 0)">Ad applicare regole CSS solo quando lo schermo è largo al massimo 768px (come uno smartphone)</button>
+            <button class="option-btn" onclick="selectOption(2, 0, 1)">A limitare la velocità di internet sul sito</button>
+            <button class="option-btn" onclick="selectOption(2, 0, 2)">A bloccare i visitatori da cellulare</button>
+          </div>
+          <div class="feedback-box" id="fb-2-0"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkSectionQuiz(2)" id="btn-check-2">Verifica Risposta</button>
+          <span id="score-badge-2" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(3)" id="btn-next-2">
+        <span id="txt-btn-next-2">Avanti alla Fase 4: Crea il tuo Sito dal Vivo ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE SITE BUILDER -->
+    <section class="module-card" id="sec-3" style="display: none;">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s3">Fase 4</span>
+        <h1 id="title-s3">Il Tuo Primo Sito Web Completo (Site Builder dal Vivo)</h1>
+        <p id="sub-s3" style="color: var(--text-muted); font-size: 1.05rem;">
+          Personalizza i parametri qui sotto, guarda come cambia il sito in tempo reale e copia il codice finito!
+        </p>
+      </div>
+
+      <!-- Live Site Builder UI -->
+      <div class="builder-container">
+        <div class="builder-toolbar">
+          <div style="font-weight: 700; font-size: 0.95rem; color: #38bdf8;">
+            🛠️ Generatore e Anteprima di un Sito Web Reale
+          </div>
+          <div class="viewport-selector">
+            <button class="viewport-btn active" id="btn-view-desktop" onclick="setDeviceView('desktop')">💻 Desktop</button>
+            <button class="viewport-btn" id="btn-view-mobile" onclick="setDeviceView('mobile')">📱 Mobile</button>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="builder-controls">
+          <div class="control-group">
+            <label id="lbl-theme">Tipo di Attività / Tema:</label>
+            <select id="b-theme" onchange="updateLiveSite()">
+              <option value="ristorante">🍕 Ristorante / Pizzeria Italiana</option>
+              <option value="portfolio">👨‍💻 Portfolio Web di Riccardo</option>
+              <option value="studio">⚖️ Studio Professionale & Servizi</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label id="lbl-site-title">Nome del Sito / Brand:</label>
+            <input type="text" id="b-title" value="Trattoria Bella Italia" oninput="updateLiveSite()">
+          </div>
+
+          <div class="control-group">
+            <label id="lbl-hero-text">Slogan Principale:</label>
+            <input type="text" id="b-slogan" value="Sapori autentici preparati con passione ogni giorno." oninput="updateLiveSite()">
+          </div>
+
+          <div class="control-group">
+            <label id="lbl-color">Colore Primario:</label>
+            <select id="b-color" onchange="updateLiveSite()">
+              <option value="#2563eb">Blu Moderno (#2563eb)</option>
+              <option value="#059669">Verde Smeraldo (#059669)</option>
+              <option value="#dc2626">Rosso Passione (#dc2626)</option>
+              <option value="#7c3aed">Viola Tech (#7c3aed)</option>
+              <option value="#0f172a">Nero Elegante (#0f172a)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Device Preview Frame -->
+        <div class="preview-frame-wrap">
+          <div class="preview-device" id="preview-device">
+            <!-- Simulated Navigation -->
+            <nav class="mock-site-nav">
+              <strong id="mock-brand" style="font-size: 1rem; color: #0f172a;">Trattoria Bella Italia</strong>
+              <div style="display: flex; gap: 12px; font-weight: 500; color: #475569;">
+                <span id="mock-link-1">Home</span>
+                <span id="mock-link-2">Servizi</span>
+                <span id="mock-link-3">Contatti</span>
+              </div>
+            </nav>
+
+            <!-- Simulated Hero -->
+            <section class="mock-site-hero" id="mock-hero" style="background: #2563eb;">
+              <h2 id="mock-hero-title" style="color: white; font-size: 1.5rem; margin-bottom: 8px;">Trattoria Bella Italia</h2>
+              <p id="mock-hero-desc" style="color: #e2e8f0; font-size: 0.95rem; max-width: 500px; margin: 0 auto 16px;">
+                Sapori autentici preparati con passione ogni giorno.
+              </p>
+              <button id="mock-hero-btn" style="background: white; color: #2563eb; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+                Prenota Ora
+              </button>
+            </section>
+
+            <!-- Simulated Grid -->
+            <section class="mock-site-grid" id="mock-grid">
+              <div class="mock-card">
+                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍕</div>
+                <strong id="card-1-title">Pizze Tradizionali</strong>
+                <p style="font-size: 0.75rem; color: #64748b;" id="card-1-desc">Impasto a lievitazione naturale 48h.</p>
+              </div>
+              <div class="mock-card">
+                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍝</div>
+                <strong id="card-2-title">Pasta Fresca</strong>
+                <p style="font-size: 0.75rem; color: #64748b;" id="card-2-desc">Fatta a mano secondo antica ricetta.</p>
+              </div>
+              <div class="mock-card">
+                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍷</div>
+                <strong id="card-3-title">Vini Selezionati</strong>
+                <p style="font-size: 0.75rem; color: #64748b;" id="card-3-desc">Le migliori etichette d'Italia.</p>
+              </div>
+            </section>
+
+            <!-- Simulated Contact -->
+            <section class="mock-site-contact">
+              <h4 id="mock-contact-title" style="margin-bottom: 8px; font-size: 0.9rem;">Richiedi Informazioni o Prenota</h4>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" placeholder="Nome" style="flex: 1; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;">
+                <button id="mock-contact-btn" style="background: #2563eb; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">Invia</button>
+              </div>
+            </section>
+
+            <!-- Simulated Footer -->
+            <footer class="mock-footer" id="mock-footer-text">
+              © 2026 Trattoria Bella Italia - Sito creato con Riccardo & Mentore
+            </footer>
+          </div>
+        </div>
+
+        <!-- Export Bar -->
+        <div style="padding: 14px 18px; background: #ffffff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <span style="font-size: 0.85rem; color: #475569;" id="txt-export-help">Ti piace questo sito? Puoi copiare il codice HTML/CSS completo per usarlo dove vuoi:</span>
+          <button class="btn-verify" onclick="copyFullSiteCode()" id="btn-copy-full-site">📋 Copia Codice del Sito Completo</button>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(4)" id="btn-next-3">
+        <span id="txt-btn-next-3">Visualizza il Diploma di Web Creator ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 4: CERTIFICATE LEVEL 2 -->
+    <section class="module-card" id="sec-4" style="display: none;">
+      <div class="certificate-card">
+        <div style="font-size: 3.5rem;">🚀</div>
+        <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;" id="cert-title">Certificato di Web Creator (Livello 2)</h1>
+        <p style="color: var(--text-muted); font-size: 1.15rem;" id="cert-sub">
+          Padronanza di Layout Moderni, Flexbox, Grid e Creazione di Siti
+        </p>
+
+        <div style="font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 1.5rem 0; border-bottom: 3px solid #3b82f6; display: inline-block; padding: 0 2rem 0.5rem;" id="cert-name">
+          Riccardo
+        </div>
+
+        <p style="max-width: 620px; margin: 1.5rem auto; font-size: 1.05rem;" id="cert-desc">
+          Ha completato con successo il <strong>Livello 2 Avanzato</strong> imparando a costruire siti web completi, reattivi per smartphone e pronti per il mercato con il suo mentore argentino.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem;">
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Riccardo</div>
+            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-student">Web Creator</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Mentore 🇦🇷</div>
+            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <button class="btn-verify" onclick="window.print()" id="btn-print-cert">🖨️ Stampa o Salva PDF</button>
+          <a href="index.html" class="btn-back-level" style="padding: 10px 18px;" id="btn-footer-home">⬅️ Torna al Livello 1</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let currentLang = 'it';
+    let currentSection = 0;
+    const totalSections = 5;
+
+    let userAnswers = { 0: {}, 1: {}, 2: {} };
+    let completedSections = { 0: false, 1: false, 2: false, 3: false, 4: false };
+
+    const quizData = {
+      0: [{
+        correct: 1,
+        feedback: {
+          it: {
+            correct: "Bravissimo! I tag semantici danno significato al contenuto, facilitano l'indicizzazione su Google (SEO) e migliorano la leggibilità del codice.",
+            wrong: "Riprova: Usare tag semantici come <nav> o <header> è la prassi moderna per SEO e ordine pulito del progetto."
+          },
+          es: {
+            correct: "¡Excelente! Las etiquetas semánticas aportan significado, facilitan el posicionamiento en Google (SEO) y mejoran el orden del código.",
+            wrong: "Reintenta: Usar etiquetas semánticas como <nav> o <header> es el estándar moderno para SEO y código profesional."
+          }
+        }
+      }],
+      1: [{
+        correct: 0,
+        feedback: {
+          it: {
+            correct: "Perfetto! Flexbox è il re indiscusso per allineare elementi su una singola riga o colonna.",
+            wrong: "Attenzione: Per una barra di navigazione flessibile e moderna, 'display: flex' è lo standard dell'industria."
+          },
+          es: {
+            correct: "¡Perfecto! Flexbox es el rey indiscutido para alinear elementos en una sola fila o columna.",
+            wrong: "Atención: Para una barra de navegación flexible y moderna, 'display: flex' es el estándar."
+          }
+        }
+      }],
+      2: [{
+        correct: 0,
+        feedback: {
+          it: {
+            correct: "Esattamente! Le Media Queries permettono al design di trasformarsi fluidamente quando viene aperto su cellulari.",
+            wrong: "Riprova: @media applica modifiche di layout in base alla larghezza dello schermo del visitatore."
+          },
+          es: {
+            correct: "¡Exactamente! Las Media Queries permiten que el diseño se transforme fluidamente cuando se abre en móviles.",
+            wrong: "Reintenta: @media aplica cambios de maquetación según el ancho de la pantalla del visitante."
+          }
+        }
+      }]
+    };
+
+    const i18n = {
+      it: {
+        studentBadge: "Livello 2: <strong>Riccardo</strong>",
+        courseTitle: "Creazione di Siti Web Reali",
+        mentorNote: "Con il tuo mentore argentino 🇦🇷🇮🇹",
+        progressLabel: "Progresso Livello 2",
+        lnkBackLvl1: "⬅️ Torna al Livello 1 (Fondamenti)",
+        txtTopBack: "Torna al Livello 1 (Fondamenti & DB)",
+        navS0: "1. Anatomia di un Sito",
+        navS1: "2. Flexbox & CSS Grid",
+        navS2: "3. Responsive & Mobile",
+        navS3: "4. Site Builder dal Vivo",
+        navS4: "5. Diploma Web Creator",
+
+        // S0
+        tagS0: "Fase 1",
+        titleS0: "L'Anatomia di una Pagina Web Professionale",
+        subS0: "Come strutturano i loro progetti i professionisti usando HTML semantico.",
+        tipS0Title: "Le 5 Sezioni Sacre di qualsiasi sito",
+        tipS0Text: "Che si tratti del sito di un ristorante italiano, di uno studio o di una landing page, c'è sempre uno schema vincente: <strong>Header</strong> (Logo e Menu) ➔ <strong>Hero Section</strong> (Titolo d'impatto con pulsante d'azione) ➔ <strong>Features / Servizi</strong> (Griglia a colonne) ➔ <strong>Contatto</strong> (Form per ricevere clienti) ➔ <strong>Footer</strong> (Copyright e contatti).",
+        h2S0Semantic: "1. I Tag Semantici (Non usare solo <div>!)",
+        pS0Semantic: "Nel Livello 1 abbiamo visto i tag base. Ora vediamo i tag che fanno capire a Google e agli smartphone cosa c'è nella pagina:",
+        quizS0Title: "Verifica Rapida: Sezione 1",
+        q00Text: "1. Perché è molto meglio usare <header>, <nav> e <footer> invece di usare solo <div> dappertutto?",
+        btnNext0: "Avanti alla Fase 2: Flexbox & CSS Grid ➔",
+
+        // S1
+        tagS1: "Fase 2",
+        titleS1: "I Due Grandi Maestri del Layout: Flexbox & CSS Grid",
+        subS1: "Come mettere qualsiasi elemento dove vuoi senza impazzire.",
+        mentorS1Title: "La Regola Chiara del tuo Mentor",
+        mentorS1Text: "Riccardo, un tempo allineare elementi in CSS era un incubo. Oggi c'è una regola d'oro chiarissima:<br>• Usa <strong>Flexbox</strong> per cose su <strong>una riga</strong> (es: menu con logo a sinistra e link a destra).<br>• Usa <strong>CSS Grid</strong> per <strong>griglie a due dimensioni</strong> (es: schede prodotti 3x3 o gallerie di foto).",
+        h2S1Flex: "1. Flexbox in 3 righe magiche",
+        h2S1Grid: "2. CSS Grid: Griglie Automatiche che si adattano da sole",
+        pS1Grid: "Questa riga singola è il segreto più potente del web moderno. Dice al browser: <em>'Crea colonne che si adattano automaticamente, con larghezza minima di 260px'</em>:",
+        quizS1Title: "Verifica Rapida: Sezione 2",
+        q10Text: "1. Qual è lo strumento perfetto per allineare gli elementi di una barra di navigazione orizzontale?",
+        btnNext1: "Avanti alla Fase 3: Responsive & Mobile ➔",
+
+        // S2
+        tagS2: "Fase 3",
+        titleS2: "Design Responsive: Funzionare su Cellulari & PC",
+        subS2: "Più del 70% dei visitatori userà lo smartphone. Ecco come adattare il sito.",
+        tipS2Title: "La Media Query: L'interruttore del Design",
+        tipS2Text: "Una <strong>Media Query</strong> è una condizione CSS che dice: <em>'Se lo schermo è più stretto di 768px (un cellulare o tablet verticale), applica queste nuove regole (es: metti il menu in colonna invece che in riga)'</em>.",
+        quizS2Title: "Verifica Rapida: Sezione 3",
+        q20Text: "1. A cosa serve la regola @media (max-width: 768px)?",
+        btnNext2: "Avanti alla Fase 4: Crea il tuo Sito dal Vivo ➔",
+
+        // S3 (Builder)
+        tagS3: "Fase 4",
+        titleS3: "Il Tuo Primo Sito Web Completo (Site Builder dal Vivo)",
+        subS3: "Personalizza i parametri qui sotto, guarda come cambia il sito in tempo reale e copia il codice finito!",
+        lblTheme: "Tipo di Attività / Tema:",
+        lblSiteTitle: "Nome del Sito / Brand:",
+        lblHeroText: "Slogan Principale:",
+        lblColor: "Colore Primario:",
+        txtExportHelp: "Ti piace questo sito? Puoi copiare il codice HTML/CSS completo per usarlo dove vuoi:",
+        btnCopyFullSite: "📋 Copia Codice del Sito Completo",
+        btnNext3: "Visualizza il Diploma di Web Creator ➔",
+
+        // Cert
+        certTitle: "Certificato di Web Creator (Livello 2)",
+        certSub: "Padronanza di Layout Moderni, Flexbox, Grid e Creazione di Siti",
+        certDesc: "Ha completato con successo il <strong>Livello 2 Avanzato</strong> imparando a costruire siti web completi, reattivi per smartphone e pronti per il mercato con il suo mentore argentino.",
+        certRoleStudent: "Web Creator",
+        certRoleMentor: "Docente & Guida 🇦🇷",
+        btnPrintCert: "🖨️ Stampa o Salva PDF",
+        btnFooterHome: "⬅️ Torna al Livello 1"
+      },
+      es: {
+        studentBadge: "Nivel 2: <strong>Ricardo</strong>",
+        courseTitle: "Creación de Sitios Web Reales",
+        mentorNote: "Con tu mentor argentino 🇦🇷🇮🇹",
+        progressLabel: "Progreso Nivel 2",
+        lnkBackLvl1: "⬅️ Volver al Nivel 1 (Fundamentos)",
+        txtTopBack: "Volver al Nivel 1 (Fundamentos & DB)",
+        navS0: "1. Anatomía de un Sitio",
+        navS1: "2. Flexbox & CSS Grid",
+        navS2: "3. Responsive & Mobile",
+        navS3: "4. Creador de Sitios en Vivo",
+        navS4: "5. Diploma Web Creator",
+
+        // S0
+        tagS0: "Fase 1",
+        titleS0: "La Anatomía de una Página Web Profesional",
+        subS0: "Cómo estructuran sus proyectos los profesionales usando HTML semántico.",
+        tipS0Title: "Las 5 Secciones Sagradas de cualquier sitio",
+        tipS0Text: "Ya sea el sitio de un restaurante italiano, un estudio o una landing page, siempre hay un esquema ganador: <strong>Header</strong> (Logo y Menú) ➔ <strong>Hero Section</strong> (Título de impacto con botón de llamada a la acción) ➔ <strong>Servicios / Características</strong> (Grilla de tarjetas) ➔ <strong>Contacto</strong> (Formulario para clientes) ➔ <strong>Footer</strong> (Copyright y datos).",
+        h2S0Semantic: "1. Etiquetas Semánticas (¡No uses solo <div>!)",
+        pS0Semantic: "En el Nivel 1 vimos las etiquetas básicas. Ahora veamos las que hacen que Google y los celulares entiendan exactamente qué hay en la página:",
+        quizS0Title: "Comprobación Rápida: Sección 1",
+        q00Text: "1. ¿Por qué es mucho mejor usar <header>, <nav> y <footer> en lugar de poner solo <div> en todos lados?",
+        btnNext0: "Avanzar a la Fase 2: Flexbox & CSS Grid ➔",
+
+        // S1
+        tagS1: "Fase 2",
+        titleS1: "Los Dos Grandes Maestros del Diseño: Flexbox & CSS Grid",
+        subS1: "Cómo posicionar cualquier elemento exactamente donde quieras.",
+        mentorS1Title: "La Regla Clara de tu Mentor",
+        mentorS1Text: "Ricardo, en el pasado alinear cosas con CSS era un dolor de cabeza. Hoy existe una regla de oro muy clara:<br>• Usa <strong>Flexbox</strong> para elementos en <strong>una sola fila o columna</strong> (ej: menú con logo a la izquierda y enlaces a la derecha).<br>• Usa <strong>CSS Grid</strong> para <strong>grillas en 2 dimensiones</strong> (ej: tarjetas de productos o galerías).",
+        h2S1Flex: "1. Flexbox en 3 líneas mágicas",
+        h2S1Grid: "2. CSS Grid: Grillas automáticas que se adaptan solas",
+        pS1Grid: "Esta sola línea es el secreto más potente del diseño web moderno. Le dice al navegador: <em>'Crea columnas que se acomoden solas con ancho mínimo de 260px'</em>:",
+        quizS1Title: "Comprobación Rápida: Sección 2",
+        q10Text: "1. ¿Cuál es la herramienta perfecta para alinear los elementos de una barra de navegación horizontal?",
+        btnNext1: "Avanzar a la Fase 3: Responsive & Mobile ➔",
+
+        // S2
+        tagS2: "Fase 3",
+        titleS2: "Diseño Responsive: Funcionamiento en Celulares & PC",
+        subS2: "Más del 70% de tus visitantes vendrán desde un smartphone. Así se adapta el sitio.",
+        tipS2Title: "La Media Query: El interruptor del Diseño",
+        tipS2Text: "Una <strong>Media Query</strong> es una condición CSS que dice: <em>'Si la pantalla es menor a 768px (un celular o tablet vertical), aplica estas nuevas reglas (ej: pon el menú en columna vertical)'</em>.",
+        quizS2Title: "Comprobación Rápida: Sección 3",
+        q20Text: "1. ¿Para qué sirve la regla @media (max-width: 768px)?",
+        btnNext2: "Avanzar a la Fase 4: Crea tu Sitio en Vivo ➔",
+
+        // S3 (Builder)
+        tagS3: "Fase 4",
+        titleS3: "Tu Primer Sitio Web Completo (Creador en Vivo)",
+        subS3: "¡Personaliza los parámetros abajo, mira cómo cambia el sitio en tiempo real y copia el código terminado!",
+        lblTheme: "Tipo de Actividad / Tema:",
+        lblSiteTitle: "Nombre del Sitio / Marca:",
+        lblHeroText: "Eslogan Principal:",
+        lblColor: "Color Principal:",
+        txtExportHelp: "¿Te gusta este sitio? Puedes copiar el código HTML/CSS completo para usarlo donde quieras:",
+        btnCopyFullSite: "📋 Copiar Código del Sitio Completo",
+        btnNext3: "Ver el Diploma de Web Creator ➔",
+
+        // Cert
+        certTitle: "Certificado de Web Creator (Nivel 2)",
+        certSub: "Dominio de Maquetación Moderna, Flexbox, Grid y Creación de Sitios",
+        certDesc: "Completó con éxito el <strong>Nivel 2 Avanzado</strong> aprendiendo a crear sitios web completos, responsivos para teléfonos y listos para clientes reales junto a su mentor argentino.",
+        certRoleStudent: "Web Creator",
+        certRoleMentor: "Docente & Guía 🇦🇷",
+        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
+        btnFooterHome: "⬅️ Volver al Nivel 1"
+      }
+    };
+
+    function init() {
+      const savedLang = localStorage.getItem('riccardo_lang') || 'it';
+      setLanguage(savedLang);
+      loadSavedState();
+      updateLiveSite();
+      updateProgressBar();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('riccardo_lang', lang);
+
+      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+
+      const t = i18n[lang];
+
+      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
+      document.getElementById('txt-course-title').innerText = t.courseTitle;
+      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
+      document.getElementById('txt-progress-label').innerText = t.progressLabel;
+      document.getElementById('lnk-back-lvl1').innerText = t.lnkBackLvl1;
+      document.getElementById('txt-top-back').innerText = t.txtTopBack;
+
+      document.getElementById('nav-s0').innerText = t.navS0;
+      document.getElementById('nav-s1').innerText = t.navS1;
+      document.getElementById('nav-s2').innerText = t.navS2;
+      document.getElementById('nav-s3').innerText = t.navS3;
+      document.getElementById('nav-s4').innerText = t.navS4;
+
+      // S0
+      document.getElementById('tag-s0').innerText = t.tagS0;
+      document.getElementById('title-s0').innerText = t.titleS0;
+      document.getElementById('sub-s0').innerText = t.subS0;
+      document.getElementById('tip-s0-title').innerText = t.tipS0Title;
+      document.getElementById('tip-s0-text').innerHTML = t.tipS0Text;
+      document.getElementById('h2-s0-semantic').innerText = t.h2S0Semantic;
+      document.getElementById('p-s0-semantic').innerText = t.pS0Semantic;
+      document.getElementById('quiz-s0-title').innerText = t.quizS0Title;
+      document.getElementById('q-0-0-text').innerText = t.q00Text;
+      document.getElementById('btn-next-0').querySelector('span').innerText = t.btnNext0;
+
+      // S1
+      document.getElementById('tag-s1').innerText = t.tagS1;
+      document.getElementById('title-s1').innerText = t.titleS1;
+      document.getElementById('sub-s1').innerText = t.subS1;
+      document.getElementById('mentor-s1-title').innerText = t.mentorS1Title;
+      document.getElementById('mentor-s1-text').innerHTML = t.mentorS1Text;
+      document.getElementById('h2-s1-flex').innerText = t.h2S1Flex;
+      document.getElementById('h2-s1-grid').innerText = t.h2S1Grid;
+      document.getElementById('p-s1-grid').innerHTML = t.pS1Grid;
+      document.getElementById('quiz-s1-title').innerText = t.quizS1Title;
+      document.getElementById('q-1-0-text').innerText = t.q10Text;
+      document.getElementById('btn-next-1').querySelector('span').innerText = t.btnNext1;
+
+      // S2
+      document.getElementById('tag-s2').innerText = t.tagS2;
+      document.getElementById('title-s2').innerText = t.titleS2;
+      document.getElementById('sub-s2').innerText = t.subS2;
+      document.getElementById('tip-s2-title').innerText = t.tipS2Title;
+      document.getElementById('tip-s2-text').innerHTML = t.tipS2Text;
+      document.getElementById('quiz-s2-title').innerText = t.quizS2Title;
+      document.getElementById('q-2-0-text').innerText = t.q20Text;
+      document.getElementById('btn-next-2').querySelector('span').innerText = t.btnNext2;
+
+      // S3 Builder
+      document.getElementById('tag-s3').innerText = t.tagS3;
+      document.getElementById('title-s3').innerText = t.titleS3;
+      document.getElementById('sub-s3').innerText = t.subS3;
+      document.getElementById('lbl-theme').innerText = t.lblTheme;
+      document.getElementById('lbl-site-title').innerText = t.lblSiteTitle;
+      document.getElementById('lbl-hero-text').innerText = t.lblHeroText;
+      document.getElementById('lbl-color').innerText = t.lblColor;
+      document.getElementById('txt-export-help').innerText = t.txtExportHelp;
+      document.getElementById('btn-copy-full-site').innerText = t.btnCopyFullSite;
+      document.getElementById('btn-next-3').querySelector('span').innerText = t.btnNext3;
+
+      // Cert
+      document.getElementById('cert-title').innerText = t.certTitle;
+      document.getElementById('cert-sub').innerText = t.certSub;
+      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
+      document.getElementById('cert-desc').innerHTML = t.certDesc;
+      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
+      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
+      document.getElementById('btnPrintCert').innerText = t.btnPrintCert;
+      document.getElementById('btn-footer-home').innerText = t.btnFooterHome;
+
+      for (let s = 0; s < 3; s++) {
+        if (completedSections[s]) renderQuizFeedback(s);
+      }
+    }
+
+    function switchSection(index) {
+      currentSection = index;
+      for (let i = 0; i < totalSections; i++) {
+        const sec = document.getElementById(`sec-${i}`);
+        if (sec) sec.style.display = (i === index) ? 'block' : 'none';
+
+        const nav = document.querySelectorAll('.nav-item')[i];
+        if (nav) nav.classList.toggle('active', i === index);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // LIVE SITE BUILDER LOGIC
+    // ==========================================
+    function setDeviceView(type) {
+      const dev = document.getElementById('preview-device');
+      const btnDesk = document.getElementById('btn-view-desktop');
+      const btnMob = document.getElementById('btn-view-mobile');
+
+      if (type === 'mobile') {
+        dev.className = 'preview-device mobile';
+        btnMob.classList.add('active');
+        btnDesk.classList.remove('active');
+      } else {
+        dev.className = 'preview-device';
+        btnDesk.classList.add('active');
+        btnMob.classList.remove('active');
+      }
+    }
+
+    function updateLiveSite() {
+      const theme = document.getElementById('b-theme').value;
+      const title = document.getElementById('b-title').value.trim() || 'Il Mio Sito';
+      const slogan = document.getElementById('b-slogan').value.trim() || 'Benvenuto nella nostra pagina.';
+      const color = document.getElementById('b-color').value;
+
+      document.getElementById('mock-brand').innerText = title;
+      document.getElementById('mock-hero-title').innerText = title;
+      document.getElementById('mock-hero-desc').innerText = slogan;
+      document.getElementById('mock-hero').style.backgroundColor = color;
+      document.getElementById('mock-hero-btn').style.color = color;
+      document.getElementById('mock-contact-btn').style.backgroundColor = color;
+      document.getElementById('mock-footer-text').innerText = `© 2026 ${title} - Realizzato con Riccardo & Mentore`;
+
+      // Preset contents according to theme
+      if (theme === 'ristorante') {
+        document.getElementById('card-1-title').innerText = "Pizze Tradizionali";
+        document.getElementById('card-1-desc').innerText = "Impasto lievitato 48h con farine selezionate.";
+        document.getElementById('card-2-title').innerText = "Pasta Fresca";
+        document.getElementById('card-2-desc').innerText = "Fatta a mano ogni mattina.";
+        document.getElementById('card-3-title').innerText = "Vini Pregiati";
+        document.getElementById('card-3-desc').innerText = "Cantina con oltre 100 etichette.";
+      } else if (theme === 'portfolio') {
+        document.getElementById('card-1-title').innerText = "Web Design";
+        document.getElementById('card-1-desc').innerText = "Siti moderni e responsive con HTML e CSS.";
+        document.getElementById('card-2-title').innerText = "Basi di Dati";
+        document.getElementById('card-2-desc').innerText = "Integrazione SQLite e backend sicuro.";
+        document.getElementById('card-3-title').innerText = "Sviluppo con IA";
+        document.getElementById('card-3-desc').innerText = "Automazione e prototipazione rapida.";
+      } else {
+        document.getElementById('card-1-title').innerText = "Consulenza Diretta";
+        document.getElementById('card-1-desc').innerText = "Analisi personalizzata delle esigenze.";
+        document.getElementById('card-2-title').innerText = "Gestione Pratiche";
+        document.getElementById('card-2-desc').innerText = "Rapidità, precisione e trasparenza.";
+        document.getElementById('card-3-title').innerText = "Assistenza 24/7";
+        document.getElementById('card-3-desc').innerText = "Sempre al tuo fianco per ogni necessità.";
+      }
+    }
+
+    function copyFullSiteCode() {
+      const title = document.getElementById('b-title').value.trim() || 'Il Mio Sito';
+      const slogan = document.getElementById('b-slogan').value.trim() || 'Benvenuto nella nostra pagina.';
+      const color = document.getElementById('b-color').value;
+
+      const fullHtml = `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; color: #1e293b; line-height: 1.6; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2rem; border-bottom: 1px solid #e2e8f0; }
+    nav a { margin-left: 1.5rem; text-decoration: none; color: #475569; font-weight: 500; }
+    .hero { background: ${color}; color: white; padding: 4rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.15rem; max-width: 600px; margin: 0 auto 1.5rem; opacity: 0.9; }
+    .hero button { background: white; color: ${color}; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; }
+    .card { background: white; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+    footer { text-align: center; padding: 2rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      header { flex-direction: column; gap: 1rem; }
+      nav a { margin: 0 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>${title}</h2>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#servizi">Servizi</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" id="home">
+      <h1>${title}</h1>
+      <p>${slogan}</p>
+      <button>Scopri di Più</button>
+    </section>
+    <section class="features" id="servizi">
+      <div class="card">
+        <h3>Qualità & Passione</h3>
+        <p>Curiamo ogni singolo dettaglio con dedizione e maestria artigianale.</p>
+      </div>
+      <div class="card">
+        <h3>Esperienza Garantita</h3>
+        <p>Anni di esperienza al servizio dei nostri clienti più esigenti.</p>
+      </div>
+      <div class="card">
+        <h3>Contatto Rapido</h3>
+        <p>Rispondiamo in tempi record per offrirti sempre la soluzione ideale.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="contatti">
+    <p>&copy; 2026 ${title} - Creato con orgoglio da Riccardo.</p>
+  </footer>
+</body>
+</html>`;
+
+      navigator.clipboard.writeText(fullHtml).then(() => {
+        alert(currentLang === 'it' 
+          ? "Codice HTML/CSS completo del sito copiato negli appunti! Puoi incollarlo in qualsiasi editor (come Blocco Note o VS Code)." 
+          : "¡Código HTML/CSS completo copiado al portapapeles! Puedes pegarlo en cualquier editor (como Bloc de Notas o VS Code).");
+      });
+    }
+
+    // ==========================================
+    // QUIZ SYSTEM
+    // ==========================================
+    function selectOption(secId, qId, optIndex) {
+      userAnswers[secId][qId] = optIndex;
+      const qBlock = document.getElementById(`q-block-${secId}-${qId}`);
+      const btns = qBlock.querySelectorAll('.option-btn');
+      btns.forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx === optIndex);
+      });
+    }
+
+    function checkSectionQuiz(secId) {
+      const questions = quizData[secId];
+      let correctCount = 0;
+      let answeredCount = 0;
+
+      questions.forEach((q, qIndex) => {
+        const userChoice = userAnswers[secId][qIndex];
+        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
+        const qBlock = document.getElementById(`q-block-${secId}-${qIndex}`);
+        const btns = qBlock.querySelectorAll('.option-btn');
+
+        if (userChoice !== undefined) {
+          answeredCount++;
+          if (userChoice === q.correct) {
+            correctCount++;
+            fbBox.className = 'feedback-box correct';
+            fbBox.innerText = q.feedback[currentLang].correct;
+            btns[userChoice].className = 'option-btn correct';
+          } else {
+            fbBox.className = 'feedback-box wrong';
+            fbBox.innerText = q.feedback[currentLang].wrong;
+            btns[userChoice].className = 'option-btn wrong';
+            btns[q.correct].className = 'option-btn correct';
+          }
+        }
+      });
+
+      if (answeredCount < questions.length) {
+        alert(currentLang === 'it' ? 'Rispondi alla domanda prima di verificare!' : '¡Responde la pregunta antes de verificar!');
+        return;
+      }
+
+      const badge = document.getElementById(`score-badge-${secId}`);
+      badge.innerText = `${correctCount}/${questions.length} ${currentLang === 'it' ? 'Corretta' : 'Correcta'}`;
+
+      if (correctCount === questions.length) {
+        completedSections[secId] = true;
+        document.getElementById(`check-${secId}`).style.display = 'inline-block';
+        document.querySelectorAll('.nav-item')[secId].classList.add('completed');
+      }
+
+      saveState();
+      updateProgressBar();
+    }
+
+    function renderQuizFeedback(secId) {
+      const questions = quizData[secId];
+      questions.forEach((q, qIndex) => {
+        const userChoice = userAnswers[secId][qIndex];
+        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
+        if (userChoice !== undefined && fbBox) {
+          const isCorrect = userChoice === q.correct;
+          fbBox.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
+          fbBox.innerText = isCorrect ? q.feedback[currentLang].correct : q.feedback[currentLang].wrong;
+        }
+      });
+    }
+
+    function updateProgressBar() {
+      let count = 0;
+      for (let i = 0; i < 3; i++) {
+        if (completedSections[i]) count++;
+      }
+      // Section 3 (Builder) auto-completes once tested
+      completedSections[3] = true;
+      document.getElementById('check-3').style.display = 'inline-block';
+      document.querySelectorAll('.nav-item')[3].classList.add('completed');
+      count++;
+
+      if (count >= 4) {
+        completedSections[4] = true;
+        document.getElementById('check-4').style.display = 'inline-block';
+        document.querySelectorAll('.nav-item')[4].classList.add('completed');
+        count = 5;
+      }
+
+      const percent = Math.round((count / 5) * 100);
+      document.getElementById('progress-percent').innerText = `${percent}%`;
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+    }
+
+    function copyCode(btn) {
+      const code = btn.parentElement.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const oldText = btn.innerText;
+        btn.innerText = currentLang === 'it' ? 'Copiato!' : '¡Copiado!';
+        setTimeout(() => btn.innerText = oldText, 1500);
+      });
+    }
+
+    function saveState() {
+      const state = { answers: userAnswers, completed: completedSections };
+      localStorage.setItem('riccardo_m2_state', JSON.stringify(state));
+    }
+
+    function loadSavedState() {
+      const saved = localStorage.getItem('riccardo_m2_state');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          userAnswers = parsed.answers || userAnswers;
+          completedSections = parsed.completed || completedSections;
+          for (let i = 0; i < 5; i++) {
+            if (completedSections[i]) {
+              const chk = document.getElementById(`check-${i}`);
+              if (chk) chk.style.display = 'inline-block';
+              const nav = document.querySelectorAll('.nav-item')[i];
+              if (nav) nav.classList.add('completed');
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

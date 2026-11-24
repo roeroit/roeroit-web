@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corso Web Design: Da Zero a Fullstack con IA - Riccardo</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #e0e7ff;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --danger-light: #fee2e2;
+      --warning: #f59e0b;
+      --warning-light: #fef3c7;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: #f1f5f9;
+      --code-bg: #1e293b;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Layout */
+    #sidebar {
+      width: 320px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      border-right: 1px solid #1e293b;
+    }
+
+    #main-content {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+
+    /* Top Bar & Language Selector */
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-selector {
+      display: flex;
+      background: var(--border);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar Content */
+    .sidebar-header {
+      padding: 1.75rem 1.5rem 1.25rem;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .student-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1e293b;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 0.75rem;
+    }
+
+    .student-badge strong {
+      color: #38bdf8;
+    }
+
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .mentor-note {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
+    .progress-container {
+      padding: 1.25rem 1.5rem;
+      background: #131c31;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.925rem;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-item:hover {
+      background: #1e293b;
+      color: #f8fafc;
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .nav-item .icon {
+      font-size: 1.15rem;
+    }
+
+    .nav-item .check {
+      margin-left: auto;
+      font-size: 0.85rem;
+      color: var(--success);
+      display: none;
+    }
+
+    .nav-item.completed .check {
+      display: inline-block;
+    }
+
+    /* Cards & Content */
+    .module-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .module-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .module-tag {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1, h2, h3 {
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    h1 { font-size: 1.85rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.35rem; margin: 1.5rem 0 0.75rem; }
+    h3 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem; }
+
+    p {
+      margin-bottom: 1rem;
+      color: #334155;
+    }
+
+    ul, ol {
+      margin: 0.5rem 0 1.25rem 1.5rem;
+      color: #334155;
+    }
+
+    li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Code Blocks */
+    .code-container {
+      background: var(--code-bg);
+      color: #f8fafc;
+      border-radius: 8px;
+      padding: 1.1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem;
+      position: relative;
+    }
+
+    .code-badge {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.7rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .code-container pre {
+      margin: 0;
+    }
+
+    .copy-btn {
+      position: absolute;
+      bottom: 8px;
+      right: 10px;
+      background: #334155;
+      color: #f1f5f9;
+      border: none;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+
+    .copy-btn:hover {
+      opacity: 1;
+    }
+
+    /* Alert Boxes */
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: #f0fdf4;
+      padding: 1rem 1.25rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .callout.tip {
+      border-left-color: #0ea5e9;
+      background: #f0f9ff;
+    }
+
+    .callout.mentor {
+      border-left-color: #8b5cf6;
+      background: #f5f3ff;
+    }
+
+    .callout.security {
+      border-left-color: #10b981;
+      background: #ecfdf5;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Interactive Sandboxes */
+    .sandbox {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .sandbox-header {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #0f172a;
+    }
+
+    .sandbox-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .sandbox-split {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sandbox-editor {
+      width: 100%;
+      height: 140px;
+      font-family: monospace;
+      font-size: 0.85rem;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+      resize: vertical;
+      background: #ffffff;
+    }
+
+    .sandbox-preview {
+      background: #ffffff;
+      border: 1px dashed #94a3b8;
+      border-radius: 6px;
+      padding: 12px;
+      height: 140px;
+      overflow: auto;
+    }
+
+    /* Web SQLite Console Styles */
+    .sql-workbench {
+      background: #0f172a;
+      border-radius: 10px;
+      color: #f8fafc;
+      overflow: hidden;
+      margin-top: 1.25rem;
+      border: 1px solid #334155;
+    }
+
+    .sql-toolbar {
+      background: #1e293b;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sql-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sql-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 10px 14px;
+      background: #131c31;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    .sql-chip-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      cursor: pointer;
+      font-family: monospace;
+      transition: all 0.15s;
+    }
+
+    .sql-chip-btn:hover {
+      background: #334155;
+      color: #f8fafc;
+      border-color: #64748b;
+    }
+
+    .sql-chip-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .sql-input-area {
+      padding: 12px 14px;
+      background: #0f172a;
+    }
+
+    .sql-textarea {
+      width: 100%;
+      height: 70px;
+      background: #090d16;
+      border: 1px solid #334155;
+      color: #38bdf8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      padding: 10px;
+      border-radius: 6px;
+      resize: vertical;
+      outline: none;
+    }
+
+    .sql-textarea:focus {
+      border-color: #38bdf8;
+    }
+
+    .sql-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .btn-run-sql {
+      background: #10b981;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s;
+    }
+
+    .btn-run-sql:hover {
+      background: #059669;
+    }
+
+    .sql-terminal-log {
+      background: #090d16;
+      padding: 8px 12px;
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #10b981;
+      border-top: 1px solid #1e293b;
+      min-height: 32px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sql-terminal-log.error {
+      color: #f87171;
+    }
+
+    .sql-result-table-container {
+      background: #ffffff;
+      padding: 14px;
+      border-top: 1px solid #e2e8f0;
+      color: #1e293b;
+      overflow-x: auto;
+    }
+
+    .db-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      text-align: left;
+    }
+
+    .db-table th, .db-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .db-table th {
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    /* Quiz Section */
+    .quiz-container {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-top: 2rem;
+    }
+
+    .quiz-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      color: #0f172a;
+    }
+
+    .question-block {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+
+    .question-text {
+      font-weight: 600;
+      margin-bottom: 1rem;
+      font-size: 0.975rem;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .option-btn {
+      text-align: left;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.15s ease;
+      color: var(--text);
+    }
+
+    .option-btn:hover:not(.disabled) {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .option-btn.correct {
+      border-color: var(--success);
+      background: var(--success-light);
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      border-color: var(--danger);
+      background: var(--danger-light);
+      color: #991b1b;
+      font-weight: 600;
+    }
+
+    .feedback-box {
+      margin-top: 0.75rem;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      display: none;
+      line-height: 1.4;
+    }
+
+    .feedback-box.correct {
+      display: block;
+      background: var(--success-light);
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .feedback-box.wrong {
+      display: block;
+      background: var(--danger-light);
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .quiz-submit-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+
+    .btn-verify {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-verify:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-next-module {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 1.5rem;
+      transition: background 0.2s;
+    }
+
+    .btn-next-module:hover {
+      background: #059669;
+    }
+
+    /* Final Diploma Card */
+    .certificate-card {
+      border: 4px double #cbd5e1;
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      padding: 3rem 2rem;
+      text-align: center;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      margin-top: 2rem;
+    }
+
+    .certificate-title {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    .certificate-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 1.25rem 0;
+      border-bottom: 2px solid #38bdf8;
+      display: inline-block;
+      padding: 0 2rem 0.5rem;
+    }
+
+    /* Prompt Box for AI */
+    .prompt-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.75rem 0;
+      position: relative;
+    }
+
+    .prompt-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #6366f1;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .prompt-text {
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #1e293b;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      #sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+      #main-content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="student-badge">
+        <span>👨‍💻</span>
+        <span id="txt-student-badge">Studente: <strong>Riccardo</strong></span>
+      </div>
+      <div class="sidebar-title" id="txt-course-title">Corso Web Design: Da Zero a Database</div>
+      <div class="mentor-note" id="txt-mentor-note">Insieme al tuo mentore argentino 🇦🇷🇮🇹</div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-info">
+        <span id="txt-progress-label">Progresso Globale</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <ul class="nav-list" id="nav-list">
+      <li class="nav-item active" onclick="switchModule(0)">
+        <span class="icon">🧱</span>
+        <span class="nav-text" id="nav-m0">1. Struttura (HTML5)</span>
+        <span class="check" id="check-0">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchModule(1)">
+        <span class="icon">🎨</span>
+        <span class="nav-text" id="nav-m1">2. Stile & Template (CSS)</span>
+        <span class="check" id="check-1">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchModule(2)">
+        <span class="icon">🗄️</span>
+        <span class="nav-text" id="nav-m2">3. Database & SQLite Web</span>
+        <span class="check" id="check-2">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchModule(3)">
+        <span class="icon">🤖</span>
+        <span class="nav-text" id="nav-m3">4. Sviluppo con IA</span>
+        <span class="check" id="check-3">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchModule(4)">
+        <span class="icon">🏆</span>
+        <span class="nav-text" id="nav-m4">5. Diploma Finale</span>
+        <span class="check" id="check-4">✓</span>
+      </li>
+    </ul>
+
+    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #64748b; border-top: 1px solid #1e293b;">
+      <span id="txt-footer-info">Guida 100% online per Riccardo. Nessun download richiesto. Salva i progressi nel browser.</span>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+    <!-- Top Bar -->
+    <div class="top-controls">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 1.25rem;">🇮🇹 🇦🇷</span>
+        <span style="font-weight: 600; color: var(--text-muted);" id="txt-greeting">Benvenuto Riccardo!</span>
+        <a href="modulo2.html" style="font-size: 0.825rem; font-weight: 600; color: #2563eb; text-decoration: none; padding: 4px 10px; border: 1px solid #bfdbfe; border-radius: 6px; background: #eff6ff; display: inline-flex; align-items: center; gap: 4px;" id="lnk-top-lvl2">
+          🚀 <span id="txt-lnk-top-lvl2">Vai al Livello 2 ➔</span>
+        </a>
+      </div>
+      
+      <!-- Language Selector -->
+      <div class="lang-selector">
+        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+      </div>
+    </div>
+
+    <!-- MODULE 0: HTML5 -->
+    <section class="module-card" id="module-0">
+      <div class="module-header">
+        <div>
+          <span class="module-tag" id="tag-m0">Modulo 1</span>
+          <h1 id="title-m0">Le Fondamenta del Web: HTML5</h1>
+          <p id="sub-m0" style="color: var(--text-muted); font-size: 1.05rem;">
+            Come creare lo scheletro di qualsiasi sito web sul pianeta.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 <span id="tip-m0-title">Come pensare a HTML</span></div>
+        <div id="tip-m0-text">
+          Pensa a una casa: <strong>HTML</strong> sono i mattoni, le pareti e le stanze. <strong>CSS</strong> sarà la vernice e i mobili, mentre il <strong>Database</strong> sarà lo scantinato dove archivi le provviste.
+        </div>
+      </div>
+
+      <h2 id="h2-m0-structure">1. La struttura universale di un file HTML</h2>
+      <p id="p-m0-structure">
+        Ogni pagina web inizia sempre con questa struttura fissa. Il computer legge dall'alto verso il basso:
+      </p>
+
+      <div class="code-container">
+        <span class="code-badge">HTML</span>
+        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="it"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Il mio primo sito&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Ciao, sono Riccardo!&lt;/h1&gt;
+    &lt;p&gt;Sto imparando il web design da zero.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <h2 id="h2-m0-tags">2. I mattoni essenziali (I Tag)</h2>
+      <ul id="list-m0-tags">
+        <li><strong>&lt;h1&gt; fino a &lt;h6&gt;:</strong> Titoli da quello principale fino al più piccolo.</li>
+        <li><strong>&lt;p&gt;:</strong> Paragrafi di testo normale.</li>
+        <li><strong>&lt;a href="url"&gt;:</strong> Link cliccabili per andare su un'altra pagina.</li>
+        <li><strong>&lt;img src="foto.jpg" alt="..."&gt;:</strong> Immagini sul sito.</li>
+        <li><strong>&lt;form&gt; e &lt;input&gt;:</strong> Caselle di testo e pulsanti (fondamentali per inviare dati al database!).</li>
+      </ul>
+
+      <!-- Interactive Sandbox Module 0 -->
+      <div class="sandbox">
+        <div class="sandbox-header">
+          <span>🛠️</span>
+          <span id="sb-m0-title">Prova dal vivo: Modifica l'HTML qui sotto</span>
+        </div>
+        <div class="sandbox-split">
+          <div>
+            <textarea class="sandbox-editor" id="editor-0" oninput="updatePreview(0)">
+<h2 style="color: #4f46e5;">Ciao Riccardo!</h2>
+<p>Cambia questo testo e guarda cosa succede a destra.</p>
+<button style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px;">Cliccami!</button></textarea>
+          </div>
+          <div class="sandbox-preview" id="preview-0"></div>
+        </div>
+      </div>
+
+      <!-- Multiple Choice Quiz Module 0 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-m0-title">Verifica Rapida: Metti alla prova quello che hai letto</span>
+        </div>
+
+        <div class="question-block" id="q-block-0-0">
+          <div class="question-text" id="q-0-0-text">1. Quale tag si usa per creare il titolo principale e più importante della pagina?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(0, 0, 0)">&lt;title&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 0, 1)">&lt;h1&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 0, 2)">&lt;p&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 0, 3)">&lt;header&gt;</button>
+          </div>
+          <div class="feedback-box" id="fb-0-0"></div>
+        </div>
+
+        <div class="question-block" id="q-block-0-1">
+          <div class="question-text" id="q-0-1-text">2. Quale elemento HTML è indispensabile per permettere all'utente di scrivere del testo (es. nome o password)?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(0, 1, 0)">&lt;input&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 1, 1)">&lt;img&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 1, 2)">&lt;div&gt;</button>
+            <button class="option-btn" onclick="selectOption(0, 1, 3)">&lt;span&gt;</button>
+          </div>
+          <div class="feedback-box" id="fb-0-1"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkModuleQuiz(0)" id="btn-check-0">Verifica Risposte</button>
+          <span id="score-badge-0" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchModule(1)" id="btn-next-0">
+        <span id="txt-btn-next-0">Avanti al Modulo 2: CSS & Template ➔</span>
+      </button>
+    </section>
+
+    <!-- MODULE 1: CSS & TEMPLATES -->
+    <section class="module-card" id="module-1" style="display: none;">
+      <div class="module-header">
+        <div>
+          <span class="module-tag" id="tag-m1">Modulo 2</span>
+          <h1 id="title-m1">Stile, Layout & Template: La Magia di CSS3</h1>
+          <p id="sub-m1" style="color: var(--text-muted); font-size: 1.05rem;">
+            Come rendere bello un sito e usare template per andare 10 volte più veloci.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 <span id="tip-m1-title">La Regola d'Oro del Web Designer Moderno</span></div>
+        <div id="tip-m1-text">
+          I professionisti <strong>non creano quasi mai tutto da zero</strong>. Usano <em>template</em> o librerie (come Bootstrap, Tailwind o HTML5 Templates) e poi personalizzano i colori, i testi e la struttura!
+        </div>
+      </div>
+
+      <h2 id="h2-m1-css">1. Come funziona il CSS: Regola di Base</h2>
+      <p id="p-m1-css">
+        Il CSS dice al browser: <em>"Prendi questo elemento e dagli queste proprietà visive"</em>.
+      </p>
+
+      <div class="code-container">
+        <span class="code-badge">CSS</span>
+        <pre><code>/* Selettore { Proprietà: Valore; } */
+h1 {
+  color: #4f46e5;        /* Colore del testo (Viola moderno) */
+  font-size: 32px;       /* Dimensione del carattere */
+  text-align: center;    /* Centra il testo */
+}
+
+.bottone-verde {
+  background-color: #10b981; /* Sfondo verde smeraldo */
+  color: white;              /* Testo bianco */
+  border-radius: 8px;        /* Bordi arrotondati */
+  padding: 10px 20px;        /* Spazio interno */
+}</code></pre>
+        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+      </div>
+
+      <h2 id="h2-m1-templates">2. Che cos'è un "Template" (Plantilla)?</h2>
+      <p id="p-m1-templates">
+        Un <strong>Template</strong> è una pagina web già disegnata e programmata da designer esperti con HTML, CSS e immagini pronte.
+      </p>
+      <ul id="list-m1-templates">
+        <li><strong>Vantaggio 1:</strong> Risparmi ore di lavoro di grafica.</li>
+        <li><strong>Vantaggio 2:</strong> È già ottimizzato per funzionare perfettamente sia su smartphone che su computer (Responsive).</li>
+        <li><strong>Cosa devi fare tu:</strong> Aprire il file del template, trovare i testi/immagini che vuoi cambiare e sostituirli con i tuoi!</li>
+      </ul>
+
+      <!-- Sandbox Module 1 -->
+      <div class="sandbox">
+        <div class="sandbox-header">
+          <span>🎨</span>
+          <span id="sb-m1-title">Laboratorio CSS: Cambia il colore di sfondo e il bordo!</span>
+        </div>
+        <div class="sandbox-split">
+          <div>
+            <textarea class="sandbox-editor" id="editor-1" oninput="updatePreview(1)">
+<div style="background: linear-gradient(135deg, #6366f1, #a855f7); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+  <h3>Card Moderna di Riccardo</h3>
+  <p>Cambia i colori e il border-radius a sinistra!</p>
+</div></textarea>
+          </div>
+          <div class="sandbox-preview" id="preview-1"></div>
+        </div>
+      </div>
+
+      <!-- Quiz Module 1 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-m1-title">Verifica Rapida: Modulo 2</span>
+        </div>
+
+        <div class="question-block" id="q-block-1-0">
+          <div class="question-text" id="q-1-0-text">1. A cosa serve principalmente il codice CSS in una pagina web?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(1, 0, 0)">A memorizzare i dati degli utenti</button>
+            <button class="option-btn" onclick="selectOption(1, 0, 1)">A definire l'aspetto visivo, i colori, i caratteri e il layout</button>
+            <button class="option-btn" onclick="selectOption(1, 0, 2)">A collegare il computer a internet</button>
+          </div>
+          <div class="feedback-box" id="fb-1-0"></div>
+        </div>
+
+        <div class="question-block" id="q-block-1-1">
+          <div class="question-text" id="q-1-1-text">2. Qual è il vantaggio principale di iniziare un progetto con un Template esistente?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(1, 1, 0)">Non dover scrivere tutto da zero e avere un design già professionale e pronto per cellulari</button>
+            <button class="option-btn" onclick="selectOption(1, 1, 1)">Che la pagina non avrà bisogno di HTML</button>
+            <button class="option-btn" onclick="selectOption(1, 1, 2)">Che il sito si collegherà gratis a un database senza configurazione</button>
+          </div>
+          <div class="feedback-box" id="fb-1-1"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkModuleQuiz(1)" id="btn-check-1">Verifica Risposte</button>
+          <span id="score-badge-1" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchModule(2)" id="btn-next-1">
+        <span id="txt-btn-next-1">Avanti al Modulo 3: Database & SQLite Web ➔</span>
+      </button>
+    </section>
+
+    <!-- MODULE 2: DATABASE & SQLITE WEB -->
+    <section class="module-card" id="module-2" style="display: none;">
+      <div class="module-header">
+        <div>
+          <span class="module-tag" id="tag-m2">Modulo 3</span>
+          <h1 id="title-m2">Il Cervello e la Memoria: Backend & SQLite Web</h1>
+          <p id="sub-m2" style="color: var(--text-muted); font-size: 1.05rem;">
+            Come fa un sito a ricordarsi gli utenti. Esegui vero codice SQL direttamente dal browser!
+          </p>
+        </div>
+      </div>
+
+      <!-- Security Reassurance Box -->
+      <div class="callout security">
+        <div class="callout-title">🔒 <span id="sec-m2-title">100% Online & Sicuro per Riccardo</span></div>
+        <div id="sec-m2-text">
+          <strong>Nessun download, nessun file eseguibile, zero rischi:</strong> Tutto questo laboratorio di database SQLite funziona direttamente all'interno di questa pagina web. Puoi esercitarti da qualsiasi computer, tablet o cellulare.
+        </div>
+      </div>
+
+      <div class="callout mentor">
+        <div class="callout-title">🤝 <span id="mentor-m2-title">Nota del tuo Mentor</span></div>
+        <div id="mentor-m2-text">
+          Riccardo, questo è il passo che separa un semplice grafico da un vero sviluppatore web! Non avere paura dei database: alla fine sono solo tabelle tipo Excel, ma super veloci e sicure.
+        </div>
+      </div>
+
+      <h2 id="h2-m2-arch">1. Il viaggio di un dato: Come funziona il Web?</h2>
+      <ol id="list-m2-flow">
+        <li><strong>Frontend (Il Browser):</strong> L'utente scrive il suo nome e la sua email in un modulo HTML e clicca "Invia".</li>
+        <li><strong>Backend (Il Server):</strong> Riceve le informazioni, controlla che non ci siano errori e le prepara.</li>
+        <li><strong>Database (La Memoria):</strong> Salva le informazioni in una riga di una tabella in modo permanente.</li>
+      </ol>
+
+      <h2 id="h2-m2-crud">2. Le 4 Operazioni Fondamentali: Il CRUD con Comandi SQL</h2>
+      <p id="p-m2-crud">In qualsiasi database al mondo (SQLite, MySQL, Postgres) si usano questi comandi SQL:</p>
+      <ul id="list-m2-crud">
+        <li><strong>C (Create):</strong> <code>INSERT INTO tabella VALUES (...);</code></li>
+        <li><strong>R (Read):</strong> <code>SELECT * FROM tabella;</code></li>
+        <li><strong>U (Update):</strong> <code>UPDATE tabella SET colonna = valore WHERE id = ...;</code></li>
+        <li><strong>D (Delete):</strong> <code>DELETE FROM tabella WHERE id = ...;</code></li>
+      </ul>
+
+      <!-- LIVE WEB SQLITE WORKBENCH -->
+      <div class="sandbox">
+        <div class="sandbox-header">
+          <span>🗄️</span>
+          <span id="sb-m2-title">Laboratorio SQLite Web: Esegui query SQL in tempo reale</span>
+        </div>
+        <p style="font-size: 0.9rem;" id="sb-m2-desc">
+          Fai clic sui pulsanti rapidi con i comandi già pronti, oppure scrivi la tua query SQL nel box e premi <strong>"Esegui SQL"</strong>:
+        </p>
+
+        <div class="sql-workbench">
+          <div class="sql-toolbar">
+            <div class="sql-title">⚡ SQLite Console (In-Browser)</div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span style="font-size: 0.75rem; color: #94a3b8;" id="txt-table-label">Tabella attiva:</span>
+              <select id="table-selector" onchange="changeActiveTable()" style="background: #090d16; color: #38bdf8; border: 1px solid #334155; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;"></select>
+              <button onclick="resetWebDatabase()" style="background: transparent; border: 1px solid #475569; color: #94a3b8; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; cursor: pointer;" id="btn-reset-db">Ripristina DB</button>
+            </div>
+          </div>
+
+          <!-- Quick Query Buttons -->
+          <div class="sql-chips">
+            <button class="sql-chip-btn" onclick="loadSqlPreset('select')" id="chip-select">📋 1. SELECT (Leggi tutti)</button>
+            <button class="sql-chip-btn" onclick="loadSqlPreset('insert')" id="chip-insert">➕ 2. INSERT (Nuovo)</button>
+            <button class="sql-chip-btn" onclick="loadSqlPreset('update')" id="chip-update">✏️ 3. UPDATE (Modifica)</button>
+            <button class="sql-chip-btn" onclick="loadSqlPreset('delete')" id="chip-delete">🗑️ 4. DELETE (Cancella ID 2)</button>
+            <button class="sql-chip-btn" onclick="loadSqlPreset('create')" id="chip-create">🛠️ 5. CREATE TABLE (Prodotti)</button>
+          </div>
+
+          <!-- SQL Textarea Input -->
+          <div class="sql-input-area">
+            <textarea id="sql-input" class="sql-textarea" spellcheck="false">SELECT * FROM studenti;</textarea>
+            <div class="sql-actions">
+              <span style="font-size: 0.75rem; color: #64748b;" id="txt-sql-hint">💡 Suggerimento: Premi 'Esegui SQL' o clicca un pulsante rapido sopra.</span>
+              <button class="btn-run-sql" onclick="executeUserSql()" id="btn-run-sql">▶ Esegui SQL</button>
+            </div>
+          </div>
+
+          <!-- Output Log -->
+          <div class="sql-terminal-log" id="sql-terminal-log">
+            &gt; Database SQLite pronto. Tabella 'studenti' caricata.
+          </div>
+
+          <!-- Live Table Result Container -->
+          <div class="sql-result-table-container">
+            <table class="db-table" id="sql-result-table">
+              <!-- Dynamically populated -->
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz Module 2 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-m2-title">Verifica Rapida: Modulo 3</span>
+        </div>
+
+        <div class="question-block" id="q-block-2-0">
+          <div class="question-text" id="q-2-0-text">1. Se chiudi il browser e spegni il computer, dove rimangono salvati i dati degli utenti in modo permanente?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(2, 0, 0)">Nel file HTML del browser</button>
+            <button class="option-btn" onclick="selectOption(2, 0, 1)">Nel Database (sul Server)</button>
+            <button class="option-btn" onclick="selectOption(2, 0, 2)">Nel file CSS</button>
+          </div>
+          <div class="feedback-box" id="fb-2-0"></div>
+        </div>
+
+        <div class="question-block" id="q-block-2-1">
+          <div class="question-text" id="q-2-1-text">2. Quale comando SQL si usa per leggere i dati salvati in una tabella?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(2, 1, 0)">SELECT * FROM tabella;</button>
+            <button class="option-btn" onclick="selectOption(2, 1, 1)">INSERT INTO tabella;</button>
+            <button class="option-btn" onclick="selectOption(2, 1, 2)">DELETE ALL tabella;</button>
+          </div>
+          <div class="feedback-box" id="fb-2-1"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkModuleQuiz(2)" id="btn-check-2">Verifica Risposte</button>
+          <span id="score-badge-2" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchModule(3)" id="btn-next-2">
+        <span id="txt-btn-next-2">Avanti al Modulo 4: Sviluppo con IA ➔</span>
+      </button>
+    </section>
+
+    <!-- MODULE 3: AI WEB DEVELOPMENT -->
+    <section class="module-card" id="module-3" style="display: none;">
+      <div class="module-header">
+        <div>
+          <span class="module-tag" id="tag-m3">Modulo 4</span>
+          <h1 id="title-m3">Il Tuo Superpotere: Sviluppo Web con Intelligenza Artificiale</h1>
+          <p id="sub-m3" style="color: var(--text-muted); font-size: 1.05rem;">
+            Come usare ChatGPT, Claude o Gemini come tuo copilota personale per creare codice.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">🤖 <span id="tip-m3-title">Perché imparare prima HTML e CSS se c'è l'IA?</span></div>
+        <div id="tip-m3-text">
+          L'IA è come un'auto da corsa di Formula 1: se non sai dove sono il volante o i freni, ti schianterai. Imparando le basi con il tuo mentore, saprai <strong>cosa chiedere all'IA</strong> e come <strong>riconoscere e correggere</strong> quando commette un errore!
+        </div>
+      </div>
+
+      <h2 id="h2-m3-prompts">1. La Formula Magica per i Prompt di Codice</h2>
+      <p id="p-m3-formula">
+        Quando chiedi codice all'IA, segui sempre questa struttura in 3 parti:
+      </p>
+      <ol id="list-m3-formula">
+        <li><strong>Ruolo e Contesto:</strong> "Agisci come esperto di web design per principianti."</li>
+        <li><strong>Compito Specifico:</strong> "Creami una barra di navigazione moderna con logo a sinistra e 3 link a destra."</li>
+        <li><strong>Formato di Uscita:</strong> "Dammi solo codice HTML e CSS pulito, senza complicazioni e spiegato riga per riga."</li>
+      </ol>
+
+      <h2 id="h2-m3-examples">2. Prompt Pronti all'Uso (Copia e Incolla)</h2>
+
+      <div class="prompt-box">
+        <div class="prompt-label" id="lbl-pr1">Esempio 1: Personalizzare una sezione di un Template</div>
+        <div class="prompt-text" id="pr-1">"Ho scaricato un template HTML. Ecco il codice di una card: [incolla codice]. Voglio cambiare lo sfondo in blu scuro, aggiungere un'ombra morbida e mettere un pulsante verde WhatsApp."</div>
+        <button class="copy-btn" onclick="copyPrompt('pr-1')">Copia</button>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-label" id="lbl-pr2">Esempio 2: Risolvere un errore (Debugging)</div>
+        <div class="prompt-text" id="pr-2">"Sto creando un modulo di contatto in HTML. Quando clicco il pulsante non invia nulla. Ecco il mio codice: [incolla codice]. Dimmi dove sta l'errore e come correggerlo in modo semplice."</div>
+        <button class="copy-btn" onclick="copyPrompt('pr-2')">Copia</button>
+      </div>
+
+      <div class="prompt-box">
+        <div class="prompt-label" id="lbl-pr3">Esempio 3: Connettere il form al Database SQLite</div>
+        <div class="prompt-text" id="pr-3">"Ho questo form HTML con campi Nome ed Email. Voglio salvare questi dati in un database SQLite. Spiegami i passaggi necessari in modo semplice e guidato passo dopo passo."</div>
+        <button class="copy-btn" onclick="copyPrompt('pr-3')">Copia</button>
+      </div>
+
+      <!-- Quiz Module 3 -->
+      <div class="quiz-container">
+        <div class="quiz-title">
+          <span>📝</span>
+          <span id="quiz-m3-title">Verifica Rapida: Modulo 4</span>
+        </div>
+
+        <div class="question-block" id="q-block-3-0">
+          <div class="question-text" id="q-3-0-text">1. Qual è il modo migliore di chiedere aiuto a un'IA quando un pezzo di codice non funziona?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(3, 0, 0)">Scrivere solo: "Il mio sito non funziona, aiutami"</button>
+            <button class="option-btn" onclick="selectOption(3, 0, 1)">Incollare il codice esatto, spiegare cosa ti aspettavi che facesse e quale errore ti mostra</button>
+            <button class="option-btn" onclick="selectOption(3, 0, 2)">Cancellare tutto e ricominciare daccapo</button>
+          </div>
+          <div class="feedback-box" id="fb-3-0"></div>
+        </div>
+
+        <div class="question-block" id="q-block-3-1">
+          <div class="question-text" id="q-3-1-text">2. Come deve essere considerata l'Intelligenza Artificiale nello sviluppo web?</div>
+          <div class="options-list">
+            <button class="option-btn" onclick="selectOption(3, 1, 0)">Come un sostituto che fa tutto al posto nostro senza bisogno di capire nulla</button>
+            <button class="option-btn" onclick="selectOption(3, 1, 1)">Come un velocissimo assistente e copilota che moltiplica le nostre capacità se ne conosciamo le basi</button>
+          </div>
+          <div class="feedback-box" id="fb-3-1"></div>
+        </div>
+
+        <div class="quiz-submit-row">
+          <button class="btn-verify" onclick="checkModuleQuiz(3)" id="btn-check-3">Verifica Risposte</button>
+          <span id="score-badge-3" style="font-weight: 700; color: var(--primary);"></span>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchModule(4)" id="btn-next-3">
+        <span id="txt-btn-next-3">Visualizza il Diploma e Riepilogo ➔</span>
+      </button>
+    </section>
+
+    <!-- MODULE 4: CERTIFICATE & DIPLOMA -->
+    <section class="module-card" id="module-4" style="display: none;">
+      <div class="certificate-card">
+        <div style="font-size: 3rem;">🎓</div>
+        <div class="certificate-title" id="cert-title">Certificato di Completamento</div>
+        <p style="color: var(--text-muted); font-size: 1.1rem;" id="cert-sub">
+          Percorso Fondamentale di Web Design & Database
+        </p>
+
+        <div class="certificate-name" id="cert-name">Riccardo</div>
+
+        <p style="max-width: 600px; margin: 1.5rem auto; font-size: 1.05rem;" id="cert-desc">
+          Ha completato con successo i moduli interattivi di <strong>HTML5, CSS3 & Template, Architettura Database e Sviluppo con IA</strong> con l'accompagnamento del suo mentore argentino.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem;">
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">
+              Riccardo
+            </div>
+            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-student">Studente</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">
+              Mentore 🇦🇷
+            </div>
+            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-verify" onclick="window.print()" id="btn-print-cert">🖨️ Stampa o Salva PDF</button>
+          <a href="modulo2.html" class="btn-verify" style="background: #2563eb; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" id="btn-go-lvl2">
+            🚀 <span id="txt-btn-go-lvl2">Passa al Livello 2: Crea Siti Reali ➔</span>
+          </a>
+          <button class="option-btn" onclick="resetAllProgress()" id="btn-reset">Ricomincia da Capo</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // State
+    let currentLang = 'it';
+    let currentModule = 0;
+    const totalModules = 5;
+
+    // In-Browser Database Tables State
+    let activeTable = 'studenti';
+    let database = {
+      studenti: [
+        { id: 1, nome: "Riccardo (Tu)", email: "riccardo@italia.it", corso: "Web Design Fullstack" },
+        { id: 2, nome: "Marco Rossi", email: "marco@roma.it", corso: "HTML & CSS" },
+        { id: 3, nome: "Giulia Bianchi", email: "giulia@milano.it", corso: "JavaScript & Database" }
+      ],
+      prodotti: [
+        { id: 1, titolo: "Sito Vetrina Base", prezzo: "€450", formato: "HTML & CSS" },
+        { id: 2, titolo: "E-Commerce SQLite", prezzo: "€950", formato: "Fullstack" }
+      ]
+    };
+
+    // Quiz answers & explanations
+    const quizData = {
+      0: [
+        {
+          correct: 1,
+          feedback: {
+            it: {
+              correct: "Esatto! <h1> è il titolo di livello 1, il più importante per la pagina e per Google.",
+              wrong: "Riprova: <title> va solo nella scheda del browser, mentre per il titolo principale visibile nella pagina si usa <h1>."
+            },
+            es: {
+              correct: "¡Exacto! <h1> es el título de nivel 1, el más importante de la página y para Google.",
+              wrong: "Reintenta: <title> va solo en la pestaña del navegador, mientras que para el título principal visible se usa <h1>."
+            }
+          }
+        },
+        {
+          correct: 0,
+          feedback: {
+            it: {
+              correct: "Bravissimo! Il tag <input> è la casella fondamentale dove l'utente scrive testo, numeri o password.",
+              wrong: "Non proprio: <div> e <span> sono solo contenitori. Per far digitare qualcosa all'utente si usa <input>."
+            },
+            es: {
+              correct: "¡Excelente! La etiqueta <input> es la casilla fundamental donde el usuario escribe texto, números o contraseñas.",
+              wrong: "No del todo: <div> y <span> son contenedores. Para que el usuario escriba datos se utiliza <input>."
+            }
+          }
+        }
+      ],
+      1: [
+        {
+          correct: 1,
+          feedback: {
+            it: {
+              correct: "Perfetto! CSS si occupa esclusivamente della presentazione: colori, margini, allineamento e font.",
+              wrong: "Attenzione: CSS non salva dati né connette a internet, si occupa solo dell'aspetto visivo e del design."
+            },
+            es: {
+              correct: "¡Perfecto! CSS se encarga exclusivamente de la presentación: colores, márgenes, alineación y fuentes.",
+              wrong: "Atención: CSS no guarda datos ni conecta a internet, solo maneja el aspecto visual y el diseño."
+            }
+          }
+        },
+        {
+          correct: 0,
+          feedback: {
+            it: {
+              correct: "Giustissimo! Un template ti dà una base solida già pronta e responsive, così puoi concentrarti sul personalizzarla.",
+              wrong: "Non esattamente: anche con un template usi HTML e avrai bisogno di collegare il database se ti serve salvare dati."
+            },
+            es: {
+              correct: "¡Muy bien! Una plantilla te da una base sólida lista y responsive, para que te enfoques en personalizarla.",
+              wrong: "No exactamente: aún con un template usarás HTML y deberás conectar una base de datos si requieres guardar datos."
+            }
+          }
+        }
+      ],
+      2: [
+        {
+          correct: 1,
+          feedback: {
+            it: {
+              correct: "Esatto! Il database sul server o in locale conserva i dati al sicuro anche dopo la chiusura del browser.",
+              wrong: "No: i file HTML e CSS sul browser sono volatili o statici. La vera persistenza vive nel Database."
+            },
+            es: {
+              correct: "¡Exacto! La base de datos conserva los datos a salvo incluso tras cerrar el navegador.",
+              wrong: "No: los archivos HTML y CSS en el navegador son volátiles o estáticos. La verdadera persistencia vive en la Base de Datos."
+            }
+          }
+        },
+        {
+          correct: 0,
+          feedback: {
+            it: {
+              correct: "Bravissimo! SELECT è il comando SQL universale per interrogare e leggere le tabelle.",
+              wrong: "Riprova: INSERT aggiunge dati, DELETE cancella. Per leggere e mostrare dati si usa SELECT."
+            },
+            es: {
+              correct: "¡Excelente! SELECT es el comando SQL universal para consultar y leer tablas.",
+              wrong: "Reintenta: INSERT agrega datos, DELETE borra. Para leer y consultar datos se usa SELECT."
+            }
+          }
+        }
+      ],
+      3: [
+        {
+          correct: 1,
+          feedback: {
+            it: {
+              correct: "Ottimo! Più sei preciso nel fornire codice ed errore all'IA, più rapida e precisa sarà la soluzione.",
+              wrong: "Se scrivi solo 'aiuto', l'IA dovrà tirare a indovinare. Fornisci sempre codice ed errore!"
+            },
+            es: {
+              correct: "¡Excelente! Cuanto más preciso seas proveyendo el código y el error a la IA, más rápida y certera será la solución.",
+              wrong: "Si solo escribes 'ayuda', la IA tendrá que adivinar. ¡Provee siempre el código y el mensaje de error!"
+            }
+          }
+        },
+        {
+          correct: 1,
+          feedback: {
+            it: {
+              correct: "Esattamente! L'IA è il copilota ideale per andare veloce, ma tu e il tuo mentore siete i capitani.",
+              wrong: "Sbagliato: fidarsi ciecamente dell'IA senza capire porta a bug e progetti fragili."
+            },
+            es: {
+              correct: "¡Exactamente! La IA es el copiloto ideal para acelerar, pero tú y tu mentor son los capitanes.",
+              wrong: "Falso: confiar ciegamente en la IA sin entender las bases conduce a errores y proyectos frágiles."
+            }
+          }
+        }
+      ]
+    };
+
+    // User selections
+    let userAnswers = {
+      0: {}, 1: {}, 2: {}, 3: {}
+    };
+
+    let completedModules = {
+      0: false, 1: false, 2: false, 3: false, 4: false
+    };
+
+    // Translations Dictionary
+    const i18n = {
+      it: {
+        studentBadge: "Studente: <strong>Riccardo</strong>",
+        courseTitle: "Corso Web Design: Da Zero a Database",
+        mentorNote: "Insieme al tuo mentore argentino 🇦🇷🇮🇹",
+        progressLabel: "Progresso Globale",
+        greeting: "Benvenuto Riccardo!",
+        footerInfo: "Guida 100% online per Riccardo. Nessun download richiesto. Salva i progressi nel browser.",
+        navM0: "1. Struttura (HTML5)",
+        navM1: "2. Stile & Template (CSS)",
+        navM2: "3. Database & SQLite Web",
+        navM3: "4. Sviluppo con IA",
+        navM4: "5. Diploma Finale",
+        // M0
+        tagM0: "Modulo 1",
+        titleM0: "Le Fondamenta del Web: HTML5",
+        subM0: "Come creare lo scheletro di qualsiasi sito web sul pianeta.",
+        tipM0Title: "Come pensare a HTML",
+        tipM0Text: "Pensa a una casa: <strong>HTML</strong> sono i mattoni, le pareti e le stanze. <strong>CSS</strong> sarà la vernice e i mobili, mentre il <strong>Database</strong> sarà lo scantinato dove archivi le provviste.",
+        h2M0Structure: "1. La struttura universale di un file HTML",
+        pM0Structure: "Ogni pagina web inizia sempre con questa struttura fissa. Il computer legge dall'alto verso il basso:",
+        h2M0Tags: "2. I mattoni essenziali (I Tag)",
+        listM0Tags: `
+          <li><strong>&lt;h1&gt; fino a &lt;h6&gt;:</strong> Titoli da quello principale fino al più piccolo.</li>
+          <li><strong>&lt;p&gt;:</strong> Paragrafi di testo normale.</li>
+          <li><strong>&lt;a href="url"&gt;:</strong> Link cliccabili per andare su un'altra pagina.</li>
+          <li><strong>&lt;img src="foto.jpg" alt="..."&gt;:</strong> Immagini sul sito.</li>
+          <li><strong>&lt;form&gt; e &lt;input&gt;:</strong> Caselle di testo e pulsanti (fondamentali per inviare dati al database!).</li>
+        `,
+        sbM0Title: "Prova dal vivo: Modifica l'HTML qui sotto",
+        quizM0Title: "Verifica Rapida: Metti alla prova quello che hai letto",
+        q00Text: "1. Quale tag si usa per creare il titolo principale e più importante della pagina?",
+        q01Text: "2. Quale elemento HTML è indispensabile per permettere all'utente di scrivere del testo (es. nome o password)?",
+        btnCheck: "Verifica Risposte",
+        btnNext0: "Avanti al Modulo 2: CSS & Template ➔",
+
+        // M1
+        tagM1: "Modulo 2",
+        titleM1: "Stile, Layout & Template: La Magia di CSS3",
+        subM1: "Come rendere bello un sito e usare template per andare 10 volte più veloci.",
+        tipM1Title: "La Regola d'Oro del Web Designer Moderno",
+        tipM1Text: "I professionisti <strong>non creano quasi mai tutto da zero</strong>. Usano <em>template</em> o librerie (come Bootstrap, Tailwind o HTML5 Templates) e poi personalizzano i colori, i testi e la struttura!",
+        h2M1Css: "1. Come funziona il CSS: Regola di Base",
+        pM1Css: "Il CSS dice al browser: <em>'Prendi questo elemento e dagli queste proprietà visive'</em>.",
+        h2M1Templates: "2. Che cos'è un 'Template' (Plantilla)?",
+        pM1Templates: "Un <strong>Template</strong> è una pagina web già disegnata e programmata da designer esperti con HTML, CSS e immagini pronte.",
+        listM1Templates: `
+          <li><strong>Vantaggio 1:</strong> Risparmi ore di lavoro di grafica.</li>
+          <li><strong>Vantaggio 2:</strong> È già ottimizzato per funzionare perfettamente sia su smartphone che su computer (Responsive).</li>
+          <li><strong>Cosa devi fare tu:</strong> Aprire il file del template, trovare i testi/immagini che vuoi cambiare e sostituirli con i tuoi!</li>
+        `,
+        sbM1Title: "Laboratorio CSS: Cambia il colore di sfondo e il bordo!",
+        quizM1Title: "Verifica Rapida: Modulo 2",
+        q10Text: "1. A cosa serve principalmente il codice CSS in una pagina web?",
+        q11Text: "2. Qual è il vantaggio principale di iniziare un progetto con un Template esistente?",
+        btnNext1: "Avanti al Modulo 3: Database & SQLite Web ➔",
+
+        // M2
+        tagM2: "Modulo 3",
+        titleM2: "Il Cervello e la Memoria: Backend & SQLite Web",
+        subM2: "Come fa un sito a ricordarsi gli utenti. Esegui vero codice SQL direttamente dal browser!",
+        secM2Title: "100% Online & Sicuro per Riccardo",
+        secM2Text: "<strong>Nessun download, nessun file eseguibile, zero rischi:</strong> Tutto questo laboratorio di database SQLite funziona direttamente all'interno di questa pagina web. Puoi esercitarti da qualsiasi computer, tablet o cellulare.",
+        mentorM2Title: "Nota del tuo Mentor",
+        mentorM2Text: "Riccardo, questo è il passo che separa un semplice grafico da un vero sviluppatore web! Non avere paura dei database: alla fine sono solo tabelle tipo Excel, ma super veloci e sicure.",
+        h2M2Arch: "1. Il viaggio di un dato: Come funziona il Web?",
+        listM2Flow: `
+          <li><strong>Frontend (Il Browser):</strong> L'utente scrive il suo nome e la sua email in un modulo HTML e clicca 'Invia'.</li>
+          <li><strong>Backend (Il Server):</strong> Riceve le informazioni, controlla che non ci siano errori e le prepara.</li>
+          <li><strong>Database (La Memoria):</strong> Salva le informazioni in una riga di una tabella in modo permanente.</li>
+        `,
+        h2M2Crud: "2. Le 4 Operazioni Fondamentali: Il CRUD con Comandi SQL",
+        pM2Crud: "In qualsiasi database al mondo (SQLite, MySQL, Postgres) si usano questi comandi SQL:",
+        listM2Crud: `
+          <li><strong>C (Create):</strong> <code>INSERT INTO tabella VALUES (...);</code></li>
+          <li><strong>R (Read):</strong> <code>SELECT * FROM tabella;</code></li>
+          <li><strong>U (Update):</strong> <code>UPDATE tabella SET colonna = valore WHERE id = ...;</code></li>
+          <li><strong>D (Delete):</strong> <code>DELETE FROM tabella WHERE id = ...;</code></li>
+        `,
+        sbM2Title: "Laboratorio SQLite Web: Esegui query SQL in tempo reale",
+        sbM2Desc: "Fai clic sui pulsanti rapidi con i comandi già pronti, oppure scrivi la tua query SQL nel box e premi <strong>'Esegui SQL'</strong>:",
+        txtTableLabel: "Tabella attiva:",
+        btnResetDb: "Ripristina DB",
+        chipSelect: "📋 1. SELECT (Leggi tutti)",
+        chipInsert: "➕ 2. INSERT (Nuovo)",
+        chipUpdate: "✏️ 3. UPDATE (Modifica)",
+        chipDelete: "🗑️ 4. DELETE (Cancella ID 2)",
+        chipCreate: "🛠️ 5. CREATE TABLE (Prodotti)",
+        txtSqlHint: "💡 Suggerimento: Premi 'Esegui SQL' o clicca un pulsante rapido sopra.",
+        btnRunSql: "▶ Esegui SQL",
+        quizM2Title: "Verifica Rapida: Modulo 3",
+        q20Text: "1. Se chiudi il browser e spegni il computer, dove rimangono salvati i dati degli utenti in modo permanente?",
+        q21Text: "2. Quale comando SQL si usa per leggere i dati salvati in una tabella?",
+        btnNext2: "Avanti al Modulo 4: Sviluppo con IA ➔",
+
+        // M3
+        tagM3: "Modulo 4",
+        titleM3: "Il Tuo Superpotere: Sviluppo Web con Intelligenza Artificiale",
+        subM3: "Come usare ChatGPT, Claude o Gemini come tuo copilota personale per creare codice.",
+        tipM3Title: "Perché imparare prima HTML e CSS se c'è l'IA?",
+        tipM3Text: "L'IA è come un'auto da corsa di Formula 1: se non sai dove sono il volante o i freni, ti schianterai. Imparando le basi con il tuo mentore, saprai <strong>cosa chiedere all'IA</strong> e come <strong>riconoscere e correggere</strong> quando commette un errore!",
+        h2M3Prompts: "1. La Formula Magica per i Prompt di Codice",
+        pM3Formula: "Quando chiedi codice all'IA, segui sempre questa struttura in 3 parti:",
+        listM3Formula: `
+          <li><strong>Ruolo e Contesto:</strong> 'Agisci come esperto di web design per principianti.'</li>
+          <li><strong>Compito Specifico:</strong> 'Creami una barra di navigazione moderna con logo a sinistra e 3 link a destra.'</li>
+          <li><strong>Formato di Uscita:</strong> 'Dammi solo codice HTML e CSS pulito, senza complicazioni e spiegato riga per riga.'</li>
+        `,
+        h2M3Examples: "2. Prompt Pronti all'Uso (Copia e Incolla)",
+        lblPr1: "Esempio 1: Personalizzare una sezione di un Template",
+        pr1: "'Ho scaricato un template HTML. Ecco il codice di una card: [incolla codice]. Voglio cambiare lo sfondo in blu scuro, aggiungere un'ombra morbida e mettere un pulsante verde WhatsApp.'",
+        lblPr2: "Esempio 2: Risolvere un errore (Debugging)",
+        pr2: "'Sto creando un modulo di contatto in HTML. Quando clicco il pulsante non invia nulla. Ecco il mio codice: [incolla codice]. Dimmi dove sta l'errore e come correggerlo in modo semplice.'",
+        lblPr3: "Esempio 3: Connettere il form al Database SQLite",
+        pr3: "'Ho questo form HTML con campi Nome ed Email. Voglio salvare questi dati in un database SQLite. Spiegami i passaggi necessari in modo semplice e guidato passo dopo passo.'",
+        quizM3Title: "Verifica Rapida: Modulo 4",
+        q30Text: "1. Qual è il modo migliore di chiedere aiuto a un'IA quando un pezzo di codice non funziona?",
+        q31Text: "2. Come deve essere considerata l'Intelligenza Artificiale nello sviluppo web?",
+        btnNext3: "Visualizza il Diploma e Riepilogo ➔",
+
+        // Certificate
+        certTitle: "Certificato di Completamento",
+        certSub: "Percorso Fondamentale di Web Design & Database",
+        certDesc: "Ha completato con successo i moduli interattivi di <strong>HTML5, CSS3 & Template, Architettura Database e Sviluppo con IA</strong> con l'accompagnamento del suo mentore argentino.",
+        certRoleStudent: "Studente",
+        certRoleMentor: "Docente & Guida 🇦🇷",
+        btnPrintCert: "🖨️ Stampa o Salva PDF",
+        btnReset: "Ricomincia da Capo",
+        lnkTopLvl2: "Vai al Livello 2 ➔",
+        btnGoLvl2: "Passa al Livello 2: Crea Siti Reali ➔"
+      },
+      es: {
+        studentBadge: "Alumno: <strong>Ricardo</strong>",
+        courseTitle: "Curso Diseño Web: De Cero a Base de Datos",
+        mentorNote: "Junto a tu mentor argentino 🇦🇷🇮🇹",
+        progressLabel: "Progreso Global",
+        greeting: "¡Bienvenido Ricardo!",
+        footerInfo: "Guía 100% online para Ricardo. Sin descargas requeridas. Guarda tu progreso en el navegador.",
+        navM0: "1. Estructura (HTML5)",
+        navM1: "2. Estilo & Plantillas (CSS)",
+        navM2: "3. Base de Datos & SQLite Web",
+        navM3: "4. Desarrollo con IA",
+        navM4: "5. Diploma Final",
+        // M0
+        tagM0: "Módulo 1",
+        titleM0: "Los Cimientos de la Web: HTML5",
+        subM0: "Cómo crear el esqueleto de cualquier sitio web del planeta.",
+        tipM0Title: "Cómo imaginar HTML",
+        tipM0Text: "Piensa en una casa: <strong>HTML</strong> son los ladrillos, las paredes y las habitaciones. <strong>CSS</strong> será la pintura y los muebles, mientras que la <strong>Base de Datos</strong> será el depósito donde guardas los suministros.",
+        h2M0Structure: "1. La estructura universal de un archivo HTML",
+        pM0Structure: "Toda página web comienza siempre con esta estructura fija. La computadora lee de arriba hacia abajo:",
+        h2M0Tags: "2. Los ladrillos esenciales (Las Etiquetas)",
+        listM0Tags: `
+          <li><strong>&lt;h1&gt; hasta &lt;h6&gt;:</strong> Títulos desde el principal hasta el más pequeño.</li>
+          <li><strong>&lt;p&gt;:</strong> Párrafos de texto común.</li>
+          <li><strong>&lt;a href="url"&gt;:</strong> Enlaces cliqueables para ir a otra página.</li>
+          <li><strong>&lt;img src="foto.jpg" alt="..."&gt;:</strong> Imágenes en el sitio.</li>
+          <li><strong>&lt;form&gt; e &lt;input&gt;:</strong> Casillas de texto y botones (¡fundamentales para enviar datos a la base de datos!).</li>
+        `,
+        sbM0Title: "Prueba en vivo: Modifica el HTML aquí abajo",
+        quizM0Title: "Comprobación Rápida: Pon a prueba lo que leíste",
+        q00Text: "1. ¿Qué etiqueta se usa para crear el título principal y más importante de la página?",
+        q01Text: "2. ¿Qué elemento HTML es indispensable para permitir que el usuario escriba texto (ej. nombre o contraseña)?",
+        btnCheck: "Verificar Respuestas",
+        btnNext0: "Avanzar al Módulo 2: CSS & Plantillas ➔",
+
+        // M1
+        tagM1: "Módulo 2",
+        titleM1: "Estilo, Maquetación & Plantillas: La Magia de CSS3",
+        subM1: "Cómo hacer atractivo un sitio y usar plantillas para avanzar 10 veces más rápido.",
+        tipM1Title: "La Regla de Oro del Diseñador Web Moderno",
+        tipM1Text: "Los profesionales <strong>casi nunca crean todo desde cero</strong>. Utilizan <em>templates</em> o librerías (como Bootstrap, Tailwind o plantillas HTML5) y luego personalizan los colores, los textos y la estructura.",
+        h2M1Css: "1. Cómo funciona CSS: Regla Básica",
+        pM1Css: "CSS le dice al navegador: <em>'Toma este elemento y dale estas propiedades visuales'</em>.",
+        h2M1Templates: "2. ¿Qué es un 'Template' (Plantilla)?",
+        pM1Templates: "Un <strong>Template</strong> es una página web ya diseñada y programada por diseñadores expertos con HTML, CSS e imágenes listas.",
+        listM1Templates: `
+          <li><strong>Ventaja 1:</strong> Ahorras horas de trabajo de diseño visual.</li>
+          <li><strong>Ventaja 2:</strong> Ya está optimizado para funcionar tanto en móviles como en computadoras (Responsive).</li>
+          <li><strong>Qué debes hacer tú:</strong> Abrir el archivo de la plantilla, ubicar los textos o imágenes que deseas cambiar y reemplazarlos por los tuyos.</li>
+        `,
+        sbM1Title: "Laboratorio CSS: ¡Cambia el color de fondo y el borde!",
+        quizM1Title: "Comprobación Rápida: Módulo 2",
+        q10Text: "1. ¿Para qué sirve principalmente el código CSS en una página web?",
+        q11Text: "2. ¿Cuál es la principal ventaja de iniciar un proyecto con una plantilla existente?",
+        btnNext1: "Avanzar al Módulo 3: Base de Datos & SQLite Web ➔",
+
+        // M2
+        tagM2: "Módulo 3",
+        titleM2: "El Cerebro y la Memoria: Backend & SQLite Web",
+        subM2: "Cómo hace un sitio para recordar usuarios. ¡Ejecuta código SQL real directamente desde el navegador!",
+        secM2Title: "100% Online y Seguro para Ricardo",
+        secM2Text: "<strong>Sin descargas, sin archivos ejecutables, cero riesgos:</strong> Todo este laboratorio de base de datos SQLite funciona directamente dentro de esta página web. Puedes practicar desde cualquier computadora, tablet o móvil.",
+        mentorM2Title: "Nota de tu Mentor",
+        mentorM2Text: "Ricardo, ¡este es el paso que separa a un maquetador visual de un verdadero desarrollador web! No le temas a las bases de datos: al final son como tablas de Excel, pero súper veloces y seguras.",
+        h2M2Arch: "1. El viaje de un dato: ¿Cómo funciona la Web?",
+        listM2Flow: `
+          <li><strong>Frontend (El Navegador):</strong> El usuario escribe su nombre y email en un formulario HTML y hace clic en 'Enviar'.</li>
+          <li><strong>Backend (El Servidor):</strong> Recibe la información, verifica que no haya errores y la prepara.</li>
+          <li><strong>Base de Datos (La Memoria):</strong> Guarda la información en una fila de una tabla de forma permanente.</li>
+        `,
+        h2M2Crud: "2. Las 4 Operaciones Fundamentales: El CRUD con Comandos SQL",
+        pM2Crud: "En cualquier base de datos del mundo (SQLite, MySQL, Postgres) se usan estos comandos SQL:",
+        listM2Crud: `
+          <li><strong>C (Create):</strong> <code>INSERT INTO tabla VALUES (...);</code></li>
+          <li><strong>R (Read):</strong> <code>SELECT * FROM tabla;</code></li>
+          <li><strong>U (Update):</strong> <code>UPDATE tabla SET columna = valor WHERE id = ...;</code></li>
+          <li><strong>D (Delete):</strong> <code>DELETE FROM tabla WHERE id = ...;</code></li>
+        `,
+        sbM2Title: "Laboratorio SQLite Web: Ejecuta consultas SQL en tiempo real",
+        sbM2Desc: "Haz clic en los botones rápidos con comandos listos, o escribe tu propia consulta SQL en la caja y presiona <strong>'Ejecutar SQL'</strong>:",
+        txtTableLabel: "Tabla activa:",
+        btnResetDb: "Restablecer DB",
+        chipSelect: "📋 1. SELECT (Leer todos)",
+        chipInsert: "➕ 2. INSERT (Nuevo)",
+        chipUpdate: "✏️ 3. UPDATE (Modificar)",
+        chipDelete: "🗑️ 4. DELETE (Borrar ID 2)",
+        chipCreate: "🛠️ 5. CREATE TABLE (Productos)",
+        txtSqlHint: "💡 Consejo: Presiona 'Ejecutar SQL' o haz clic en un botón rápido arriba.",
+        btnRunSql: "▶ Ejecutar SQL",
+        quizM2Title: "Comprobación Rápida: Módulo 3",
+        q20Text: "1. Si cierras el navegador y apagas la computadora, ¿dónde quedan guardados los datos de los usuarios permanentemente?",
+        q21Text: "2. ¿Qué comando SQL se usa para leer los datos guardados en una tabla?",
+        btnNext2: "Avanzar al Módulo 4: Desarrollo con IA ➔",
+
+        // M3
+        tagM3: "Módulo 4",
+        titleM3: "Tu Superpoder: Desarrollo Web con Inteligencia Artificial",
+        subM3: "Cómo usar ChatGPT, Claude o Gemini como tu copiloto personal para generar código.",
+        tipM3Title: "¿Por qué aprender HTML y CSS primero si existe la IA?",
+        tipM3Text: "La IA es como un coche de Fórmula 1: si no sabes dónde está el volante o los frenos, te estrellarás. Al aprender los fundamentos con tu mentor, sabrás <strong>qué pedirle a la IA</strong> y cómo <strong>detectar y corregir</strong> cuando cometa un error.",
+        h2M3Prompts: "1. La Fórmula Mágica para Prompts de Código",
+        pM3Formula: "Cuando le pidas código a una IA, sigue siempre esta estructura en 3 partes:",
+        listM3Formula: `
+          <li><strong>Rol y Contexto:</strong> 'Actúa como experto en diseño web para principiantes.'</li>
+          <li><strong>Tarea Específica:</strong> 'Crea una barra de navegación moderna con logo a la izquierda y 3 enlaces a la derecha.'</li>
+          <li><strong>Formato de Salida:</strong> 'Bríndame solo código HTML y CSS limpio, sin librerías complejas y explicado línea por línea.'</li>
+        `,
+        h2M3Examples: "2. Prompts Listos para Usar (Copiar y Pegar)",
+        lblPr1: "Ejemplo 1: Personalizar una sección de una Plantilla",
+        pr1: "'He descargado una plantilla HTML. Aquí está el código de una tarjeta: [pegar código]. Quiero cambiar el fondo a azul oscuro, añadir una sombra suave y poner un botón verde de WhatsApp.'",
+        lblPr2: "Ejemplo 2: Resolver un error (Debugging)",
+        pr2: "'Estoy creando un formulario de contacto en HTML. Al hacer clic en el botón no envía nada. Aquí está mi código: [pegar código]. Dime dónde está el fallo y cómo solucionarlo de manera sencilla.'",
+        lblPr3: "Ejemplo 3: Conectar el formulario a la Base de Datos SQLite",
+        pr3: "'Tengo este formulario HTML con campos Nombre y Email. Deseo guardar estos datos en una base de datos SQLite. Explícame los pasos necesarios paso a paso de forma clara.'",
+        quizM3Title: "Comprobación Rápida: Módulo 4",
+        q30Text: "1. ¿Cuál es la mejor forma de pedir ayuda a una IA cuando un fragmento de código no funciona?",
+        q31Text: "2. ¿Cómo debe considerarse a la Inteligencia Artificial en el desarrollo web?",
+        btnNext3: "Ver el Diploma y Resumen ➔",
+
+        // Certificate
+        certTitle: "Certificado de Finalización",
+        certSub: "Trayecto Fundamental de Diseño Web & Base de Datos",
+        certDesc: "Completó con éxito los módulos interactivos de <strong>HTML5, CSS3 & Plantillas, Arquitectura de Bases de Datos y Desarrollo con IA</strong> junto al acompañamiento de su mentor argentino.",
+        certRoleStudent: "Alumno",
+        certRoleMentor: "Docente & Guida 🇦🇷",
+        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
+        btnReset: "Reiniciar desde Cero",
+        lnkTopLvl2: "Ir al Nivel 2 ➔",
+        btnGoLvl2: "Pasar al Nivel 2: Crear Sitios Reales ➔"
+      }
+    };
+
+    // Initialize
+    function init() {
+      loadSavedState();
+      loadDatabaseState();
+      setLanguage(currentLang);
+      updatePreview(0);
+      updatePreview(1);
+      updateProgressBar();
+      renderTableSelector();
+      renderCurrentTable();
+    }
+
+    // Set Language
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('riccardo_lang', lang);
+
+      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+
+      const t = i18n[lang];
+
+      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
+      document.getElementById('txt-course-title').innerText = t.courseTitle;
+      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
+      document.getElementById('txt-progress-label').innerText = t.progressLabel;
+      document.getElementById('txt-greeting').innerText = t.greeting;
+      document.getElementById('txt-footer-info').innerText = t.footerInfo;
+
+      document.getElementById('nav-m0').innerText = t.navM0;
+      document.getElementById('nav-m1').innerText = t.navM1;
+      document.getElementById('nav-m2').innerText = t.navM2;
+      document.getElementById('nav-m3').innerText = t.navM3;
+      document.getElementById('nav-m4').innerText = t.navM4;
+
+      // M0
+      document.getElementById('tag-m0').innerText = t.tagM0;
+      document.getElementById('title-m0').innerText = t.titleM0;
+      document.getElementById('sub-m0').innerText = t.subM0;
+      document.getElementById('tip-m0-title').innerText = t.tipM0Title;
+      document.getElementById('tip-m0-text').innerHTML = t.tipM0Text;
+      document.getElementById('h2-m0-structure').innerText = t.h2M0Structure;
+      document.getElementById('p-m0-structure').innerText = t.pM0Structure;
+      document.getElementById('h2-m0-tags').innerText = t.h2M0Tags;
+      document.getElementById('list-m0-tags').innerHTML = t.listM0Tags;
+      document.getElementById('sb-m0-title').innerText = t.sbM0Title;
+      document.getElementById('quiz-m0-title').innerText = t.quizM0Title;
+      document.getElementById('q-0-0-text').innerText = t.q00Text;
+      document.getElementById('q-0-1-text').innerText = t.q01Text;
+      document.getElementById('btn-check-0').innerText = t.btnCheck;
+      document.getElementById('txt-btn-next-0').innerText = t.btnNext0;
+
+      // M1
+      document.getElementById('tag-m1').innerText = t.tagM1;
+      document.getElementById('title-m1').innerText = t.titleM1;
+      document.getElementById('sub-m1').innerText = t.subM1;
+      document.getElementById('tip-m1-title').innerText = t.tipM1Title;
+      document.getElementById('tip-m1-text').innerHTML = t.tipM1Text;
+      document.getElementById('h2-m1-css').innerText = t.h2M1Css;
+      document.getElementById('p-m1-css').innerHTML = t.pM1Css;
+      document.getElementById('h2-m1-templates').innerText = t.h2M1Templates;
+      document.getElementById('p-m1-templates').innerHTML = t.pM1Templates;
+      document.getElementById('list-m1-templates').innerHTML = t.listM1Templates;
+      document.getElementById('sb-m1-title').innerText = t.sbM1Title;
+      document.getElementById('quiz-m1-title').innerText = t.quizM1Title;
+      document.getElementById('q-1-0-text').innerText = t.q10Text;
+      document.getElementById('q-1-1-text').innerText = t.q11Text;
+      document.getElementById('btn-check-1').innerText = t.btnCheck;
+      document.getElementById('txt-btn-next-1').innerText = t.btnNext1;
+
+      // M2 (SQLite Web)
+      document.getElementById('tag-m2').innerText = t.tagM2;
+      document.getElementById('title-m2').innerText = t.titleM2;
+      document.getElementById('sub-m2').innerText = t.subM2;
+      document.getElementById('sec-m2-title').innerText = t.secM2Title;
+      document.getElementById('sec-m2-text').innerHTML = t.secM2Text;
+      document.getElementById('mentor-m2-title').innerText = t.mentorM2Title;
+      document.getElementById('mentor-m2-text').innerText = t.mentorM2Text;
+      document.getElementById('h2-m2-arch').innerText = t.h2M2Arch;
+      document.getElementById('list-m2-flow').innerHTML = t.listM2Flow;
+      document.getElementById('h2-m2-crud').innerText = t.h2M2Crud;
+      document.getElementById('p-m2-crud').innerText = t.pM2Crud;
+      document.getElementById('list-m2-crud').innerHTML = t.listM2Crud;
+      document.getElementById('sb-m2-title').innerText = t.sbM2Title;
+      document.getElementById('sb-m2-desc').innerHTML = t.sbM2Desc;
+      document.getElementById('txt-table-label').innerText = t.txtTableLabel;
+      document.getElementById('btn-reset-db').innerText = t.btnResetDb;
+      document.getElementById('chip-select').innerText = t.chipSelect;
+      document.getElementById('chip-insert').innerText = t.chipInsert;
+      document.getElementById('chip-update').innerText = t.chipUpdate;
+      document.getElementById('chip-delete').innerText = t.chipDelete;
+      document.getElementById('chip-create').innerText = t.chipCreate;
+      document.getElementById('txt-sql-hint').innerText = t.txtSqlHint;
+      document.getElementById('btn-run-sql').innerText = t.btnRunSql;
+      document.getElementById('quiz-m2-title').innerText = t.quizM2Title;
+      document.getElementById('q-2-0-text').innerText = t.q20Text;
+      document.getElementById('q-2-1-text').innerText = t.q21Text;
+      document.getElementById('btn-check-2').innerText = t.btnCheck;
+      document.getElementById('txt-btn-next-2').innerText = t.btnNext2;
+
+      // M3
+      document.getElementById('tag-m3').innerText = t.tagM3;
+      document.getElementById('title-m3').innerText = t.titleM3;
+      document.getElementById('sub-m3').innerText = t.subM3;
+      document.getElementById('tip-m3-title').innerText = t.tipM3Title;
+      document.getElementById('tip-m3-text').innerHTML = t.tipM3Text;
+      document.getElementById('h2-m3-prompts').innerText = t.h2M3Prompts;
+      document.getElementById('p-m3-formula').innerText = t.pM3Formula;
+      document.getElementById('list-m3-formula').innerHTML = t.listM3Formula;
+      document.getElementById('h2-m3-examples').innerText = t.h2M3Examples;
+      document.getElementById('lbl-pr1').innerText = t.lblPr1;
+      document.getElementById('pr-1').innerText = t.pr1;
+      document.getElementById('lbl-pr2').innerText = t.lblPr2;
+      document.getElementById('pr-2').innerText = t.pr2;
+      document.getElementById('lbl-pr3').innerText = t.lblPr3;
+      document.getElementById('pr-3').innerText = t.pr3;
+      document.getElementById('quiz-m3-title').innerText = t.quizM3Title;
+      document.getElementById('q-3-0-text').innerText = t.q30Text;
+      document.getElementById('q-3-1-text').innerText = t.q31Text;
+      document.getElementById('btn-check-3').innerText = t.btnCheck;
+      document.getElementById('txt-btn-next-3').innerText = t.btnNext3;
+
+      // Certificate
+      document.getElementById('cert-title').innerText = t.certTitle;
+      document.getElementById('cert-sub').innerText = t.certSub;
+      document.getElementById('cert-desc').innerHTML = t.certDesc;
+      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
+      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
+      document.getElementById('btn-print-cert').innerText = t.btnPrintCert;
+      document.getElementById('btn-reset').innerText = t.btnReset;
+      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
+      if (document.getElementById('txt-lnk-top-lvl2')) document.getElementById('txt-lnk-top-lvl2').innerText = t.lnkTopLvl2;
+      if (document.getElementById('txt-btn-go-lvl2')) document.getElementById('txt-btn-go-lvl2').innerText = t.btnGoLvl2;
+
+      for (let m = 0; m < 4; m++) {
+        if (completedModules[m]) {
+          renderQuizFeedback(m);
+        }
+      }
+    }
+
+    // Switch Module
+    function switchModule(index) {
+      currentModule = index;
+      for (let i = 0; i < totalModules; i++) {
+        const mod = document.getElementById(`module-${i}`);
+        if (mod) mod.style.display = (i === index) ? 'block' : 'none';
+
+        const nav = document.querySelectorAll('.nav-item')[i];
+        if (nav) nav.classList.toggle('active', i === index);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Interactive Preview Sandbox
+    function updatePreview(id) {
+      const editor = document.getElementById(`editor-${id}`);
+      const preview = document.getElementById(`preview-${id}`);
+      if (editor && preview) {
+        preview.innerHTML = editor.value;
+      }
+    }
+
+    // ==========================================
+    // IN-BROWSER SQLITE WORKBENCH ENGINE
+    // ==========================================
+    function renderTableSelector() {
+      const selector = document.getElementById('table-selector');
+      selector.innerHTML = '';
+      const tables = Object.keys(database);
+      tables.forEach(tbl => {
+        const opt = document.createElement('option');
+        opt.value = tbl;
+        opt.innerText = tbl;
+        opt.selected = (tbl === activeTable);
+        selector.appendChild(opt);
+      });
+    }
+
+    function changeActiveTable() {
+      activeTable = document.getElementById('table-selector').value;
+      document.getElementById('sql-input').value = `SELECT * FROM ${activeTable};`;
+      executeUserSql();
+    }
+
+    function renderCurrentTable(filteredRows = null) {
+      const tableEl = document.getElementById('sql-result-table');
+      const rows = filteredRows !== null ? filteredRows : (database[activeTable] || []);
+
+      if (!database[activeTable] || rows.length === 0) {
+        tableEl.innerHTML = `<tr><td style="color: #64748b; padding: 14px; text-align: center;">(Tabella '${activeTable}' vuota o nessun record trovato)</td></tr>`;
+        return;
+      }
+
+      // Collect all keys from rows
+      const cols = Object.keys(rows[0] || {});
+      let theadHtml = '<thead><tr>';
+      cols.forEach(c => {
+        theadHtml += `<th>${c.toUpperCase()}</th>`;
+      });
+      theadHtml += '</tr></thead>';
+
+      let tbodyHtml = '<tbody>';
+      rows.forEach(r => {
+        tbodyHtml += '<tr>';
+        cols.forEach(c => {
+          let val = r[c] !== undefined ? r[c] : '';
+          tbodyHtml += `<td>${escapeHtml(String(val))}</td>`;
+        });
+        tbodyHtml += '</tr>';
+      });
+      tbodyHtml += '</tbody>';
+
+      tableEl.innerHTML = theadHtml + tbodyHtml;
+    }
+
+    function loadSqlPreset(type) {
+      const input = document.getElementById('sql-input');
+      if (type === 'select') {
+        input.value = `SELECT * FROM ${activeTable};`;
+      } else if (type === 'insert') {
+        if (activeTable === 'studenti') {
+          input.value = `INSERT INTO studenti (nome, email, corso) VALUES ('Paolo Verdi', 'paolo@roma.it', 'CSS & Flexbox');`;
+        } else {
+          input.value = `INSERT INTO ${activeTable} (titolo, prezzo) VALUES ('Nuovo Corso Pro', '€1200');`;
+        }
+      } else if (type === 'update') {
+        if (activeTable === 'studenti') {
+          input.value = `UPDATE studenti SET corso = 'Fullstack Developer Pro' WHERE id = 1;`;
+        } else {
+          input.value = `UPDATE ${activeTable} SET prezzo = '€399' WHERE id = 1;`;
+        }
+      } else if (type === 'delete') {
+        input.value = `DELETE FROM ${activeTable} WHERE id = 2;`;
+      } else if (type === 'create') {
+        input.value = `CREATE TABLE corsi (id INTEGER, materia TEXT, ore INTEGER);`;
+      }
+      executeUserSql();
+    }
+
+    function logSql(msg, isError = false) {
+      const logEl = document.getElementById('sql-terminal-log');
+      logEl.className = isError ? 'sql-terminal-log error' : 'sql-terminal-log';
+      logEl.innerText = `> ${msg}`;
+    }
+
+    function executeUserSql() {
+      const sql = document.getElementById('sql-input').value.trim();
+      if (!sql) return;
+
+      const cleanSql = sql.replace(/;/g, '').trim();
+      const upper = cleanSql.toUpperCase();
+
+      try {
+        // 1. SELECT
+        if (upper.startsWith('SELECT')) {
+          const match = cleanSql.match(/FROM\s+([a-zA-Z0-9_]+)/i);
+          if (!match) throw new Error("Manca la clausola FROM (es: SELECT * FROM studenti)");
+          const tbl = match[1].toLowerCase();
+          if (!database[tbl]) throw new Error(`La tabella '${tbl}' non esiste nel database!`);
+          
+          activeTable = tbl;
+          document.getElementById('table-selector').value = tbl;
+
+          // Check WHERE condition simple (e.g. WHERE id = 1)
+          let resultRows = database[tbl];
+          const whereMatch = cleanSql.match(/WHERE\s+([a-zA-Z0-9_]+)\s*=\s*['"]?([^'"]+)['"]?/i);
+          if (whereMatch) {
+            const col = whereMatch[1].toLowerCase();
+            const val = whereMatch[2];
+            resultRows = resultRows.filter(r => String(r[col]).toLowerCase() === val.toLowerCase());
+          }
+
+          renderCurrentTable(resultRows);
+          logSql(currentLang === 'it' 
+            ? `Query eseguita con successo. Righe restituite: ${resultRows.length}`
+            : `Consulta ejecutada con éxito. Filas retornadas: ${resultRows.length}`);
+        }
+        // 2. INSERT
+        else if (upper.startsWith('INSERT INTO')) {
+          const matchTbl = cleanSql.match(/INSERT\s+INTO\s+([a-zA-Z0-9_]+)/i);
+          if (!matchTbl) throw new Error("Sintassi INSERT errata.");
+          const tbl = matchTbl[1].toLowerCase();
+          if (!database[tbl]) throw new Error(`La tabella '${tbl}' non esiste.`);
+
+          // Extract columns and values
+          const valMatch = cleanSql.match(/VALUES\s*\((.*?)\)/i);
+          if (!valMatch) throw new Error("Manca la clausola VALUES (...)");
+
+          const rawValues = valMatch[1].split(',').map(s => s.trim().replace(/^['"]|['"]$/g, ''));
+          
+          let newRow = {};
+          const colsMatch = cleanSql.match(/INSERT\s+INTO\s+[a-zA-Z0-9_]+\s*\((.*?)\)/i);
+          
+          if (colsMatch) {
+            const cols = colsMatch[1].split(',').map(s => s.trim().toLowerCase());
+            cols.forEach((c, idx) => {
+              newRow[c] = rawValues[idx] || '';
+            });
+            if (!newRow.id) {
+              const maxId = database[tbl].reduce((max, r) => Math.max(max, Number(r.id) || 0), 0);
+              newRow.id = maxId + 1;
+            }
+          } else {
+            // Match with existing table cols
+            const existingCols = Object.keys(database[tbl][0] || { id: 1 });
+            existingCols.forEach((c, idx) => {
+              newRow[c] = rawValues[idx] || '';
+            });
+          }
+
+          database[tbl].push(newRow);
+          activeTable = tbl;
+          document.getElementById('table-selector').value = tbl;
+          saveDatabaseState();
+          renderCurrentTable();
+          logSql(currentLang === 'it' 
+            ? `Record inserito con successo nella tabella '${tbl}'! (INSERT)`
+            : `¡Registro insertado con éxito en la tabla '${tbl}'! (INSERT)`);
+        }
+        // 3. UPDATE
+        else if (upper.startsWith('UPDATE')) {
+          const matchTbl = cleanSql.match(/UPDATE\s+([a-zA-Z0-9_]+)/i);
+          if (!matchTbl) throw new Error("Sintassi UPDATE errata.");
+          const tbl = matchTbl[1].toLowerCase();
+          if (!database[tbl]) throw new Error(`Tabella '${tbl}' non trovata.`);
+
+          const setMatch = cleanSql.match(/SET\s+([a-zA-Z0-9_]+)\s*=\s*['"]?([^'"]+?)['"]?(?:\s+WHERE|$)/i);
+          if (!setMatch) throw new Error("Manca la clausola SET colonna = valore");
+          const setCol = setMatch[1].toLowerCase();
+          const setVal = setMatch[2];
+
+          const whereMatch = cleanSql.match(/WHERE\s+([a-zA-Z0-9_]+)\s*=\s*['"]?([^'"]+)['"]?/i);
+          let count = 0;
+          database[tbl].forEach(r => {
+            if (!whereMatch || String(r[whereMatch[1].toLowerCase()]) === String(whereMatch[2])) {
+              r[setCol] = setVal;
+              count++;
+            }
+          });
+
+          activeTable = tbl;
+          saveDatabaseState();
+          renderCurrentTable();
+          logSql(currentLang === 'it' 
+            ? `UPDATE eseguito. ${count} record aggiornati nella tabella '${tbl}'.`
+            : `UPDATE ejecutado. ${count} registros actualizados en '${tbl}'.`);
+        }
+        // 4. DELETE
+        else if (upper.startsWith('DELETE FROM')) {
+          const matchTbl = cleanSql.match(/DELETE\s+FROM\s+([a-zA-Z0-9_]+)/i);
+          if (!matchTbl) throw new Error("Sintassi DELETE errata.");
+          const tbl = matchTbl[1].toLowerCase();
+          if (!database[tbl]) throw new Error(`Tabella '${tbl}' non trovata.`);
+
+          const whereMatch = cleanSql.match(/WHERE\s+([a-zA-Z0-9_]+)\s*=\s*['"]?([^'"]+)['"]?/i);
+          const initialLen = database[tbl].length;
+          if (whereMatch) {
+            const col = whereMatch[1].toLowerCase();
+            const val = whereMatch[2];
+            database[tbl] = database[tbl].filter(r => String(r[col]) !== String(val));
+          } else {
+            database[tbl] = [];
+          }
+
+          const deleted = initialLen - database[tbl].length;
+          activeTable = tbl;
+          saveDatabaseState();
+          renderCurrentTable();
+          logSql(currentLang === 'it' 
+            ? `DELETE eseguito. ${deleted} record cancellati dalla tabella '${tbl}'.`
+            : `DELETE ejecutado. ${deleted} registros eliminados de '${tbl}'.`);
+        }
+        // 5. CREATE TABLE
+        else if (upper.startsWith('CREATE TABLE')) {
+          const matchTbl = cleanSql.match(/CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?([a-zA-Z0-9_]+)/i);
+          if (!matchTbl) throw new Error("Sintassi CREATE TABLE errata.");
+          const newTbl = matchTbl[1].toLowerCase();
+          if (database[newTbl]) {
+            throw new Error(`La tabella '${newTbl}' esiste già!`);
+          }
+
+          // Parse columns inside parenthesis
+          const colsMatch = cleanSql.match(/\((.*?)\)/);
+          let sampleRow = { id: 1 };
+          if (colsMatch) {
+            const colDefs = colsMatch[1].split(',');
+            colDefs.forEach(def => {
+              const colName = def.trim().split(/\s+/)[0].toLowerCase();
+              if (colName && colName !== 'id') {
+                sampleRow[colName] = '(Dato esempio)';
+              }
+            });
+          }
+
+          database[newTbl] = [sampleRow];
+          activeTable = newTbl;
+          saveDatabaseState();
+          renderTableSelector();
+          renderCurrentTable();
+          logSql(currentLang === 'it' 
+            ? `Nuova tabella '${newTbl}' creata con successo nel database!`
+            : `¡Nueva tabla '${newTbl}' creada con éxito en la base de datos!`);
+        } else {
+          throw new Error("Comando SQL non riconosciuto. Usa SELECT, INSERT, UPDATE, DELETE o CREATE TABLE.");
+        }
+      } catch (err) {
+        logSql(`Errore SQL: ${err.message}`, true);
+      }
+    }
+
+    function saveDatabaseState() {
+      localStorage.setItem('riccardo_web_db', JSON.stringify(database));
+    }
+
+    function loadDatabaseState() {
+      const saved = localStorage.getItem('riccardo_web_db');
+      if (saved) {
+        try {
+          database = JSON.parse(saved);
+          if (!database[activeTable]) {
+            activeTable = Object.keys(database)[0] || 'studenti';
+          }
+        } catch(e) {
+          console.error(e);
+        }
+      }
+    }
+
+    function resetWebDatabase() {
+      const msg = currentLang === 'it' 
+        ? "Ripristinare il database SQLite ai dati originali?" 
+        : "¿Restablecer la base de datos SQLite a los datos originales?";
+      if (confirm(msg)) {
+        database = {
+          studenti: [
+            { id: 1, nome: "Riccardo (Tu)", email: "riccardo@italia.it", corso: "Web Design Fullstack" },
+            { id: 2, nome: "Marco Rossi", email: "marco@roma.it", corso: "HTML & CSS" },
+            { id: 3, nome: "Giulia Bianchi", email: "giulia@milano.it", corso: "JavaScript & Database" }
+          ],
+          prodotti: [
+            { id: 1, titolo: "Sito Vetrina Base", prezzo: "€450", formato: "HTML & CSS" },
+            { id: 2, titolo: "E-Commerce SQLite", prezzo: "€950", formato: "Fullstack" }
+          ]
+        };
+        activeTable = 'studenti';
+        saveDatabaseState();
+        renderTableSelector();
+        renderCurrentTable();
+        logSql(currentLang === 'it' ? "Database ripristinato con successo." : "Base de datos restablecida con éxito.");
+      }
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    // ==========================================
+    // QUIZ SYSTEM
+    // ==========================================
+    function selectOption(modId, qId, optIndex) {
+      userAnswers[modId][qId] = optIndex;
+      const qBlock = document.getElementById(`q-block-${modId}-${qId}`);
+      const btns = qBlock.querySelectorAll('.option-btn');
+      btns.forEach((btn, idx) => {
+        btn.classList.toggle('selected', idx === optIndex);
+      });
+    }
+
+    function checkModuleQuiz(modId) {
+      const questions = quizData[modId];
+      let correctCount = 0;
+      let answeredCount = 0;
+
+      questions.forEach((q, qIndex) => {
+        const userChoice = userAnswers[modId][qIndex];
+        const fbBox = document.getElementById(`fb-${modId}-${qIndex}`);
+        const qBlock = document.getElementById(`q-block-${modId}-${qIndex}`);
+        const btns = qBlock.querySelectorAll('.option-btn');
+
+        if (userChoice !== undefined) {
+          answeredCount++;
+          if (userChoice === q.correct) {
+            correctCount++;
+            fbBox.className = 'feedback-box correct';
+            fbBox.innerText = q.feedback[currentLang].correct;
+            btns[userChoice].className = 'option-btn correct';
+          } else {
+            fbBox.className = 'feedback-box wrong';
+            fbBox.innerText = q.feedback[currentLang].wrong;
+            btns[userChoice].className = 'option-btn wrong';
+            btns[q.correct].className = 'option-btn correct';
+          }
+        }
+      });
+
+      if (answeredCount < questions.length) {
+        alert(currentLang === 'it' 
+          ? 'Per favore rispondi a tutte le domande prima di verificare!' 
+          : '¡Por favor responde a todas las preguntas antes de verificar!');
+        return;
+      }
+
+      const badge = document.getElementById(`score-badge-${modId}`);
+      badge.innerText = `${correctCount}/${questions.length} ${currentLang === 'it' ? 'Corrette' : 'Correctas'}`;
+
+      if (correctCount === questions.length) {
+        completedModules[modId] = true;
+        document.getElementById(`check-${modId}`).style.display = 'inline-block';
+        document.querySelectorAll('.nav-item')[modId].classList.add('completed');
+      }
+
+      saveState();
+      updateProgressBar();
+    }
+
+    function renderQuizFeedback(modId) {
+      const questions = quizData[modId];
+      questions.forEach((q, qIndex) => {
+        const userChoice = userAnswers[modId][qIndex];
+        const fbBox = document.getElementById(`fb-${modId}-${qIndex}`);
+        if (userChoice !== undefined && fbBox) {
+          const isCorrect = userChoice === q.correct;
+          fbBox.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
+          fbBox.innerText = isCorrect ? q.feedback[currentLang].correct : q.feedback[currentLang].wrong;
+        }
+      });
+    }
+
+    function updateProgressBar() {
+      let completedCount = 0;
+      for (let i = 0; i < 4; i++) {
+        if (completedModules[i]) completedCount++;
+      }
+
+      if (completedCount === 4) {
+        completedModules[4] = true;
+        document.getElementById('check-4').style.display = 'inline-block';
+        document.querySelectorAll('.nav-item')[4].classList.add('completed');
+        completedCount = 5;
+      }
+
+      const percent = Math.round((completedCount / 5) * 100);
+      document.getElementById('progress-percent').innerText = `${percent}%`;
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+    }
+
+    function copyCode(btn) {
+      const code = btn.parentElement.querySelector('code').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = btn.innerText;
+        btn.innerText = currentLang === 'it' ? 'Copiato!' : '¡Copiado!';
+        setTimeout(() => btn.innerText = originalText, 1500);
+      });
+    }
+
+    function copyPrompt(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert(currentLang === 'it' ? 'Prompt copiato negli appunti!' : '¡Prompt copiado al portapapeles!');
+      });
+    }
+
+    function saveState() {
+      const state = {
+        answers: userAnswers,
+        completed: completedModules
+      };
+      localStorage.setItem('riccardo_course_state', JSON.stringify(state));
+    }
+
+    function loadSavedState() {
+      const savedLang = localStorage.getItem('riccardo_lang');
+      if (savedLang) currentLang = savedLang;
+
+      const savedState = localStorage.getItem('riccardo_course_state');
+      if (savedState) {
+        try {
+          const parsed = JSON.parse(savedState);
+          userAnswers = parsed.answers || userAnswers;
+          completedModules = parsed.completed || completedModules;
+
+          for (let i = 0; i < 5; i++) {
+            if (completedModules[i]) {
+              const chk = document.getElementById(`check-${i}`);
+              if (chk) chk.style.display = 'inline-block';
+              const nav = document.querySelectorAll('.nav-item')[i];
+              if (nav) nav.classList.add('completed');
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+
+    function resetAllProgress() {
+      const confirmMsg = currentLang === 'it' 
+        ? 'Sei sicuro di voler resettare tutti i tuoi progressi e ricominciare da capo?' 
+        : '¿Estás seguro de que deseas reiniciar todo tu progreso y empezar desde cero?';
+      if (confirm(confirmMsg)) {
+        localStorage.removeItem('riccardo_course_state');
+        localStorage.removeItem('riccardo_web_db');
+        location.reload();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

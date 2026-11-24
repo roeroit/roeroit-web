@@ -545,10 +545,15 @@
   <main id="main-content">
     <!-- Top Bar -->
     <div class="top-controls">
-      <a href="index.html" class="btn-back-level" id="btn-top-back">
-        <span>⬅️</span>
-        <span id="txt-top-back">Torna al Livello 1 (Fondamenti & DB)</span>
-      </a>
+      <div style="display: flex; gap: 8px; font-size: 0.85rem; font-weight: 600; align-items: center; flex-wrap: wrap;">
+        <a href="index.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 1</a>
+        <span>➔</span>
+        <span style="color: #2563eb; font-weight: 700;">Livello 2 (Attuale)</span>
+        <span>➔</span>
+        <a href="modulo3.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 3</a>
+        <span>➔</span>
+        <a href="modulo4.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 4</a>
+      </div>
 
       <!-- Language Selector -->
       <div class="lang-selector">
@@ -922,6 +927,9 @@
 
         <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
           <button class="btn-verify" onclick="window.print()" id="btn-print-cert">🖨️ Stampa o Salva PDF</button>
+          <a href="modulo3.html" class="btn-verify" style="background: #f59e0b; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" id="btn-go-lvl3">
+            ⚡ Passa al Livello 3 (JavaScript) ➔
+          </a>
           <a href="index.html" class="btn-back-level" style="padding: 10px 18px;" id="btn-footer-home">⬅️ Torna al Livello 1</a>
         </div>
       </div>

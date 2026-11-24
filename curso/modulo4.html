@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livello 4: Progetto Reale & Salita sul Web - Riccardo</title>
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-hover: #047857;
+      --primary-light: #d1fae5;
+      --secondary: #0f172a;
+      --success: #10b981;
+      --success-light: #d1fae5;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --sidebar-bg: #064e3b;
+      --sidebar-text: #f0fdf4;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    #sidebar {
+      width: 320px;
+      background: var(--sidebar-bg);
+      color: var(--sidebar-text);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      border-right: 1px solid #047857;
+    }
+
+    #main-content {
+      flex: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2.5rem;
+      overflow-y: auto;
+    }
+
+    .top-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-breadcrumbs {
+      display: flex;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      align-items: center;
+    }
+
+    .nav-breadcrumbs a {
+      color: #64748b;
+      text-decoration: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #f1f5f9;
+    }
+
+    .nav-breadcrumbs a:hover {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .lang-selector {
+      display: flex;
+      background: var(--border);
+      border-radius: 9999px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .lang-btn {
+      border: none;
+      background: transparent;
+      padding: 6px 14px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+
+    .lang-btn.active {
+      background: #ffffff;
+      color: #059669;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar */
+    .sidebar-header {
+      padding: 1.75rem 1.5rem 1.25rem;
+      border-bottom: 1px solid #047857;
+    }
+
+    .student-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #047857;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #d1fae5;
+      margin-bottom: 0.75rem;
+    }
+    .student-badge strong { color: #ffffff; }
+
+    .sidebar-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .mentor-note {
+      font-size: 0.8rem;
+      color: #a7f3d0;
+      margin-top: 0.5rem;
+    }
+
+    .progress-container {
+      padding: 1.25rem 1.5rem;
+      background: #022c22;
+      border-bottom: 1px solid #047857;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      color: #a7f3d0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #064e3b;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #34d399, #10b981);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.925rem;
+      color: #a7f3d0;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .nav-item:hover { background: #047857; color: #ffffff; }
+    .nav-item.active { background: #10b981; color: #022c22; font-weight: 700; }
+    .nav-item .icon { font-size: 1.15rem; }
+    .nav-item .check { margin-left: auto; font-size: 0.85rem; color: #34d399; display: none; }
+    .nav-item.completed .check { display: inline-block; }
+
+    /* Module cards */
+    .module-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .module-tag {
+      background: #d1fae5;
+      color: #065f46;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    h1 { font-size: 1.9rem; margin-bottom: 0.5rem; color: #0f172a; line-height: 1.3; }
+    h2 { font-size: 1.35rem; margin: 1.75rem 0 0.75rem; color: #0f172a; }
+    h3 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; color: #0f172a; }
+    p { margin-bottom: 1.1rem; color: #334155; }
+    ul, ol { margin: 0.5rem 0 1.25rem 1.5rem; color: #334155; }
+    li { margin-bottom: 0.4rem; }
+
+    .callout {
+      border-left: 4px solid var(--primary);
+      background: #f8fafc;
+      padding: 1.1rem 1.3rem;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin: 1.35rem 0;
+      font-size: 0.95rem;
+    }
+    .callout.tip { border-left-color: #059669; background: #ecfdf5; }
+    .callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
+
+    .callout-title { font-weight: 700; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 6px; }
+
+    /* Publishing Steps Grid */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 1.5rem 0;
+    }
+
+    .step-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+
+    .step-number {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #059669;
+      margin-bottom: 4px;
+    }
+
+    /* Final Project Workshop Box */
+    .workshop-box {
+      background: #f8fafc;
+      border: 2px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .workshop-controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.25rem;
+    }
+
+    .workshop-controls label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .workshop-controls input, .workshop-controls select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .preview-box-mini {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .btn-verify {
+      background: #059669; color: white; border: none;
+      padding: 10px 20px; border-radius: 6px; font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-verify:hover { background: #047857; }
+
+    .btn-next-module {
+      background: var(--success); color: white; border: none;
+      padding: 12px 24px; border-radius: 8px; font-weight: 700;
+      cursor: pointer; display: inline-flex; align-items: center;
+      gap: 8px; margin-top: 1.5rem;
+    }
+
+    .certificate-card {
+      border: 6px double #34d399;
+      background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
+      padding: 3.5rem 2rem; text-align: center;
+      border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { width: 100%; height: auto; position: relative; }
+      #main-content { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-header">
+      <div class="student-badge">
+        <span>🏆</span>
+        <span id="txt-student-badge">Livello 4: <strong>Riccardo</strong></span>
+      </div>
+      <div class="sidebar-title" id="txt-course-title">Progetto Reale & Salita sul Web</div>
+      <div class="mentor-note" id="txt-mentor-note">Con il tuo mentore argentino 🇦🇷🇮🇹</div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-info">
+        <span id="txt-progress-label">Progresso Livello 4</span>
+        <span id="progress-percent">0%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </div>
+
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchSection(0)">
+        <span class="icon">🚀</span>
+        <span id="nav-s0">1. Come si Pubblica un Sito</span>
+        <span class="check" id="check-0">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(1)">
+        <span class="icon">🛠️</span>
+        <span id="nav-s1">2. Il Taller del Progetto Finale</span>
+        <span class="check" id="check-1">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(2)">
+        <span class="icon">🤝</span>
+        <span id="nav-s2">3. Lavorare con Clienti Reali</span>
+        <span class="check" id="check-2">✓</span>
+      </li>
+      <li class="nav-item" onclick="switchSection(3)">
+        <span class="icon">🎓</span>
+        <span id="nav-s3">4. Gran Diploma Finale</span>
+        <span class="check" id="check-3">✓</span>
+      </li>
+    </ul>
+
+    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #a7f3d0; border-top: 1px solid #047857;">
+      <a href="index.html" style="color: #ffffff; text-decoration: none; font-weight: 600; display: block; margin-bottom: 6px;">🏠 Torna alla Home (Livello 1)</a>
+      <a href="modulo3.html" style="color: #6ee7b7; text-decoration: none; font-weight: 600; display: block;">⬅️ Torna al Livello 3 (JavaScript)</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main id="main-content">
+    <div class="top-controls">
+      <div class="nav-breadcrumbs">
+        <a href="index.html">Livello 1</a>
+        <span>➔</span>
+        <a href="modulo2.html">Livello 2</a>
+        <span>➔</span>
+        <a href="modulo3.html">Livello 3</a>
+        <span>➔</span>
+        <span style="color: #059669; font-weight: 700;">Livello 4 (Traguardo)</span>
+      </div>
+
+      <div class="lang-selector">
+        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
+        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+      </div>
+    </div>
+
+    <!-- SECTION 0: HOW TO PUBLISH -->
+    <section class="module-card" id="sec-0">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s0">Fase 1: Uscita nel Mondo</span>
+        <h1 id="title-s0">Dalla Tua Cartella al Mondo Intero: Come Funziona il Web Reale</h1>
+        <p id="sub-s0" style="color: var(--text-muted); font-size: 1.05rem;">
+          Cosa serve esattamente per far sì che chiunque digiti www.tuosito.it dal cellulare e veda la tua pagina.
+        </p>
+      </div>
+
+      <div class="callout mentor">
+        <div class="callout-title">🤝 <span id="mentor-s0-title">La Spiegazione del tuo Mentor</span></div>
+        <div id="mentor-s0-text">
+          Riccardo, pubblicare un sito sembra una magia, ma sono solo 3 pezzi di un puzzle chiarissimi:
+          <br>1. <strong>Il Dominio:</strong> Il nome (es: <em>www.riccardoweb.it</em>). È come l'indirizzo civico di casa tua.
+          <br>2. <strong>L'Hosting:</strong> Il computer sempre acceso connesso a internet (es: la cartella <code>public_html</code> che abbiamo usato oggi). È il terreno su cui costruisci.
+          <br>3. <strong>I tuoi File (HTML, CSS, JS):</strong> I mattoni e l'arredamento che carichi nella cartella!
+        </div>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <strong id="card-step1-t">Scegliere il Dominio</strong>
+          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step1-d">
+            Registri il nome (es: su Register.it, Namecheap o Aruba) per circa 10€ all'anno.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <strong id="card-step2-t">Attivare l'Hosting</strong>
+          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step2-d">
+            Uno spazio con cPanel o un hosting statico gratuito (come GitHub Pages o Netlify).
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <strong id="card-step3-t">Caricare i File (index.html)</strong>
+          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step3-d">
+            Trascini i file dentro <code>public_html</code> via FTP o File Manager e il sito è subito online!
+          </p>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(1)" id="btn-next-0">
+        <span id="txt-btn-next-0">Avanti alla Fase 2: Il Taller del Progetto Finale ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 1: FINAL PROJECT WORKSHOP -->
+    <section class="module-card" id="sec-1" style="display: none;">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s1">Fase 2: Laboratorio Pratico</span>
+        <h1 id="title-s1">Il Taller del Tuo Progetto Finale (Metti le mani in pasta)</h1>
+        <p id="sub-s1" style="color: var(--text-muted); font-size: 1.05rem;">
+          Personalizza il tuo primo sito professionale, testalo dal vivo e scarica il codice completo.
+        </p>
+      </div>
+
+      <div class="workshop-box">
+        <h3 style="margin-bottom: 12px; color: #065f46;" id="wk-box-title">⚙️ Configura il Tuo Sito Finale:</h3>
+
+        <div class="workshop-controls">
+          <div>
+            <label id="lbl-wk-type">Tipo di Progetto:</label>
+            <select id="wk-type" onchange="updateFinalProject()">
+              <option value="pizzeria">🍕 Pizzeria & Ristorante Italiano</option>
+              <option value="portfolio">👨‍💻 Portfolio Personale di Riccardo</option>
+              <option value="servizi">💼 Studio Professionale & Consulenze</option>
+            </select>
+          </div>
+          <div>
+            <label id="lbl-wk-name">Nome dell'Attività:</label>
+            <input type="text" id="wk-name" value="Da Riccardo - Pizzeria Artigianale" oninput="updateFinalProject()">
+          </div>
+          <div>
+            <label id="lbl-wk-wa">Numero WhatsApp / Telefono:</label>
+            <input type="text" id="wk-wa" value="+39 340 1234567" oninput="updateFinalProject()">
+          </div>
+          <div>
+            <label id="lbl-wk-color">Colore Brand:</label>
+            <select id="wk-color" onchange="updateFinalProject()">
+              <option value="#059669">Verde Smeraldo Italiano (#059669)</option>
+              <option value="#dc2626">Rosso Passione (#dc2626)</option>
+              <option value="#2563eb">Blu Elegante (#2563eb)</option>
+              <option value="#b45309">Ambra Caldo (#b45309)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Live Preview inside workshop -->
+        <div class="preview-box-mini" id="final-preview-box">
+          <h2 id="prev-title" style="color: #059669; font-size: 1.7rem; margin-bottom: 8px;">Da Riccardo - Pizzeria Artigianale</h2>
+          <p id="prev-slogan" style="color: #64748b; font-size: 1rem; max-width: 500px; margin: 0 auto 16px;">
+            Impasto tradizionale a lievitazione naturale 48h. Ingredienti 100% italiani.
+          </p>
+          <div style="display: inline-flex; gap: 10px;">
+            <button id="prev-cta" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;">
+              Prenota un Tavolo
+            </button>
+            <a id="prev-wa-link" href="#" style="background: #25d366; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+              💬 WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+          <span style="font-size: 0.85rem; color: #64748b;" id="txt-wk-export">Pronto per il tuo hosting? Copia il codice HTML/CSS completo:</span>
+          <button class="btn-verify" onclick="copyFinalProjectCode()" id="btn-export-final">
+            📋 Copia Codice del Progetto Finale
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-next-module" onclick="switchSection(2)" id="btn-next-1">
+        <span id="txt-btn-next-1">Avanti alla Fase 3: Lavorare con Clienti Reali ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 2: WORKING WITH CLIENTS -->
+    <section class="module-card" id="sec-2" style="display: none;">
+      <div class="module-header">
+        <span class="module-tag" id="tag-s2">Fase 3: Professione</span>
+        <h1 id="title-s2">I 3 Consigli d'Oro per Lavorare con Clienti Reali</h1>
+        <p id="sub-s2" style="color: var(--text-muted); font-size: 1.05rem;">
+          Cosa separa chi sa solo il codice da chi guadagna creando siti per le aziende.
+        </p>
+      </div>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 <span id="tip-s2-title">Il Segreto del Web Designer di Successo</span></div>
+        <div id="tip-s2-text">
+          Al cliente non interessa quante righe di codice scrivi: gli interessa che il sito <strong>porti clienti al suo locale</strong>, che funzioni benissimo sullo smartphone e che si carichi in meno di 2 secondi.
+        </div>
+      </div>
+
+      <ul id="list-s2-tips" style="line-height: 1.7;">
+        <li><strong>1. Mobile-First sempre:</strong> Più del 70% dei clienti del tuo cliente aprirà il sito da cellulare mentre cammina per strada. Se non funziona su smartphone, il sito non serve a nulla.</li>
+        <li><strong>2. Pulsante di chiamata o WhatsApp subito visibile:</strong> Non nascondere i contatti. Metti il bottone d'azione verde in evidenza nella parte alta della pagina.</li>
+        <li><strong>3. Usa l'IA per scrivere i testi e accelerare:</strong> Chiedi all'IA: <em>"Scrivimi 3 frasi persuasive per la copertina di una pizzeria a Roma"</em> per non perdere ore bloccato sulla grafica.</li>
+      </ul>
+
+      <button class="btn-next-module" onclick="switchSection(3)" id="btn-next-2">
+        <span id="txt-btn-next-2">Visualizza il Gran Diploma Finale ➔</span>
+      </button>
+    </section>
+
+    <!-- SECTION 3: GRAND DIPLOMA -->
+    <section class="module-card" id="sec-3" style="display: none;">
+      <div class="certificate-card">
+        <div style="font-size: 4rem;">🎓🇮🇹🇦🇷</div>
+        <h1 style="font-size: 2.3rem; color: #065f46; margin-bottom: 0.5rem;" id="cert-title">Gran Diploma di Web Designer & Developer</h1>
+        <p style="color: #047857; font-size: 1.2rem; font-weight: 600;" id="cert-sub">
+          Percorso Completo: Fondamenti, Layout Moderni, Interattività, Database & Pubblicazione
+        </p>
+
+        <div style="font-size: 2rem; font-weight: 800; color: #0f172a; margin: 1.5rem 0; border-bottom: 3px solid #10b981; display: inline-block; padding: 0 2.5rem 0.5rem;" id="cert-name">
+          Riccardo
+        </div>
+
+        <p style="max-width: 640px; margin: 1.5rem auto; font-size: 1.1rem; color: #334155;" id="cert-desc">
+          Ha completato brillantemente l'intero percorso di formazione in <strong>4 Livelli Progressivi</strong>, acquisendo le competenze pratiche per creare pagine web reali con HTML5, CSS3, JavaScript, Database SQLite e Intelligenza Artificiale insieme al suo mentore argentino.
+        </p>
+
+        <div style="display: flex; justify-content: center; gap: 3.5rem; margin-top: 2.5rem;">
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 2px solid #059669; padding-top: 6px; width: 190px;">Riccardo</div>
+            <div style="font-size: 0.85rem; color: #64748b;" id="cert-role-student">Web Developer & Creator</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-weight: 700; color: #0f172a; border-top: 2px solid #059669; padding-top: 6px; width: 190px;">Mentore 🇦🇷</div>
+            <div style="font-size: 0.85rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <button class="btn-verify" onclick="window.print()" id="btnPrintCert" style="padding: 12px 24px; font-size: 1rem;">🖨️ Stampa o Salva PDF</button>
+          <a href="index.html" class="btn-verify" style="background: #0f172a; text-decoration: none; padding: 12px 24px; font-size: 1rem;" id="btn-home">🏠 Torna al Livello 1</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    let currentLang = 'it';
+    let currentSection = 0;
+    const totalSections = 4;
+    let completedSections = { 0: false, 1: false, 2: false, 3: false };
+
+    const i18n = {
+      it: {
+        studentBadge: "Livello 4: <strong>Riccardo</strong>",
+        courseTitle: "Progetto Reale & Salita sul Web",
+        mentorNote: "Con il tuo mentore argentino 🇦🇷🇮🇹",
+        progressLabel: "Progresso Livello 4",
+        navS0: "1. Come si Pubblica un Sito",
+        navS1: "2. Il Taller del Progetto Finale",
+        navS2: "3. Lavorare con Clienti Reali",
+        navS3: "4. Gran Diploma Finale",
+
+        // S0
+        tagS0: "Fase 1: Uscita nel Mondo",
+        titleS0: "Dalla Tua Cartella al Mondo Intero: Come Funziona il Web Reale",
+        subS0: "Cosa serve esattamente per far sì che chiunque digiti www.tuosito.it dal cellulare e veda la tua pagina.",
+        mentorS0Title: "La Spiegazione del tuo Mentor",
+        mentorS0Text: "Riccardo, pubblicare un sito sembra una magia, ma sono solo 3 pezzi di un puzzle chiarissimi:<br>1. <strong>Il Dominio:</strong> Il nome (es: <em>www.riccardoweb.it</em>). È come l'indirizzo civico di casa tua.<br>2. <strong>L'Hosting:</strong> Il computer sempre acceso connesso a internet (es: la cartella <code>public_html</code> che abbiamo usato oggi). È il terreno su cui costruisci.<br>3. <strong>I tuoi File (HTML, CSS, JS):</strong> I mattoni e l'arredamento che carichi nella cartella!",
+        cardStep1T: "Scegliere il Dominio",
+        cardStep1D: "Registri il nome (es: su Register.it, Namecheap o Aruba) per circa 10€ all'anno.",
+        cardStep2T: "Attivare l'Hosting",
+        cardStep2D: "Uno spazio con cPanel o un hosting statico gratuito (come GitHub Pages o Netlify).",
+        cardStep3T: "Caricare i File (index.html)",
+        cardStep3D: "Trascini i file dentro public_html via FTP o File Manager e il sito è subito online!",
+        btnNext0: "Avanti alla Fase 2: Il Taller del Progetto Finale ➔",
+
+        // S1
+        tagS1: "Fase 2: Laboratorio Pratico",
+        titleS1: "Il Taller del Tuo Progetto Finale (Metti le mani in pasta)",
+        subS1: "Personalizza il tuo primo sito professionale, testalo dal vivo e scarica il codice completo.",
+        wkBoxTitle: "⚙️ Configura il Tuo Sito Finale:",
+        lblWkType: "Tipo di Progetto:",
+        lblWkName: "Nome dell'Attività:",
+        lblWkWa: "Numero WhatsApp / Telefono:",
+        lblWkColor: "Colore Brand:",
+        txtWkExport: "Pronto per il tuo hosting? Copia il codice HTML/CSS completo:",
+        btnExportFinal: "📋 Copia Codice del Progetto Finale",
+        btnNext1: "Avanti alla Fase 3: Lavorare con Clienti Reali ➔",
+
+        // S2
+        tagS2: "Fase 3: Professione",
+        titleS2: "I 3 Consigli d'Oro per Lavorare con Clienti Reali",
+        subS2: "Cosa separa chi sa solo il codice da chi guadagna creando siti per le aziende.",
+        tipS2Title: "Il Segreto del Web Designer di Successo",
+        tipS2Text: "Al cliente non interessa quante righe di codice scrivi: gli interessa che il sito <strong>porti clienti al suo locale</strong>, che funzioni benissimo sullo smartphone e che si carichi in meno di 2 secondi.",
+        btnNext2: "Visualizza il Gran Diploma Finale ➔",
+
+        // Cert
+        certTitle: "Gran Diploma di Web Designer & Developer",
+        certSub: "Percorso Completo: Fondamenti, Layout Moderni, Interattività, Database & Pubblicazione",
+        certDesc: "Ha completato brillantemente l'intero percorso di formazione in <strong>4 Livelli Progressivi</strong>, acquisendo le competenze pratiche per creare pagine web reali con HTML5, CSS3, JavaScript, Database SQLite e Intelligenza Artificiale insieme al suo mentore argentino.",
+        certRoleStudent: "Web Developer & Creator",
+        certRoleMentor: "Docente & Guida 🇦🇷",
+        btnPrintCert: "🖨️ Stampa o Salva PDF",
+        btnHome: "🏠 Torna al Livello 1"
+      },
+      es: {
+        studentBadge: "Nivel 4: <strong>Ricardo</strong>",
+        courseTitle: "Proyecto Real & Salida al Mundo",
+        mentorNote: "Con tu mentor argentino 🇦🇷🇮🇹",
+        progressLabel: "Progreso Nivel 4",
+        navS0: "1. Cómo se Publica un Sitio",
+        navS1: "2. El Taller del Proyecto Final",
+        navS2: "3. Trabajar con Clientes Reales",
+        navS3: "4. Gran Diploma Final",
+
+        // S0
+        tagS0: "Fase 1: Salida al Mundo",
+        titleS0: "De tu Carpeta al Mundo Entero: Cómo Funciona la Web Real",
+        subS0: "Qué se necesita exactamente para que cualquier persona escriba www.tusitio.com y vea tu página.",
+        mentorS0Title: "La Explicación de tu Mentor",
+        mentorS0Text: "Ricardo, publicar una web parece magia pero son solo 3 piezas de un rompecabezas muy simple:<br>1. <strong>El Dominio:</strong> El nombre (ej: <em>www.ricardoweb.com</em>). Es como la dirección de tu casa.<br>2. <strong>El Hosting:</strong> La computadora siempre conectada a internet (ej: la carpeta <code>public_html</code> que usamos hoy). Es el terreno donde construyes.<br>3. <strong>Tus Archivos (HTML, CSS, JS):</strong> Los ladrillos y los muebles que subes a esa carpeta.",
+        cardStep1T: "Elegir el Dominio",
+        cardStep1D: "Registras el nombre (ej: en Namecheap, GoDaddy o DonWeb) por unos 10€ al año.",
+        cardStep2T: "Activar el Hosting",
+        cardStep2D: "Un espacio con cPanel o un hosting estático gratuito (como GitHub Pages o Netlify).",
+        cardStep3T: "Subir los Archivos (index.html)",
+        cardStep3D: "Arrastras los archivos a public_html y el sitio ya queda visible en internet.",
+        btnNext0: "Avanzar a la Fase 2: El Taller del Proyecto Final ➔",
+
+        // S1
+        tagS1: "Fase 2: Laboratorio Práctico",
+        titleS1: "El Taller de tu Proyecto Final (Mete mano al código)",
+        subS1: "Personaliza tu primer sitio profesional, pruébalo en vivo y descarga el código completo.",
+        wkBoxTitle: "⚙️ Configura tu Sitio Final:",
+        lblWkType: "Tipo de Proyecto:",
+        lblWkName: "Nombre del Negocio:",
+        lblWkWa: "Número de WhatsApp / Teléfono:",
+        lblWkColor: "Color de Marca:",
+        txtWkExport: "¿Listo para tu hosting? Copia el código HTML/CSS completo:",
+        btnExportFinal: "📋 Copiar Código del Proyecto Final",
+        btnNext1: "Avanzar a la Fase 3: Trabajar con Clientes Reales ➔",
+
+        // S2
+        tagS2: "Fase 3: Profesión",
+        titleS2: "Los 3 Consejos de Oro para Trabajar con Clientes Reales",
+        subS2: "Lo que separa a quien solo sabe código de quien genera ingresos haciendo webs para empresas.",
+        tipS2Title: "El Secreto del Diseñador Web Exitoso",
+        tipS2Text: "Al cliente no le importa cuántas líneas de código escribes: le importa que el sitio <strong>le traiga clientes a su negocio</strong>, que funcione de maravilla en celulares y que cargue rápido.",
+        btnNext2: "Ver el Gran Diploma Final ➔",
+
+        // Cert
+        certTitle: "Gran Diploma de Diseñador & Desarrollador Web",
+        certSub: "Trayecto Completo: Fundamentos, Maquetación, Interactividad, Bases de Datos & Publicación",
+        certDesc: "Completó brillantemente el trayecto formativo en <strong>4 Niveles Progresivos</strong>, adquiriendo las competencias prácticas para crear sitios web reales con HTML5, CSS3, JavaScript, Bases de Datos SQLite e Inteligencia Artificial junto a su mentor argentino.",
+        certRoleStudent: "Web Developer & Creator",
+        certRoleMentor: "Docente & Guía 🇦🇷",
+        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
+        btnHome: "🏠 Volver al Nivel 1"
+      }
+    };
+
+    function init() {
+      const savedLang = localStorage.getItem('riccardo_lang') || 'it';
+      setLanguage(savedLang);
+      updateFinalProject();
+      updateProgressBar();
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('riccardo_lang', lang);
+
+      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+
+      const t = i18n[lang];
+
+      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
+      document.getElementById('txt-course-title').innerText = t.courseTitle;
+      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
+      document.getElementById('txt-progress-label').innerText = t.progressLabel;
+
+      document.getElementById('nav-s0').innerText = t.navS0;
+      document.getElementById('nav-s1').innerText = t.navS1;
+      document.getElementById('nav-s2').innerText = t.navS2;
+      document.getElementById('nav-s3').innerText = t.navS3;
+
+      // S0
+      document.getElementById('tag-s0').innerText = t.tagS0;
+      document.getElementById('title-s0').innerText = t.titleS0;
+      document.getElementById('sub-s0').innerText = t.subS0;
+      document.getElementById('mentor-s0-title').innerText = t.mentorS0Title;
+      document.getElementById('mentor-s0-text').innerHTML = t.mentorS0Text;
+      document.getElementById('card-step1-t').innerText = t.cardStep1T;
+      document.getElementById('card-step1-d').innerText = t.cardStep1D;
+      document.getElementById('card-step2-t').innerText = t.cardStep2T;
+      document.getElementById('card-step2-d').innerText = t.cardStep2D;
+      document.getElementById('card-step3-t').innerText = t.cardStep3T;
+      document.getElementById('card-step3-d').innerText = t.cardStep3D;
+      document.getElementById('btn-next-0').querySelector('span').innerText = t.btnNext0;
+
+      // S1
+      document.getElementById('tag-s1').innerText = t.tagS1;
+      document.getElementById('title-s1').innerText = t.titleS1;
+      document.getElementById('sub-s1').innerText = t.subS1;
+      document.getElementById('wk-box-title').innerText = t.wkBoxTitle;
+      document.getElementById('lbl-wk-type').innerText = t.lblWkType;
+      document.getElementById('lbl-wk-name').innerText = t.lblWkName;
+      document.getElementById('lbl-wk-wa').innerText = t.lblWkWa;
+      document.getElementById('lbl-wk-color').innerText = t.lblWkColor;
+      document.getElementById('txt-wk-export').innerText = t.txtWkExport;
+      document.getElementById('btn-export-final').innerText = t.btnExportFinal;
+      document.getElementById('btn-next-1').querySelector('span').innerText = t.btnNext1;
+
+      // S2
+      document.getElementById('tag-s2').innerText = t.tagS2;
+      document.getElementById('title-s2').innerText = t.titleS2;
+      document.getElementById('sub-s2').innerText = t.subS2;
+      document.getElementById('tip-s2-title').innerText = t.tipS2Title;
+      document.getElementById('tip-s2-text').innerHTML = t.tipS2Text;
+      document.getElementById('btn-next-2').querySelector('span').innerText = t.btnNext2;
+
+      // Cert
+      document.getElementById('cert-title').innerText = t.certTitle;
+      document.getElementById('cert-sub').innerText = t.certSub;
+      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
+      document.getElementById('cert-desc').innerHTML = t.certDesc;
+      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
+      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
+      document.getElementById('btnPrintCert').innerText = t.btnPrintCert;
+      document.getElementById('btn-home').innerText = t.btnHome;
+    }
+
+    function switchSection(index) {
+      currentSection = index;
+      for (let i = 0; i < totalSections; i++) {
+        const sec = document.getElementById(`sec-${i}`);
+        if (sec) sec.style.display = (i === index) ? 'block' : 'none';
+
+        const nav = document.querySelectorAll('.nav-item')[i];
+        if (nav) nav.classList.toggle('active', i === index);
+      }
+      completedSections[index] = true;
+      document.getElementById(`check-${index}`).style.display = 'inline-block';
+      document.querySelectorAll('.nav-item')[index].classList.add('completed');
+      updateProgressBar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateFinalProject() {
+      const type = document.getElementById('wk-type').value;
+      const name = document.getElementById('wk-name').value.trim() || 'Attività';
+      const color = document.getElementById('wk-color').value;
+      const wa = document.getElementById('wk-wa').value.trim() || '+39 340 0000000';
+
+      document.getElementById('prev-title').innerText = name;
+      document.getElementById('prev-title').style.color = color;
+      document.getElementById('prev-cta').style.backgroundColor = color;
+      document.getElementById('prev-wa-link').href = `https://wa.me/${wa.replace(/[^0-9]/g, '')}`;
+
+      if (type === 'pizzeria') {
+        document.getElementById('prev-slogan').innerText = "Impasto tradizionale a lievitazione naturale 48h. Ingredienti 100% italiani.";
+      } else if (type === 'portfolio') {
+        document.getElementById('prev-slogan').innerText = "Siti web moderni, responsive e veloci realizzati su misura per la tua attività.";
+      } else {
+        document.getElementById('prev-slogan').innerText = "Consulenze personalizzate, professionalità garantita e supporto continuo.";
+      }
+    }
+
+    function copyFinalProjectCode() {
+      const name = document.getElementById('wk-name').value.trim() || 'La Mia Attività';
+      const color = document.getElementById('wk-color').value;
+      const wa = document.getElementById('wk-wa').value.trim();
+
+      const siteHtml = `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${name}</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; color: #1e293b; line-height: 1.6; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2rem; border-bottom: 1px solid #e2e8f0; }
+    nav a { margin-left: 1.5rem; text-decoration: none; color: #475569; font-weight: 600; }
+    .hero { background: ${color}; color: white; padding: 4.5rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2.75rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 1.5rem; opacity: 0.95; }
+    .btn-wa { background: #25d366; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 1rem; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1000px; margin: 3.5rem auto; padding: 0 1.5rem; }
+    .card { background: white; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
+    footer { text-align: center; padding: 2.5rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem; }
+    @media (max-width: 768px) {
+      header { flex-direction: column; gap: 1rem; }
+      nav a { margin: 0 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>${name}</h2>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#servizi">Servizi</a>
+      <a href="#contatti">Contatti</a>
+    </nav>
+  </header>
+  <main>
+    <section class="hero" id="home">
+      <h1>${name}</h1>
+      <p>Esperienza, passione e qualità al servizio dei nostri clienti.</p>
+      <a href="https://wa.me/${wa.replace(/[^0-9]/g, '')}" class="btn-wa">💬 Contattaci su WhatsApp</a>
+    </section>
+    <section class="features" id="servizi">
+      <div class="card">
+        <h3>Qualità Garantita</h3>
+        <p>I migliori standard del settore con attenzione artigianale a ogni dettaglio.</p>
+      </div>
+      <div class="card">
+        <h3>Assistenza Rapida</h3>
+        <p>Rispondiamo in tempi record per offrirti sempre la soluzione ideale.</p>
+      </div>
+      <div class="card">
+        <h3>Esperienza & Fiducia</h3>
+        <p>Clienti soddisfatti ogni giorno grazie alla nostra dedizione continua.</p>
+      </div>
+    </section>
+  </main>
+  <footer id="contatti">
+    <p>&copy; 2026 ${name} - Sito Web Creato da Riccardo con il suo Mentore.</p>
+  </footer>
+</body>
+</html>`;
+
+      navigator.clipboard.writeText(siteHtml).then(() => {
+        alert(currentLang === 'it' 
+          ? "Codice completo del Progetto Finale copiato negli appunti! Puoi salvarlo in un file 'index.html' e caricarlo su qualsiasi hosting!" 
+          : "¡Código completo del Proyecto Final copiado al portapapeles! ¡Puedes guardarlo en un archivo 'index.html' y subirlo a cualquier hosting!");
+      });
+    }
+
+    function updateProgressBar() {
+      let count = 0;
+      for (let i = 0; i < totalSections; i++) {
+        if (completedSections[i]) count++;
+      }
+      const percent = Math.round((count / totalSections) * 100);
+      document.getElementById('progress-percent').innerText = `${percent}%`;
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

@@ -3,1494 +3,1119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Livello 2: Creazione di Siti Web Reali & Layout Avanzato - Riccardo</title>
+  <title>Livello 2: Layout & Siti Reali — Corso di Riccardo</title>
   <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-light: #dbeafe;
-      --secondary: #0f172a;
-      --accent: #f59e0b;
-      --success: #10b981;
-      --success-light: #d1fae5;
-      --danger: #ef4444;
-      --danger-light: #fee2e2;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --sidebar-bg: #0b1329;
-      --sidebar-text: #f8fafc;
-      --radius: 12px;
-      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-    }
+:root { --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #eff6ff; --primary-soft: #93c5fd; --sidebar-bg: #0b1329; }
+:root {
+  --success: #10b981; --success-dark: #047857; --success-light: #d1fae5;
+  --danger: #ef4444; --danger-light: #fee2e2;
+  --bg: #f8fafc; --card-bg: #ffffff; --text: #0f172a; --text-body: #334155; --text-muted: #64748b;
+  --border: #e2e8f0; --code-bg: #0f172a; --radius: 12px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / .07), 0 2px 4px -2px rgb(0 0 0 / .07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html[lang="it"] .es, html[lang="es"] .it { display: none !important; }
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; display: flex; min-height: 100vh; }
+a { color: var(--primary-dark); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; }
+p code, li code, td code, .callout code { background: #f1f5f9; color: #0f172a; padding: 1px 5px; border-radius: 4px; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ---------- Sidebar ---------- */
+#sidebar { width: 300px; background: var(--sidebar-bg); color: #f1f5f9; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+.sidebar-header { padding: 1.6rem 1.4rem 1.2rem; border-bottom: 1px solid rgb(255 255 255 / .08); }
+.student-badge { display: inline-flex; align-items: center; gap: 8px; background: rgb(255 255 255 / .07); padding: 5px 12px; border-radius: 8px; font-size: .82rem; color: #cbd5e1; margin-bottom: .7rem; }
+.student-badge strong { color: var(--primary-soft); }
+.sidebar-title { font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.3; }
+.mentor-note { font-size: .8rem; color: #94a3b8; margin-top: .4rem; }
+.progress-container { padding: 1.1rem 1.4rem; background: rgb(0 0 0 / .18); border-bottom: 1px solid rgb(255 255 255 / .08); }
+.progress-info { display: flex; justify-content: space-between; font-size: .84rem; margin-bottom: 6px; color: #cbd5e1; }
+.progress-bar { height: 8px; background: rgb(255 255 255 / .1); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary-soft), var(--success)); transition: width .4s; }
+.nav-list { list-style: none; margin: 0; padding: .9rem .7rem; display: flex; flex-direction: column; gap: 4px; }
+.nav-item { width: 100%; text-align: left; background: none; border: 0; font: inherit; padding: 9px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: .88rem; color: #a3aec2; font-weight: 500; transition: background .15s, color .15s; }
+.nav-item:hover { background: rgb(255 255 255 / .07); color: #fff; }
+.nav-item.active { background: var(--primary); color: #fff; font-weight: 600; }
+.nav-item .icon { font-size: 1.05rem; }
+.nav-item .check { margin-left: auto; color: var(--success); font-weight: 700; visibility: hidden; }
+.nav-item.completed .check { visibility: visible; }
+.nav-item.active .check { color: #fff; }
+.sidebar-footer { margin-top: auto; padding: 1.1rem 1.4rem; font-size: .8rem; border-top: 1px solid rgb(255 255 255 / .08); display: flex; flex-direction: column; gap: 8px; }
+.sidebar-footer a { color: var(--primary-soft); text-decoration: none; font-weight: 600; }
+.sidebar-footer small { color: #8792a6; line-height: 1.45; }
 
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      display: flex;
-      min-height: 100vh;
-    }
+/* ---------- Main ---------- */
+#main-content { flex: 1; min-width: 0; max-width: 1000px; margin: 0 auto; padding: 2.2rem 2.4rem 4rem; }
+.top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+.levels { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: .82rem; font-weight: 600; }
+.levels a, .levels span.cur { text-decoration: none; padding: 5px 10px; border-radius: 7px; background: #f1f5f9; color: var(--text-muted); border: 1px solid transparent; }
+.levels a:hover { color: var(--text); background: #e2e8f0; }
+.levels span.cur { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary-soft); }
+.levels .sep { color: #cbd5e1; }
+.lang-selector { display: flex; background: var(--border); border-radius: 99px; padding: 3px; gap: 3px; }
+.lang-btn { border: 0; background: transparent; padding: 6px 14px; font-size: .86rem; font-weight: 600; border-radius: 99px; cursor: pointer; color: var(--text-muted); }
+.lang-btn.active { background: #fff; color: var(--primary-dark); box-shadow: 0 1px 3px rgb(0 0 0 / .1); }
 
-    #sidebar {
-      width: 320px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      flex-shrink: 0;
-      border-right: 1px solid #1e293b;
-    }
+.module-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 2.4rem; margin-bottom: 2rem; }
+.module-card[hidden] { display: none; }
+.module-tag { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: .78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: .6rem; }
+h1 { font-size: 1.85rem; margin-bottom: .5rem; line-height: 1.28; }
+h2 { font-size: 1.3rem; margin: 1.9rem 0 .7rem; line-height: 1.35; }
+h3 { font-size: 1.08rem; margin: 1.3rem 0 .5rem; }
+p { margin-bottom: 1rem; color: var(--text-body); }
+.lead { color: var(--text-muted); font-size: 1.05rem; }
+ul, ol { margin: .4rem 0 1.2rem 1.4rem; color: var(--text-body); }
+li { margin-bottom: .45rem; }
+.muted { color: var(--text-muted); font-size: .9rem; }
 
-    #main-content {
-      flex: 1;
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 2.5rem;
-      overflow-y: auto;
-    }
+/* Callouts */
+.callout { border-left: 4px solid var(--primary); background: #f8fafc; padding: 1rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.3rem 0; font-size: .95rem; color: var(--text-body); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout.tip { border-left-color: #0ea5e9; background: #f0f9ff; }
+.callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
+.callout.security { border-left-color: #10b981; background: #ecfdf5; }
+.callout.history { border-left-color: #f59e0b; background: #fffbeb; }
+.callout.warn { border-left-color: #ef4444; background: #fef2f2; }
+.callout-title { font-weight: 700; margin-bottom: .35rem; color: var(--text); }
 
-    .top-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-    }
+/* Code */
+.code-container { background: var(--code-bg); color: #e2e8f0; border-radius: 10px; padding: 1.1rem 1.1rem 2.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; overflow-x: auto; margin: 1rem 0 1.5rem; position: relative; }
+.code-container pre { margin: 0; white-space: pre; }
+.code-container code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.code-badge { position: absolute; top: 8px; right: 12px; font-size: .68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+.copy-btn { position: absolute; bottom: 8px; right: 10px; background: #334155; color: #f1f5f9; border: 0; border-radius: 5px; padding: 4px 10px; font-size: .75rem; cursor: pointer; }
+.copy-btn:hover { background: #475569; }
+.c-com { color: #7dd3a0; }
 
-    .btn-back-level {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #334155;
-      text-decoration: none;
-      transition: all 0.2s ease;
-    }
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 7px; background: var(--primary); color: #fff; border: 0; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: .92rem; cursor: pointer; text-decoration: none; font-family: inherit; }
+.btn:hover { background: var(--primary-dark); }
+.btn.ghost { background: #fff; color: var(--text-body); border: 1px solid var(--border); }
+.btn.ghost:hover { background: #f1f5f9; }
+.btn.dark { background: #0f172a; } .btn.dark:hover { background: #1e293b; }
+.btn.green { background: var(--success); } .btn.green:hover { background: var(--success-dark); }
+.btn.sm { padding: 6px 12px; font-size: .82rem; }
+.btn-next-module { margin-top: 1.6rem; background: var(--success); padding: 12px 22px; font-weight: 700; }
+.btn-next-module:hover { background: var(--success-dark); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-    .btn-back-level:hover {
-      background: #f1f5f9;
-      border-color: #cbd5e1;
-      color: var(--primary);
-    }
+/* Diagram & cards */
+.diagram-box { background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; margin: 1.4rem 0; display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 8px; text-align: center; }
+.diagram-arrow { align-self: center; }
+.diagram-step { background: #fff; padding: 12px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: .84rem; flex: 1 1 130px; max-width: 190px; }
+.diagram-step .big { font-size: 1.5rem; }
+.diagram-step p { font-size: .78rem; color: var(--text-muted); margin: 2px 0 0; }
+.diagram-arrow { font-size: 1.25rem; color: var(--text-muted); font-weight: 800; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 1.4rem 0; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem; display: flex; flex-direction: column; }
+.card p { font-size: .87rem; flex: 1; margin-bottom: .6rem; }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: .6rem; }
+.card-icon { font-size: 1.6rem; background: #f1f5f9; padding: 5px 10px; border-radius: 8px; }
+.badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 3px; background: var(--primary-light); color: var(--primary-dark); }
+.card .ideal { font-size: .78rem; font-weight: 700; color: var(--success-dark); }
+.step-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 6px; }
 
-    .lang-selector {
-      display: flex;
-      background: var(--border);
-      border-radius: 9999px;
-      padding: 3px;
-      gap: 4px;
-    }
+table.simple { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1rem 0 1.5rem; }
+table.simple th, table.simple td { padding: 9px 11px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+table.simple th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
 
-    .lang-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 14px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      color: var(--text-muted);
-    }
+/* Choice selector (path / wizard) */
+.choice-box { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); color: #fff; padding: 1.8rem; border-radius: var(--radius); margin: 1.8rem 0; }
+.choice-box h3 { color: #fff; margin-top: 0; }
+.choice-box p { color: #cbd5e1; }
+.choice-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 1rem; }
+.choice-btn { background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .2); color: #fff; padding: 14px; border-radius: 10px; cursor: pointer; text-align: left; font: inherit; transition: background .15s, border-color .15s; }
+.choice-btn:hover { background: rgb(255 255 255 / .14); border-color: #38bdf8; }
+.choice-btn.selected { background: #4f46e5; border-color: #a5b4fc; }
+.choice-btn small { display: block; color: #cbd5e1; font-size: .8rem; margin-top: 3px; }
+.choice-result { margin-top: 1.3rem; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .15); border-radius: 8px; padding: 16px 18px; line-height: 1.55; }
+.choice-result ul { color: #e2e8f0; margin-bottom: 0; }
+.choice-result a { color: #7dd3fc; }
 
-    .lang-btn.active {
-      background: #ffffff;
-      color: var(--primary);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+/* Box model */
+.box-model-demo { background: #fed7aa; border: 2px dashed #ea580c; padding: 18px; border-radius: 8px; text-align: center; margin: 1.5rem 0; font-size: .84rem; color: #7c2d12; }
+.box-model-border { background: #fef08a; border: 2px solid #ca8a04; padding: 14px; border-radius: 6px; color: #713f12; margin-top: 8px; }
+.box-model-padding { background: #bbf7d0; border: 2px dashed #16a34a; padding: 12px; border-radius: 4px; color: #14532d; margin-top: 8px; }
+.box-model-content { background: #bfdbfe; border: 2px solid #2563eb; padding: 12px; border-radius: 4px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
 
-    /* Sidebar */
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      border-bottom: 1px solid #1e293b;
-    }
+/* Labs */
+.lab { background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; margin: 1.5rem 0; }
+.lab-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: .7rem; }
+.lab-title { font-weight: 700; font-size: .95rem; }
+.lab-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lab-code { width: 100%; min-height: 230px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; resize: vertical; background: #0f172a; color: #e2e8f0; tab-size: 2; }
+.lab-code:focus { outline: 2px solid var(--primary-soft); }
+.lab-view { width: 100%; min-height: 230px; height: 100%; border: 1px dashed #94a3b8; border-radius: 8px; background: #fff; }
+.lab-label { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.lab.tall .lab-code, .lab.tall .lab-view { min-height: 330px; }
 
-    .student-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #1e293b;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #94a3b8;
-      margin-bottom: 0.75rem;
-    }
+/* Challenge */
+.challenge { border: 2px dashed var(--primary-soft); background: var(--primary-light); border-radius: 12px; padding: 1.2rem 1.3rem; margin: 1.6rem 0; }
+.challenge-title { font-weight: 800; color: var(--primary-dark); margin-bottom: .4rem; font-size: 1rem; }
+.challenge p { margin-bottom: .6rem; }
+.checklist { list-style: none; margin: .4rem 0 0; }
+.checklist li { margin-bottom: 6px; }
+.checklist label { display: flex; gap: 9px; align-items: flex-start; cursor: pointer; font-size: .92rem; color: var(--text-body); }
+.checklist input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--success); flex-shrink: 0; }
+.checklist input:checked + span { color: var(--text-muted); text-decoration: line-through; }
+.challenge-count { font-size: .8rem; font-weight: 700; color: var(--primary-dark); margin-top: 6px; }
 
-    .student-badge strong { color: #38bdf8; }
+/* Quiz */
+.quiz-container { background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.6rem; margin-top: 2rem; }
+.quiz-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.1rem; }
+.question-block { background: #fff; padding: 1.15rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
+.question-text { font-weight: 600; margin-bottom: .8rem; }
+.options-list { display: flex; flex-direction: column; gap: 7px; }
+.option-btn { text-align: left; padding: 10px 14px; border: 1px solid var(--border); border-radius: 7px; background: #fff; cursor: pointer; font: inherit; font-size: .9rem; color: var(--text); }
+.option-btn:hover { background: #f1f5f9; }
+.option-btn.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+.option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
+.option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
+.feedback-box { margin-top: .7rem; padding: 9px 13px; border-radius: 7px; font-size: .87rem; display: none; }
+.feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
+.feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
+.quiz-submit-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.score-badge { font-weight: 700; color: var(--primary-dark); }
 
-    .sidebar-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.3;
-    }
+/* Prompt boxes */
+.prompt-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1rem 1rem 2.4rem; margin: .8rem 0; position: relative; }
+.prompt-label { font-size: .74rem; font-weight: 700; color: #6366f1; text-transform: uppercase; margin-bottom: 4px; }
+.prompt-text { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .86rem; color: #1e293b; }
 
-    .mentor-note {
-      font-size: 0.8rem;
-      color: #94a3b8;
-      margin-top: 0.5rem;
-    }
+/* Forms & builders */
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px; background: #fff; border-bottom: 1px solid var(--border); }
+.control-group label { display: block; font-size: .78rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
+.control-group input, .control-group select, .control-group textarea, .field { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: .9rem; font-family: inherit; background: #fff; }
+.builder { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+.builder-toolbar { background: #0f172a; color: #fff; padding: 11px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.builder-toolbar strong { color: var(--primary-soft); font-size: .92rem; }
+.seg { display: flex; gap: 5px; }
+.seg button { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 4px 11px; border-radius: 6px; font-size: .8rem; cursor: pointer; font-family: inherit; }
+.seg button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.frame-wrap { padding: 18px; background: #e2e8f0; display: flex; justify-content: center; }
+.frame-wrap iframe { width: 100%; height: 560px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; box-shadow: 0 10px 25px -5px rgb(0 0 0 / .15); transition: width .3s; }
+.frame-wrap.mobile iframe { width: 375px; border: 8px solid #0f172a; border-radius: 26px; }
+.frame-wrap.tablet iframe { width: 768px; max-width: 100%; }
+.export-bar { padding: 13px 16px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.export-bar span { font-size: .86rem; color: #475569; }
+details.code-peek { border-top: 1px solid var(--border); background: #fff; }
+details.code-peek summary { cursor: pointer; padding: 10px 16px; font-size: .86rem; font-weight: 600; color: var(--primary-dark); }
+details.code-peek textarea { width: 100%; height: 260px; border: 0; border-top: 1px solid var(--border); padding: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem; background: #0f172a; color: #e2e8f0; resize: vertical; }
 
-    .progress-container {
-      padding: 1.25rem 1.5rem;
-      background: #090e1d;
-      border-bottom: 1px solid #1e293b;
-    }
+/* Playground */
+.pg { display: grid; grid-template-columns: 260px 1fr; gap: 14px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin: 1.4rem 0; }
+.pg .control-group { margin-bottom: 10px; }
+.pg-stage { background: #fff; border: 1px dashed #94a3b8; border-radius: 8px; min-height: 220px; padding: 10px; }
+.pg-item { background: var(--primary); color: #fff; font-weight: 700; border-radius: 6px; padding: 14px 18px; text-align: center; }
+.pg-item:nth-child(2) { background: #0ea5e9; } .pg-item:nth-child(3) { background: #10b981; } .pg-item:nth-child(4) { background: #f59e0b; } .pg-item:nth-child(5) { background: #ef4444; } .pg-item:nth-child(6) { background: #8b5cf6; }
+.pg-css { margin-top: 10px; background: #0f172a; color: #a7f3d0; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; padding: 10px 12px; border-radius: 8px; white-space: pre; overflow-x: auto; }
 
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: #cbd5e1;
-    }
+/* SQL workbench */
+.sql-workbench { background: #0f172a; border-radius: 10px; color: #f8fafc; overflow: hidden; margin-top: 1rem; border: 1px solid #334155; }
+.sql-toolbar { background: #1e293b; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; flex-wrap: wrap; gap: 8px; }
+.sql-title { font-size: .85rem; font-weight: 700; color: #38bdf8; }
+.sql-toolbar select, .sql-toolbar button { background: #0b1120; color: #cbd5e1; border: 1px solid #475569; padding: 3px 8px; border-radius: 5px; font-size: .78rem; cursor: pointer; font-family: inherit; }
+.sql-chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px; background: #131c31; border-bottom: 1px solid #1e293b; }
+.sql-chip-btn { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: .77rem; cursor: pointer; font-family: ui-monospace, Menlo, monospace; }
+.sql-chip-btn:hover { background: #334155; color: #fff; }
+.sql-input-area { padding: 12px 14px; }
+.sql-textarea { width: 100%; height: 74px; background: #070b14; border: 1px solid #334155; color: #7dd3fc; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88rem; padding: 10px; border-radius: 6px; resize: vertical; }
+.sql-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 10px; flex-wrap: wrap; }
+.sql-actions span { font-size: .76rem; color: #94a3b8; }
+.sql-log { background: #070b14; padding: 8px 14px; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; color: #34d399; border-top: 1px solid #1e293b; min-height: 34px; }
+.sql-log.error { color: #f87171; }
+.sql-result { background: #fff; padding: 12px; color: #1e293b; overflow-x: auto; }
+.db-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.db-table th, .db-table td { padding: 7px 11px; border-bottom: 1px solid var(--border); text-align: left; }
+.db-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
 
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #1e293b;
-      border-radius: 9999px;
-      overflow: hidden;
-    }
+/* Demo boxes (L3) */
+.demo-area { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.4rem; text-align: center; margin-top: .8rem; transition: background .3s, color .3s; }
+.demo-area.dark { background: #0f172a; color: #f8fafc; border-color: #334155; }
+.demo-area.dark p { color: #cbd5e1; }
+.counter-display { font-size: 2.4rem; font-weight: 800; color: var(--primary-dark); margin: 6px 0; }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #3b82f6, #10b981);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
+/* Certificate */
+.certificate-card { border: 4px double #cbd5e1; background: linear-gradient(135deg, #fff 0%, var(--primary-light) 140%); padding: 3rem 2rem; text-align: center; border-radius: 16px; box-shadow: var(--shadow-lg); }
+.cert-name { font-size: 1.9rem; font-weight: 800; margin: 1.4rem 0; border-bottom: 3px solid var(--primary); display: inline-block; padding: 0 2rem .45rem; }
+.cert-signs { display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap; }
+.cert-signs div div:first-child { font-weight: 700; border-top: 1px solid #94a3b8; padding-top: 6px; width: 180px; }
+.cert-signs small { color: var(--text-muted); }
+.cert-status { margin: 1.2rem auto 0; max-width: 560px; font-size: .9rem; padding: 9px 13px; border-radius: 8px; background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.cert-status.ok { background: var(--success-light); color: #065f46; border-color: #a7f3d0; }
 
-    .nav-list {
-      list-style: none;
-      padding: 1rem 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+/* Toast & modal */
+#toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0f172a; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: .9rem; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50; max-width: 90vw; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#modal { position: fixed; inset: 0; background: rgb(15 23 42 / .6); display: none; align-items: center; justify-content: center; z-index: 60; padding: 20px; }
+#modal.show { display: flex; }
+#modal .box { background: #fff; border-radius: 12px; padding: 1.3rem; width: min(760px, 100%); }
+#modal textarea { width: 100%; height: 320px; font-family: ui-monospace, Menlo, monospace; font-size: .78rem; margin: .7rem 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; }
 
-    .nav-item {
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.925rem;
-      color: #94a3b8;
-      transition: all 0.2s ease;
-      font-weight: 500;
-    }
+@media (max-width: 960px) {
+  body { flex-direction: column; }
+  #sidebar { width: 100%; height: auto; position: relative; }
+  .sidebar-header { padding: 1rem 1rem .8rem; }
+  .mentor-note, .sidebar-footer small { display: none; }
+  .progress-container { padding: .7rem 1rem; }
+  .nav-list { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: .6rem; gap: 6px; }
+  .nav-list li { flex-shrink: 0; }
+  .nav-item { width: auto; white-space: nowrap; background: rgb(255 255 255 / .06); }
+  .sidebar-footer { flex-direction: row; flex-wrap: wrap; gap: 14px; padding: .7rem 1rem; }
+  #main-content { width: 100%; margin: 0; padding: 1.1rem .8rem 3rem; }
+  .top-controls { gap: 8px; }
+  .frame-wrap { padding: 8px; }
+  .frame-wrap.mobile iframe { width: 100%; border-width: 4px; }
+  .module-card { padding: 1.4rem 1.1rem; }
+  .lab-split, .pg { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}
+@media print {
+  #sidebar, .top-controls, .module-card:not(.printing), .no-print, .btn-next-module { display: none !important; }
+  body { display: block; background: #fff; }
+  #main-content { padding: 0; max-width: none; }
+  .module-card.printing { display: block !important; box-shadow: none; border: 0; }
+}
 
-    .nav-item:hover { background: #1e293b; color: #f8fafc; }
-    .nav-item.active { background: var(--primary); color: #ffffff; font-weight: 600; }
-    .nav-item .icon { font-size: 1.15rem; }
-    .nav-item .check { margin-left: auto; font-size: 0.85rem; color: var(--success); display: none; }
-    .nav-item.completed .check { display: inline-block; }
-
-    /* Module cards */
-    .module-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 2.25rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .module-tag {
-      background: var(--primary-light);
-      color: var(--primary);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    h1 { font-size: 1.85rem; margin-bottom: 0.5rem; color: #0f172a; }
-    h2 { font-size: 1.35rem; margin: 1.5rem 0 0.75rem; color: #0f172a; }
-    h3 { font-size: 1.1rem; margin: 1.2rem 0 0.5rem; color: #0f172a; }
-    p { margin-bottom: 1rem; color: #334155; }
-    ul, ol { margin: 0.5rem 0 1.25rem 1.5rem; color: #334155; }
-    li { margin-bottom: 0.4rem; }
-
-    .callout {
-      border-left: 4px solid var(--primary);
-      background: #f0fdf4;
-      padding: 1rem 1.25rem;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 1.25rem 0;
-      font-size: 0.95rem;
-    }
-
-    .callout.tip { border-left-color: #0ea5e9; background: #f0f9ff; }
-    .callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
-
-    .callout-title { font-weight: 700; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 6px; }
-
-    .code-container {
-      background: #0f172a;
-      color: #f8fafc;
-      border-radius: 8px;
-      padding: 1.1rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.875rem;
-      overflow-x: auto;
-      margin: 1rem 0 1.5rem;
-      position: relative;
-    }
-
-    .code-badge {
-      position: absolute;
-      top: 8px; right: 10px;
-      font-size: 0.7rem; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-
-    .copy-btn {
-      position: absolute; bottom: 8px; right: 10px;
-      background: #334155; color: #f1f5f9;
-      border: none; border-radius: 4px; padding: 4px 10px;
-      font-size: 0.75rem; cursor: pointer; opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-    .copy-btn:hover { opacity: 1; }
-
-    /* Interactive Site Builder Workbench */
-    .builder-container {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin: 1.5rem 0;
-    }
-
-    .builder-toolbar {
-      background: #0f172a;
-      color: #ffffff;
-      padding: 12px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .builder-controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      padding: 16px;
-      background: #ffffff;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .control-group label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #475569;
-      margin-bottom: 4px;
-    }
-
-    .control-group input, .control-group select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .viewport-selector {
-      display: flex;
-      gap: 6px;
-    }
-
-    .viewport-btn {
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #94a3b8;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .viewport-btn.active {
-      background: var(--primary);
-      color: white;
-      border-color: var(--primary);
-    }
-
-    .preview-frame-wrap {
-      padding: 20px;
-      background: #e2e8f0;
-      display: flex;
-      justify-content: center;
-      min-height: 480px;
-      transition: all 0.3s ease;
-    }
-
-    .preview-device {
-      background: #ffffff;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
-      width: 100%;
-      transition: width 0.3s ease;
-      overflow: hidden;
-      border: 1px solid #cbd5e1;
-    }
-
-    .preview-device.mobile {
-      width: 375px;
-      border-radius: 24px;
-      border: 8px solid #0f172a;
-    }
-
-    /* Live Mini Web Components inside Preview */
-    .mock-site-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 20px;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 0.85rem;
-    }
-    .mock-site-hero {
-      padding: 40px 20px;
-      text-align: center;
-      color: white;
-    }
-    .mock-site-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 12px;
-      padding: 24px 20px;
-    }
-    .mock-card {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 12px;
-      font-size: 0.85rem;
-      text-align: center;
-    }
-    .mock-site-contact {
-      padding: 24px 20px;
-      background: #f8fafc;
-      border-top: 1px solid #e2e8f0;
-    }
-    .mock-footer {
-      padding: 14px;
-      text-align: center;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    /* Quiz styles */
-    .quiz-container {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      margin-top: 2rem;
-    }
-
-    .quiz-title {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem;
-    }
-
-    .question-block {
-      background: #ffffff; padding: 1.25rem;
-      border-radius: 8px; border: 1px solid var(--border);
-      margin-bottom: 1.25rem;
-    }
-
-    .question-text { font-weight: 600; margin-bottom: 1rem; }
-
-    .options-list { display: flex; flex-direction: column; gap: 8px; }
-
-    .option-btn {
-      text-align: left; padding: 10px 14px;
-      border: 1px solid var(--border); border-radius: 6px;
-      background: #ffffff; cursor: pointer; font-size: 0.9rem;
-      transition: all 0.15s ease;
-    }
-    .option-btn:hover { background: #f1f5f9; }
-    .option-btn.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
-    .option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
-    .option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
-
-    .feedback-box {
-      margin-top: 0.75rem; padding: 10px 14px;
-      border-radius: 6px; font-size: 0.875rem; display: none;
-    }
-    .feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
-    .feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
-
-    .btn-verify {
-      background: var(--primary); color: white; border: none;
-      padding: 10px 20px; border-radius: 6px; font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-verify:hover { background: var(--primary-hover); }
-
-    .btn-next-module {
-      background: var(--success); color: white; border: none;
-      padding: 12px 24px; border-radius: 8px; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center;
-      gap: 8px; margin-top: 1.5rem;
-    }
-    .btn-next-module:hover { background: #059669; }
-
-    .certificate-card {
-      border: 4px double #cbd5e1;
-      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-      padding: 3rem 2rem; text-align: center;
-      border-radius: 16px; box-shadow: var(--shadow-lg);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #sidebar { width: 100%; height: auto; position: relative; }
-      #main-content { padding: 1.5rem; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="sidebar-header">
-      <div class="student-badge">
-        <span>🚀</span>
-        <span id="txt-student-badge">Livello 2: <strong>Riccardo</strong></span>
-      </div>
-      <div class="sidebar-title" id="txt-course-title">Creazione di Siti Web Reali</div>
-      <div class="mentor-note" id="txt-mentor-note">Con il tuo mentore argentino 🇦🇷🇮🇹</div>
+      <div class="student-badge"><span>🚀</span><span class="it">Livello 2: <strong>Riccardo</strong></span><span class="es">Nivel 2: <strong>Ricardo</strong></span></div>
+      <div class="sidebar-title"><span class="it">Creazione di Siti Web Reali</span><span class="es">Creación de Sitios Web Reales</span></div>
+      <div class="mentor-note"><span class="it">Insieme al tuo mentore argentino 🇦🇷🇮🇹</span><span class="es">Junto a tu mentor argentino 🇦🇷🇮🇹</span></div>
     </div>
-
     <div class="progress-container">
-      <div class="progress-info">
-        <span id="txt-progress-label">Progresso Livello 2</span>
-        <span id="progress-percent">0%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
+      <div class="progress-info"><span class="it">Progresso Livello 2</span><span class="es">Progreso Nivel 2</span><span id="progress-percent">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
-
     <ul class="nav-list">
-      <li class="nav-item active" onclick="switchSection(0)">
-        <span class="icon">🏛️</span>
-        <span id="nav-s0">1. Anatomia di un Sito</span>
-        <span class="check" id="check-0">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(1)">
-        <span class="icon">📐</span>
-        <span id="nav-s1">2. Flexbox & CSS Grid</span>
-        <span class="check" id="check-1">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(2)">
-        <span class="icon">📱</span>
-        <span id="nav-s2">3. Responsive & Mobile</span>
-        <span class="check" id="check-2">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(3)">
-        <span class="icon">🛠️</span>
-        <span id="nav-s3">4. Site Builder dal Vivo</span>
-        <span class="check" id="check-3">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(4)">
-        <span class="icon">🎓</span>
-        <span id="nav-s4">5. Diploma Web Creator</span>
-        <span class="check" id="check-4">✓</span>
-      </li>
+      <li><button type="button" class="nav-item" data-go="0"><span class="icon">🏛️</span><span>1. <span class="it">Anatomia di un Sito</span><span class="es">Anatomía de un Sitio</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="1"><span class="icon">📐</span><span>2. <span class="it">Flexbox & CSS Grid</span><span class="es">Flexbox & CSS Grid</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="2"><span class="icon">📱</span><span>3. <span class="it">Responsive & Mobile</span><span class="es">Responsive & Celular</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="3"><span class="icon">🛠️</span><span>4. <span class="it">Site Builder dal Vivo</span><span class="es">Creador de Sitios en Vivo</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="4"><span class="icon">🎓</span><span>5. <span class="it">Diploma Web Creator</span><span class="es">Diploma Web Creator</span></span><span class="check">✓</span></button></li>
     </ul>
-
-    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #64748b; border-top: 1px solid #1e293b;">
-      <a href="index.html" style="color: #38bdf8; text-decoration: none; font-weight: 600;" id="lnk-back-lvl1">⬅️ Torna al Livello 1 (Fondamenti)</a>
+    <div class="sidebar-footer">
+      <a href="index.html">⬅️ <span class="it">Torna al Livello 1</span><span class="es">Volver al Nivel 1</span></a>
+      <a href="modulo3.html">🚀 <span class="it">Vai al Livello 3</span><span class="es">Ir al Nivel 3</span> ➔</a>
+      <small><span class="it">Corso 100% nel browser. I progressi si salvano su questo computer.</span><span class="es">Curso 100% en el navegador. El progreso se guarda en esta computadora.</span></small>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main id="main-content">
-    <!-- Top Bar -->
     <div class="top-controls">
-      <div style="display: flex; gap: 8px; font-size: 0.85rem; font-weight: 600; align-items: center; flex-wrap: wrap;">
-        <a href="index.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 1</a>
-        <span>➔</span>
-        <span style="color: #2563eb; font-weight: 700;">Livello 2 (Attuale)</span>
-        <span>➔</span>
-        <a href="modulo3.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 3</a>
-        <span>➔</span>
-        <a href="modulo4.html" style="color: #64748b; text-decoration: none; padding: 4px 8px; border-radius: 6px; background: #f1f5f9;">Livello 4</a>
-      </div>
-
-      <!-- Language Selector -->
+      <nav class="levels" aria-label="Livelli"><a href="index.html"><span class="it">Livello 1</span><span class="es">Nivel 1</span></a><span class="sep">➔</span><span class="cur"><span class="it">Livello 2</span><span class="es">Nivel 2</span></span><span class="sep">➔</span><a href="modulo3.html"><span class="it">Livello 3</span><span class="es">Nivel 3</span></a><span class="sep">➔</span><a href="modulo4.html"><span class="it">Livello 4</span><span class="es">Nivel 4</span></a></nav>
       <div class="lang-selector">
-        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
-        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+        <button type="button" class="lang-btn active" data-lang="it">🇮🇹 Italiano</button>
+        <button type="button" class="lang-btn" data-lang="es">🇪🇸 Español</button>
       </div>
     </div>
 
-    <!-- SECTION 0: ANATOMY OF A REAL SITE -->
-    <section class="module-card" id="sec-0">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s0">Fase 1</span>
-        <h1 id="title-s0">L'Anatomia di una Pagina Web Professionale</h1>
-        <p id="sub-s0" style="color: var(--text-muted); font-size: 1.05rem;">
-          Come strutturano i loro progetti i professionisti usando HTML semantico.
-        </p>
-      </div>
+    <!-- ============ SEZIONE 1: ANATOMIA ============ -->
+    <section class="module-card">
+      <span class="module-tag">Fase 1</span>
+      <h1 class="it">L'Anatomia di una Pagina Web Professionale</h1>
+      <h1 class="es">La Anatomía de una Página Web Profesional</h1>
+      <p class="lead it">Come organizzano i professionisti i loro progetti usando l'HTML semantico.</p>
+      <p class="lead es">Cómo organizan sus proyectos los profesionales usando HTML semántico.</p>
 
       <div class="callout tip">
-        <div class="callout-title">💡 <span id="tip-s0-title">Le 5 Sezioni Sacre di qualsiasi sito</span></div>
-        <div id="tip-s0-text">
-          Che si tratti del sito di un ristorante italiano, di uno studio di avvocati o di una landing page, c'è sempre uno schema vincente: <strong>Header</strong> (Logo e Menu) $\rightarrow$ <strong>Hero Section</strong> (Titolo d'impatto con pulsante d'azione) $\rightarrow$ <strong>Features / Servizi</strong> (Griglia a colonne) $\rightarrow$ <strong>Contatto</strong> (Form per ricevere clienti) $\rightarrow$ <strong>Footer</strong> (Copyright e contatti).
-        </div>
+        <div class="callout-title">💡 <span class="it">Le 5 sezioni di quasi ogni sito</span><span class="es">Las 5 secciones de casi todo sitio</span></div>
+        <p class="it">Ristorante, studio di avvocati o landing page: lo schema vincente è quasi sempre lo stesso.</p>
+        <p class="es">Restaurante, estudio de abogados o landing page: el esquema ganador es casi siempre el mismo.</p>
+      </div>
+      <div class="diagram-box">
+        <div class="diagram-step"><div class="big">🔝</div><strong>Header</strong><p><span class="it">Logo e menu</span><span class="es">Logo y menú</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🌟</div><strong>Hero</strong><p><span class="it">Titolo d'impatto + pulsante d'azione</span><span class="es">Título de impacto + botón de acción</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🧩</div><strong><span class="it">Servizi</span><span class="es">Servicios</span></strong><p><span class="it">Griglia di card</span><span class="es">Grilla de tarjetas</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">✉️</div><strong><span class="it">Contatti</span><span class="es">Contacto</span></strong><p><span class="it">Modulo, WhatsApp, mappa</span><span class="es">Formulario, WhatsApp, mapa</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🔚</div><strong>Footer</strong><p><span class="it">Copyright e dati</span><span class="es">Copyright y datos</span></p></div>
       </div>
 
-      <h2 id="h2-s0-semantic">1. I Tag Semantici (Non usare solo &lt;div&gt;!)</h2>
-      <p id="p-s0-semantic">
-        Nel Livello 1 abbiamo visto i tag base. Ora vediamo i tag che fanno capire a Google e agli smartphone cosa c'è nella pagina:
-      </p>
-
-      <div class="code-container">
-        <span class="code-badge">HTML Semantico</span>
-        <pre><code>&lt;body&gt;
-  &lt;!-- 1. Intestazione con navigazione --&gt;
+      <h2><span class="it">1. I tag semantici (non usare solo &lt;div&gt;!)</span><span class="es">1. Las etiquetas semánticas (¡no uses solo &lt;div&gt;!)</span></h2>
+      <p class="it">Nel Livello 1 abbiamo visto i tag base. Questi tag funzionano come un <code>&lt;div&gt;</code>, ma il nome spiega <strong>cosa contengono</strong>: Google, i lettori di schermo per non vedenti e chi leggerà il tuo codice capiscono subito la pagina.</p>
+      <p class="es">En el Nivel 1 vimos las etiquetas básicas. Estas funcionan como un <code>&lt;div&gt;</code>, pero el nombre explica <strong>qué contienen</strong>: Google, los lectores de pantalla para no videntes y quien lea tu código entienden enseguida la página.</p>
+      <div class="code-container"><span class="code-badge">HTML Semantico</span><pre><code>&lt;body&gt;
+  <span class="c-com">&lt;!-- 1. Intestazione con navigazione --&gt;</span>
   &lt;header&gt;
-    &lt;nav&gt;...menu con link...&lt;/nav&gt;
+    &lt;nav&gt; ...link del menu... &lt;/nav&gt;
   &lt;/header&gt;
 
-  &lt;!-- 2. Contenuto principale --&gt;
+  <span class="c-com">&lt;!-- 2. Contenuto principale (uno solo per pagina) --&gt;</span>
   &lt;main&gt;
-    &lt;section class="hero"&gt;...copertina con titolo e bottone...&lt;/section&gt;
-    &lt;section class="servizi"&gt;...griglia delle offerte...&lt;/section&gt;
-    &lt;section class="contatti"&gt;...modulo email...&lt;/section&gt;
+    &lt;section class="hero"&gt; ...titolo e pulsante... &lt;/section&gt;
+    &lt;section id="servizi"&gt; ...griglia di card... &lt;/section&gt;
+    &lt;section id="contatti"&gt; ...modulo... &lt;/section&gt;
   &lt;/main&gt;
 
-  &lt;!-- 3. Piè di pagina --&gt;
+  <span class="c-com">&lt;!-- 3. Piè di pagina --&gt;</span>
   &lt;footer&gt;
-    &lt;p&gt;&copy; 2026 Creato da Riccardo&lt;/p&gt;
+    &lt;p&gt;&amp;copy; 2026 Creato da Riccardo&lt;/p&gt;
   &lt;/footer&gt;
-&lt;/body&gt;</code></pre>
-        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+&lt;/body&gt;</code></pre><button type="button" class="copy-btn">Copia</button></div>
+      <p class="it"><strong>Trucco del menu:</strong> se una sezione ha <code>id="servizi"</code>, il link <code>&lt;a href="#servizi"&gt;</code> porta direttamente lì. Così funzionano i menu delle pagine singole.</p>
+      <p class="es"><strong>Truco del menú:</strong> si una sección tiene <code>id="servizi"</code>, el enlace <code>&lt;a href="#servizi"&gt;</code> lleva directo ahí. Así funcionan los menús de las páginas únicas.</p>
+
+      <div class="lab tall" data-lab="l2-sem" data-file="struttura">
+        <div class="lab-head"><span class="lab-title">🛠️ <span class="it">Laboratorio: una pagina con le 5 sezioni</span><span class="es">Laboratorio: una página con las 5 secciones</span></span>
+          <div class="btn-row"><button type="button" class="btn ghost sm" data-lab-reset><span class="it">↺ Ripristina</span><span class="es">↺ Restablecer</span></button><button type="button" class="btn sm" data-lab-download><span class="it">📥 Scarica</span><span class="es">📥 Descargar</span></button></div></div>
+        <div class="lab-split">
+          <div><div class="lab-label"><span class="it">Il tuo codice</span><span class="es">Tu código</span></div><textarea class="lab-code" spellcheck="false"><style>
+  header { background: #0f172a; color: white; padding: 12px; }
+  header a { color: #93c5fd; margin-right: 12px; }
+  .hero { background: #2563eb; color: white; padding: 30px; text-align: center; }
+  section { padding: 16px; }
+  footer { border-top: 1px solid #ccc; padding: 10px; color: gray; }
+</style>
+
+<header>
+  <strong>Bar Centrale</strong>
+  <nav>
+    <a href="#servizi">Servizi</a>
+    <a href="#contatti">Contatti</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Bar Centrale</h1>
+    <p>Il miglior caffè del quartiere dal 1985.</p>
+    <button>Vieni a trovarci</button>
+  </section>
+
+  <section id="servizi">
+    <h2>Cosa offriamo</h2>
+    <p>Colazioni, pranzi veloci, aperitivi.</p>
+  </section>
+
+  <section id="contatti">
+    <h2>Contatti</h2>
+    <p>Via Roma 1 — Tel. 06 123456</p>
+  </section>
+</main>
+
+<footer>© 2026 Bar Centrale</footer></textarea></div>
+          <div><div class="lab-label"><span class="it">Anteprima</span><span class="es">Vista previa</span></div><iframe class="lab-view" title="Anteprima" sandbox="allow-scripts"></iframe></div>
+        </div>
       </div>
 
-      <!-- Quiz Section 0 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s0-title">Verifica Rapida: Sezione 1</span>
-        </div>
-
-        <div class="question-block" id="q-block-0-0">
-          <div class="question-text" id="q-0-0-text">1. Perché è molto meglio usare &lt;header&gt;, &lt;nav&gt; e &lt;footer&gt; invece di usare solo &lt;div&gt; dappertutto?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(0, 0, 0)">Perché rende il codice più pesante e lento</button>
-            <button class="option-btn" onclick="selectOption(0, 0, 1)">Perché Google capisce meglio il sito (SEO) e il codice è molto più ordinato e professionale</button>
-            <button class="option-btn" onclick="selectOption(0, 0, 2)">Perché senza di essi il CSS non funziona</button>
-          </div>
-          <div class="feedback-box" id="fb-0-0"></div>
-        </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(0)" id="btn-check-0">Verifica Risposta</button>
-          <span id="score-badge-0" style="font-weight: 700; color: var(--primary);"></span>
-        </div>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: trasformalo nel sito di un'attività vera</span><span class="es">Desafío: conviértelo en el sitio de un negocio real</span></div>
+        <ul class="checklist" data-key="l2-s0">
+          <li><label><input type="checkbox"><span><span class="it">Cambia nome, slogan e colori con quelli di un'attività del tuo quartiere.</span><span class="es">Cambia nombre, eslogan y colores por los de un negocio de tu barrio.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi una sezione <code>&lt;section id="orari"&gt;</code> con gli orari di apertura e il suo link nel menu.</span><span class="es">Agrega una sección <code>&lt;section id="orari"&gt;</code> con los horarios y su enlace en el menú.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Nei servizi, usa una lista <code>&lt;ul&gt;</code> invece del paragrafo.</span><span class="es">En los servicios, usa una lista <code>&lt;ul&gt;</code> en lugar del párrafo.</span></span></label></li>
+        </ul>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(1)" id="btn-next-0">
-        <span id="txt-btn-next-0">Avanti alla Fase 2: Flexbox & CSS Grid ➔</span>
-      </button>
+      <div data-quiz="0"></div>
+      <button type="button" class="btn btn-next-module" data-go="1"><span class="it">Avanti alla Fase 2: Flexbox & CSS Grid ➔</span><span class="es">Avanzar a la Fase 2: Flexbox & CSS Grid ➔</span></button>
     </section>
 
-    <!-- SECTION 1: FLEXBOX & CSS GRID -->
-    <section class="module-card" id="sec-1" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s1">Fase 2</span>
-        <h1 id="title-s1">I Due Grandi Maestri del Layout: Flexbox & CSS Grid</h1>
-        <p id="sub-s1" style="color: var(--text-muted); font-size: 1.05rem;">
-          Come mettere qualsiasi elemento dove vuoi senza impazzire.
-        </p>
-      </div>
+    <!-- ============ SEZIONE 2: FLEXBOX & GRID ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag">Fase 2</span>
+      <h1 class="it">I Due Maestri del Layout: Flexbox & CSS Grid</h1>
+      <h1 class="es">Los Dos Maestros de la Maquetación: Flexbox & CSS Grid</h1>
+      <p class="lead it">Come mettere qualsiasi elemento dove vuoi, senza impazzire.</p>
+      <p class="lead es">Cómo poner cualquier elemento donde quieras, sin volverte loco.</p>
 
       <div class="callout mentor">
-        <div class="callout-title">🤝 <span id="mentor-s1-title">La Regola Chiara del tuo Mentor</span></div>
-        <div id="mentor-s1-text">
-          Riccardo, un tempo allineare elementi in CSS era un incubo. Oggi c'è una regola d'oro chiarissima:
-          <br>• Usa <strong>Flexbox</strong> per cose su <strong>una riga</strong> (es: menu con logo a sinistra e link a destra).
-          <br>• Usa <strong>CSS Grid</strong> per <strong>griglie a due dimensioni</strong> (es: schede prodotti 3x3 o gallerie di foto).
-        </div>
+        <div class="callout-title">🤝 <span class="it">La regola chiara del tuo mentore</span><span class="es">La regla clara de tu mentor</span></div>
+        <p class="it">Riccardo, un tempo allineare elementi in CSS era un incubo. Oggi la regola è semplice:</p>
+        <ul class="it"><li>Usa <strong>Flexbox</strong> per elementi <strong>in una riga o in una colonna</strong> (es. menu con logo a sinistra e link a destra).</li><li>Usa <strong>CSS Grid</strong> per <strong>griglie a due dimensioni</strong> (es. card dei prodotti, gallerie di foto).</li></ul>
+        <p class="es">Ricardo, antes alinear elementos en CSS era una pesadilla. Hoy la regla es simple:</p>
+        <ul class="es"><li>Usa <strong>Flexbox</strong> para elementos <strong>en una fila o una columna</strong> (ej. menú con logo a la izquierda y enlaces a la derecha).</li><li>Usa <strong>CSS Grid</strong> para <strong>grillas de dos dimensiones</strong> (ej. tarjetas de productos, galerías de fotos).</li></ul>
       </div>
 
-      <h2 id="h2-s1-flex">1. Flexbox in 3 righe magiche</h2>
-      <div class="code-container">
-        <span class="code-badge">CSS Flexbox</span>
-        <pre><code>.menu-moderno {
+      <h2><span class="it">1. Flexbox in 3 righe</span><span class="es">1. Flexbox en 3 líneas</span></h2>
+      <div class="code-container"><span class="code-badge">CSS Flexbox</span><pre><code>.menu {
   display: flex;
-  justify-content: space-between; /* Spinge logo a sinistra e link a destra */
-  align-items: center;            /* Centra perfettamente in verticale */
-}</code></pre>
-        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
-      </div>
+  justify-content: space-between; <span class="c-com">/* distribuisce in orizzontale */</span>
+  align-items: center;            <span class="c-com">/* centra in verticale */</span>
+  gap: 16px;                      <span class="c-com">/* spazio tra gli elementi */</span>
+}</code></pre><button type="button" class="copy-btn">Copia</button></div>
 
-      <h2 id="h2-s1-grid">2. CSS Grid: Griglie Automatiche che si adattano da sole</h2>
-      <p id="p-s1-grid">
-        Questa riga singola è il segreto più potente del web moderno. Dice al browser: <em>"Crea colonne che si adattano automaticamente, con larghezza minima di 260px"</em>:
-      </p>
-
-      <div class="code-container">
-        <span class="code-badge">CSS Grid Magico</span>
-        <pre><code>.griglia-servizi {
+      <h2><span class="it">2. CSS Grid: griglie che si adattano da sole</span><span class="es">2. CSS Grid: grillas que se adaptan solas</span></h2>
+      <p class="it">Questa riga è uno dei segreti più potenti del web moderno. Dice al browser: <em>"crea tante colonne quante ne entrano, ognuna larga almeno 260px"</em>. Sul PC vedrai 3 colonne, sul cellulare 1, senza scrivere altro.</p>
+      <p class="es">Esta línea es uno de los secretos más potentes de la web moderna. Le dice al navegador: <em>"crea tantas columnas como entren, cada una de al menos 260px"</em>. En la PC verás 3 columnas, en el celular 1, sin escribir nada más.</p>
+      <div class="code-container"><span class="code-badge">CSS Grid</span><pre><code>.griglia-servizi {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px; /* Spazio tra le card */
-}</code></pre>
-        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
-      </div>
+  gap: 20px;
+}</code></pre><button type="button" class="copy-btn">Copia</button></div>
 
-      <!-- Quiz Section 1 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s1-title">Verifica Rapida: Sezione 2</span>
-        </div>
-
-        <div class="question-block" id="q-block-1-0">
-          <div class="question-text" id="q-1-0-text">1. Qual è lo strumento perfetto per allineare gli elementi di una barra di navigazione orizzontale?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(1, 0, 0)">Flexbox (display: flex)</button>
-            <button class="option-btn" onclick="selectOption(1, 0, 1)">Database SQLite</button>
-            <button class="option-btn" onclick="selectOption(1, 0, 2)">Una tabella HTML antica &lt;table&gt;</button>
+      <h2><span class="it">3. Playground: muovi i blocchi</span><span class="es">3. Playground: mueve los bloques</span></h2>
+      <p class="it">Cambia le opzioni a sinistra e guarda come si spostano i blocchi. Sotto trovi il CSS esatto da copiare nei tuoi progetti.</p>
+      <p class="es">Cambia las opciones a la izquierda y mira cómo se mueven los bloques. Abajo tienes el CSS exacto para copiar en tus proyectos.</p>
+      <div class="pg" id="playground">
+        <div>
+          <div class="control-group"><label><span class="it">Modalità</span><span class="es">Modo</span></label>
+            <select id="pg-mode"><option value="flex">display: flex</option><option value="grid">display: grid</option></select></div>
+          <div class="pg-flex">
+            <div class="control-group"><label>flex-direction</label><select id="pg-dir"><option>row</option><option>column</option></select></div>
+            <div class="control-group"><label>justify-content</label><select id="pg-justify"><option>flex-start</option><option>center</option><option selected>space-between</option><option>space-around</option><option>flex-end</option></select></div>
+            <div class="control-group"><label>align-items</label><select id="pg-align"><option>stretch</option><option selected>center</option><option>flex-start</option><option>flex-end</option></select></div>
+            <div class="control-group"><label>flex-wrap</label><select id="pg-wrap"><option>nowrap</option><option>wrap</option></select></div>
           </div>
-          <div class="feedback-box" id="fb-1-0"></div>
+          <div class="pg-grid" hidden>
+            <div class="control-group"><label><span class="it">Larghezza minima colonna</span><span class="es">Ancho mínimo de columna</span>: <span id="pg-min-v">120</span>px</label><input type="range" id="pg-min" min="60" max="300" step="10" value="120"></div>
+          </div>
+          <div class="control-group"><label>gap: <span id="pg-gap-v">12</span>px</label><input type="range" id="pg-gap" min="0" max="40" value="12"></div>
+          <div class="control-group"><label><span class="it">Numero di blocchi</span><span class="es">Cantidad de bloques</span>: <span id="pg-n-v">4</span></label><input type="range" id="pg-n" min="2" max="6" value="4"></div>
         </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(1)" id="btn-check-1">Verifica Risposta</button>
-          <span id="score-badge-1" style="font-weight: 700; color: var(--primary);"></span>
+        <div>
+          <div class="pg-stage" id="pg-stage"></div>
+          <div class="pg-css" id="pg-css"></div>
         </div>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(2)" id="btn-next-1">
-        <span id="txt-btn-next-1">Avanti alla Fase 3: Responsive & Mobile ➔</span>
-      </button>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: indovina le impostazioni</span><span class="es">Desafío: adivina la configuración</span></div>
+        <ul class="checklist" data-key="l2-s1">
+          <li><label><input type="checkbox"><span><span class="it">Con Flexbox, centra perfettamente i blocchi in orizzontale e in verticale.</span><span class="es">Con Flexbox, centra perfectamente los bloques en horizontal y vertical.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Crea un "menu": logo (blocco 1) a sinistra e gli altri a destra. Suggerimento: prova <code>space-between</code> con 2 blocchi.</span><span class="es">Crea un "menú": logo (bloque 1) a la izquierda y el resto a la derecha. Pista: prueba <code>space-between</code> con 2 bloques.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Con Grid e 6 blocchi, ottieni esattamente 3 colonne.</span><span class="es">Con Grid y 6 bloques, logra exactamente 3 columnas.</span></span></label></li>
+        </ul>
+      </div>
+
+      <div data-quiz="1"></div>
+      <button type="button" class="btn btn-next-module" data-go="2"><span class="it">Avanti alla Fase 3: Responsive & Mobile ➔</span><span class="es">Avanzar a la Fase 3: Responsive & Celular ➔</span></button>
     </section>
 
-    <!-- SECTION 2: RESPONSIVE DESIGN -->
-    <section class="module-card" id="sec-2" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s2">Fase 3</span>
-        <h1 id="title-s2">Design Responsive: Funzionare su Cellulari & PC</h1>
-        <p id="sub-s2" style="color: var(--text-muted); font-size: 1.05rem;">
-          Più del 70% dei visitatori userà lo smartphone. Ecco come adattare il sito.
-        </p>
+    <!-- ============ SEZIONE 3: RESPONSIVE ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag">Fase 3</span>
+      <h1 class="it">Design Responsive: Funzionare su Cellulare e PC</h1>
+      <h1 class="es">Diseño Responsive: Funcionar en Celular y PC</h1>
+      <p class="lead it">La maggior parte dei visitatori di un'attività locale arriva dallo smartphone. Ecco come adattare il sito.</p>
+      <p class="lead es">La mayoría de los visitantes de un negocio local llega desde el smartphone. Así se adapta el sitio.</p>
+
+      <div class="callout warn">
+        <div class="callout-title">⚠️ <span class="it">La riga che non deve mai mancare</span><span class="es">La línea que nunca debe faltar</span></div>
+        <p class="it">Senza questo tag nel <code>&lt;head&gt;</code>, il cellulare mostra il sito "rimpicciolito" come su un PC e le media query non funzionano bene:</p>
+        <p class="es">Sin esta etiqueta en el <code>&lt;head&gt;</code>, el celular muestra el sitio "achicado" como en una PC y las media queries no funcionan bien:</p>
+        <p><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code></p>
       </div>
 
       <div class="callout tip">
-        <div class="callout-title">📱 <span id="tip-s2-title">La Media Query: L'interruttore del Design</span></div>
-        <div id="tip-s2-text">
-          Una <strong>Media Query</strong> è una condizione CSS che dice: <em>"Se lo schermo è più stretto di 768px (un cellulare o tablet verticale), applica queste nuove regole (es: metti il menu in colonna invece che in riga)"</em>.
-        </div>
+        <div class="callout-title">📱 <span class="it">La media query: l'interruttore del design</span><span class="es">La media query: el interruptor del diseño</span></div>
+        <p class="it">Una <strong>media query</strong> è una condizione CSS: <em>"se lo schermo è largo al massimo 768px (cellulare o tablet in verticale), applica queste regole in più"</em>.</p>
+        <p class="es">Una <strong>media query</strong> es una condición CSS: <em>"si la pantalla mide como máximo 768px (celular o tablet vertical), aplica estas reglas extra"</em>.</p>
       </div>
+      <div class="code-container"><span class="code-badge">CSS Responsive</span><pre><code><span class="c-com">/* Per tutti gli schermi */</span>
+.menu { display: flex; flex-direction: row; }
 
-      <div class="code-container">
-        <span class="code-badge">CSS Responsive</span>
-        <pre><code>/* Per computer (schermi grandi) */
-.menu {
-  display: flex;
-  flex-direction: row;
-}
-
-/* Quando lo schermo è piccolo (Smartphone) */
+<span class="c-com">/* Solo quando lo schermo è piccolo (smartphone) */</span>
 @media (max-width: 768px) {
   .menu {
-    flex-direction: column; /* Gli elementi vanno uno sotto l'altro */
+    flex-direction: column;  <span class="c-com">/* gli elementi vanno uno sotto l'altro */</span>
     text-align: center;
   }
-}</code></pre>
-        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
+}</code></pre><button type="button" class="copy-btn">Copia</button></div>
+      <p class="it"><strong>Altri 3 trucchi responsive:</strong> <code>img { max-width: 100%; }</code> (le foto non escono mai dallo schermo), misure in <code>%</code> o <code>rem</code> invece di larghezze fisse, e pulsanti grandi almeno 44px per il dito.</p>
+      <p class="es"><strong>Otros 3 trucos responsive:</strong> <code>img { max-width: 100%; }</code> (las fotos nunca se salen de la pantalla), medidas en <code>%</code> o <code>rem</code> en vez de anchos fijos, y botones de al menos 44px para el dedo.</p>
+
+      <div class="lab tall" data-lab="l2-resp" data-file="responsive">
+        <div class="lab-head"><span class="lab-title">📱 <span class="it">Laboratorio: prova le larghezze dello schermo</span><span class="es">Laboratorio: prueba los anchos de pantalla</span></span>
+          <div class="btn-row">
+            <span class="seg"><button type="button" data-lab-width="100%" class="active">💻 PC</button><button type="button" data-lab-width="375px">📱 375px</button></span>
+            <button type="button" class="btn ghost sm" data-lab-reset><span class="it">↺ Ripristina</span><span class="es">↺ Restablecer</span></button></div></div>
+        <div class="lab-split">
+          <div><div class="lab-label"><span class="it">Il tuo codice</span><span class="es">Tu código</span></div><textarea class="lab-code" spellcheck="false"><style>
+  .menu { display: flex; justify-content: space-between;
+          background: #1d4ed8; color: white; padding: 12px; }
+  .menu a { color: white; margin-left: 12px; }
+  .cards { display: flex; gap: 10px; padding: 10px; }
+  .card { flex: 1; background: #eff6ff; padding: 14px; border-radius: 8px; }
+
+  @media (max-width: 500px) {
+    .menu { flex-direction: column; text-align: center; }
+    .cards { flex-direction: column; }
+  }
+</style>
+
+<nav class="menu">
+  <strong>Palestra Forza</strong>
+  <div><a href="#">Corsi</a><a href="#">Orari</a><a href="#">Contatti</a></div>
+</nav>
+<div class="cards">
+  <div class="card">🏋️ Pesi</div>
+  <div class="card">🧘 Yoga</div>
+  <div class="card">🥊 Boxe</div>
+</div></textarea></div>
+          <div><div class="lab-label"><span class="it">Anteprima (usa i pulsanti PC / 375px)</span><span class="es">Vista previa (usa los botones PC / 375px)</span></div><iframe class="lab-view" title="Anteprima" sandbox="allow-scripts"></iframe></div>
+        </div>
       </div>
 
-      <!-- Quiz Section 2 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s2-title">Verifica Rapida: Sezione 3</span>
-        </div>
-
-        <div class="question-block" id="q-block-2-0">
-          <div class="question-text" id="q-2-0-text">1. A cosa serve la regola @media (max-width: 768px)?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(2, 0, 0)">Ad applicare regole CSS solo quando lo schermo è largo al massimo 768px (come uno smartphone)</button>
-            <button class="option-btn" onclick="selectOption(2, 0, 1)">A limitare la velocità di internet sul sito</button>
-            <button class="option-btn" onclick="selectOption(2, 0, 2)">A bloccare i visitatori da cellulare</button>
-          </div>
-          <div class="feedback-box" id="fb-2-0"></div>
-        </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(2)" id="btn-check-2">Verifica Risposta</button>
-          <span id="score-badge-2" style="font-weight: 700; color: var(--primary);"></span>
-        </div>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: testa come un professionista</span><span class="es">Desafío: prueba como un profesional</span></div>
+        <ul class="checklist" data-key="l2-s2">
+          <li><label><input type="checkbox"><span><span class="it">Nel laboratorio, passa a 375px e guarda come cambiano menu e card.</span><span class="es">En el laboratorio, pasa a 375px y mira cómo cambian el menú y las tarjetas.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Nella media query, rendi il testo delle card più grande (<code>font-size: 20px</code>).</span><span class="es">En la media query, agranda el texto de las tarjetas (<code>font-size: 20px</code>).</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Su qualsiasi sito, premi F12 e poi l'icona del cellulare (Ctrl+Shift+M): ora vedi il sito come su uno smartphone.</span><span class="es">En cualquier sitio, presiona F12 y luego el ícono del celular (Ctrl+Shift+M): ahora ves el sitio como en un smartphone.</span></span></label></li>
+        </ul>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(3)" id="btn-next-2">
-        <span id="txt-btn-next-2">Avanti alla Fase 4: Crea il tuo Sito dal Vivo ➔</span>
-      </button>
+      <div data-quiz="2"></div>
+      <button type="button" class="btn btn-next-module" data-go="3"><span class="it">Avanti alla Fase 4: Crea il tuo Sito dal Vivo ➔</span><span class="es">Avanzar a la Fase 4: Crea tu Sitio en Vivo ➔</span></button>
     </section>
 
-    <!-- SECTION 3: INTERACTIVE SITE BUILDER -->
-    <section class="module-card" id="sec-3" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s3">Fase 4</span>
-        <h1 id="title-s3">Il Tuo Primo Sito Web Completo (Site Builder dal Vivo)</h1>
-        <p id="sub-s3" style="color: var(--text-muted); font-size: 1.05rem;">
-          Personalizza i parametri qui sotto, guarda come cambia il sito in tempo reale e copia il codice finito!
-        </p>
-      </div>
+    <!-- ============ SEZIONE 4: SITE BUILDER ============ -->
+    <section class="module-card" data-done="visit" hidden>
+      <span class="module-tag">Fase 4</span>
+      <h1 class="it">Il Tuo Primo Sito Completo (Site Builder dal Vivo)</h1>
+      <h1 class="es">Tu Primer Sitio Completo (Creador en Vivo)</h1>
+      <p class="lead it">Scegli le opzioni, guarda il sito cambiare in tempo reale e scarica il file <code>index.html</code> pronto. L'anteprima mostra esattamente il codice che scarichi.</p>
+      <p class="lead es">Elige las opciones, mira el sitio cambiar en tiempo real y descarga el archivo <code>index.html</code> listo. La vista previa muestra exactamente el código que descargas.</p>
 
-      <!-- Live Site Builder UI -->
-      <div class="builder-container">
+      <div class="builder">
         <div class="builder-toolbar">
-          <div style="font-weight: 700; font-size: 0.95rem; color: #38bdf8;">
-            🛠️ Generatore e Anteprima di un Sito Web Reale
-          </div>
-          <div class="viewport-selector">
-            <button class="viewport-btn active" id="btn-view-desktop" onclick="setDeviceView('desktop')">💻 Desktop</button>
-            <button class="viewport-btn" id="btn-view-mobile" onclick="setDeviceView('mobile')">📱 Mobile</button>
-          </div>
+          <strong>🛠️ <span class="it">Generatore di siti</span><span class="es">Generador de sitios</span></strong>
+          <div class="seg" id="b-view"><button type="button" data-view="" class="active">💻 Desktop</button><button type="button" data-view="tablet">📟 Tablet</button><button type="button" data-view="mobile">📱 Mobile</button></div>
         </div>
-
-        <!-- Controls -->
-        <div class="builder-controls">
-          <div class="control-group">
-            <label id="lbl-theme">Tipo di Attività / Tema:</label>
-            <select id="b-theme" onchange="updateLiveSite()">
-              <option value="ristorante">🍕 Ristorante / Pizzeria Italiana</option>
-              <option value="portfolio">👨‍💻 Portfolio Web di Riccardo</option>
-              <option value="studio">⚖️ Studio Professionale & Servizi</option>
-            </select>
-          </div>
-
-          <div class="control-group">
-            <label id="lbl-site-title">Nome del Sito / Brand:</label>
-            <input type="text" id="b-title" value="Trattoria Bella Italia" oninput="updateLiveSite()">
-          </div>
-
-          <div class="control-group">
-            <label id="lbl-hero-text">Slogan Principale:</label>
-            <input type="text" id="b-slogan" value="Sapori autentici preparati con passione ogni giorno." oninput="updateLiveSite()">
-          </div>
-
-          <div class="control-group">
-            <label id="lbl-color">Colore Primario:</label>
-            <select id="b-color" onchange="updateLiveSite()">
-              <option value="#2563eb">Blu Moderno (#2563eb)</option>
-              <option value="#059669">Verde Smeraldo (#059669)</option>
-              <option value="#dc2626">Rosso Passione (#dc2626)</option>
-              <option value="#7c3aed">Viola Tech (#7c3aed)</option>
-              <option value="#0f172a">Nero Elegante (#0f172a)</option>
-            </select>
-          </div>
+        <div class="controls">
+          <div class="control-group"><label><span class="it">Tipo di attività</span><span class="es">Tipo de negocio</span></label>
+            <select id="b-theme">
+              <option value="ristorante">🍕 Ristorante / Pizzeria</option>
+              <option value="palestra">🏋️ Palestra</option>
+              <option value="portfolio">👨‍💻 Portfolio Web Designer</option>
+              <option value="studio">⚖️ Studio professionale</option>
+            </select></div>
+          <div class="control-group"><label><span class="it">Nome / Brand</span><span class="es">Nombre / Marca</span></label><input type="text" id="b-title" value="Trattoria Bella Italia"></div>
+          <div class="control-group"><label><span class="it">Slogan</span><span class="es">Eslogan</span></label><input type="text" id="b-slogan" value="Sapori autentici preparati con passione ogni giorno."></div>
+          <div class="control-group"><label><span class="it">Colore principale</span><span class="es">Color principal</span></label><input type="color" id="b-color" value="#2563eb" style="height:38px;padding:3px"></div>
+          <div class="control-group"><label><span class="it">Lingua del sito</span><span class="es">Idioma del sitio</span></label><select id="b-lang"><option value="it">Italiano</option><option value="es">Español</option></select></div>
         </div>
-
-        <!-- Device Preview Frame -->
-        <div class="preview-frame-wrap">
-          <div class="preview-device" id="preview-device">
-            <!-- Simulated Navigation -->
-            <nav class="mock-site-nav">
-              <strong id="mock-brand" style="font-size: 1rem; color: #0f172a;">Trattoria Bella Italia</strong>
-              <div style="display: flex; gap: 12px; font-weight: 500; color: #475569;">
-                <span id="mock-link-1">Home</span>
-                <span id="mock-link-2">Servizi</span>
-                <span id="mock-link-3">Contatti</span>
-              </div>
-            </nav>
-
-            <!-- Simulated Hero -->
-            <section class="mock-site-hero" id="mock-hero" style="background: #2563eb;">
-              <h2 id="mock-hero-title" style="color: white; font-size: 1.5rem; margin-bottom: 8px;">Trattoria Bella Italia</h2>
-              <p id="mock-hero-desc" style="color: #e2e8f0; font-size: 0.95rem; max-width: 500px; margin: 0 auto 16px;">
-                Sapori autentici preparati con passione ogni giorno.
-              </p>
-              <button id="mock-hero-btn" style="background: white; color: #2563eb; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer;">
-                Prenota Ora
-              </button>
-            </section>
-
-            <!-- Simulated Grid -->
-            <section class="mock-site-grid" id="mock-grid">
-              <div class="mock-card">
-                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍕</div>
-                <strong id="card-1-title">Pizze Tradizionali</strong>
-                <p style="font-size: 0.75rem; color: #64748b;" id="card-1-desc">Impasto a lievitazione naturale 48h.</p>
-              </div>
-              <div class="mock-card">
-                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍝</div>
-                <strong id="card-2-title">Pasta Fresca</strong>
-                <p style="font-size: 0.75rem; color: #64748b;" id="card-2-desc">Fatta a mano secondo antica ricetta.</p>
-              </div>
-              <div class="mock-card">
-                <div style="font-size: 1.5rem; margin-bottom: 4px;">🍷</div>
-                <strong id="card-3-title">Vini Selezionati</strong>
-                <p style="font-size: 0.75rem; color: #64748b;" id="card-3-desc">Le migliori etichette d'Italia.</p>
-              </div>
-            </section>
-
-            <!-- Simulated Contact -->
-            <section class="mock-site-contact">
-              <h4 id="mock-contact-title" style="margin-bottom: 8px; font-size: 0.9rem;">Richiedi Informazioni o Prenota</h4>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" placeholder="Nome" style="flex: 1; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.8rem;">
-                <button id="mock-contact-btn" style="background: #2563eb; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">Invia</button>
-              </div>
-            </section>
-
-            <!-- Simulated Footer -->
-            <footer class="mock-footer" id="mock-footer-text">
-              © 2026 Trattoria Bella Italia - Sito creato con Riccardo & Mentore
-            </footer>
-          </div>
+        <div class="frame-wrap" id="b-frame-wrap"><iframe id="b-frame" title="Anteprima del sito" sandbox="allow-scripts"></iframe></div>
+        <div class="export-bar">
+          <span><span class="it">Ti piace? Scaricalo e aprilo con doppio clic, oppure copia il codice:</span><span class="es">¿Te gusta? Descárgalo y ábrelo con doble clic, o copia el código:</span></span>
+          <div class="btn-row"><button type="button" class="btn ghost" id="b-copy">📋 <span class="it">Copia codice</span><span class="es">Copiar código</span></button><button type="button" class="btn" id="b-download">📥 <span class="it">Scarica index.html</span><span class="es">Descargar index.html</span></button></div>
         </div>
-
-        <!-- Export Bar -->
-        <div style="padding: 14px 18px; background: #ffffff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-          <span style="font-size: 0.85rem; color: #475569;" id="txt-export-help">Ti piace questo sito? Puoi copiare il codice HTML/CSS completo per usarlo dove vuoi:</span>
-          <button class="btn-verify" onclick="copyFullSiteCode()" id="btn-copy-full-site">📋 Copia Codice del Sito Completo</button>
-        </div>
+        <details class="code-peek"><summary><span class="it">👀 Guarda il codice generato (impara leggendolo!)</span><span class="es">👀 Mira el código generado (¡aprende leyéndolo!)</span></summary><textarea id="b-code" readonly spellcheck="false"></textarea></details>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(4)" id="btn-next-3">
-        <span id="txt-btn-next-3">Visualizza il Diploma di Web Creator ➔</span>
-      </button>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: diventa proprietario del codice</span><span class="es">Desafío: hazte dueño del código</span></div>
+        <ul class="checklist" data-key="l2-s3">
+          <li><label><input type="checkbox"><span><span class="it">Scarica il sito e aprilo con doppio clic.</span><span class="es">Descarga el sitio y ábrelo con doble clic.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aprilo in VS Code e trova <code>--brand</code>: cambia il colore e salva.</span><span class="es">Ábrelo en VS Code y busca <code>--brand</code>: cambia el color y guarda.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi una quarta card nei servizi copiando un blocco <code>&lt;article class="card"&gt;</code>.</span><span class="es">Agrega una cuarta tarjeta en los servicios copiando un bloque <code>&lt;article class="card"&gt;</code>.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Trova la media query in fondo al CSS e spiega al tuo mentore cosa fa.</span><span class="es">Encuentra la media query al final del CSS y explícale a tu mentor qué hace.</span></span></label></li>
+        </ul>
+      </div>
+
+      <button type="button" class="btn btn-next-module" data-go="4"><span class="it">Vai al Diploma di Web Creator ➔</span><span class="es">Ir al Diploma de Web Creator ➔</span></button>
     </section>
 
-    <!-- SECTION 4: CERTIFICATE LEVEL 2 -->
-    <section class="module-card" id="sec-4" style="display: none;">
+    <!-- ============ SEZIONE 5: DIPLOMA ============ -->
+    <section class="module-card" data-done="final" hidden>
       <div class="certificate-card">
-        <div style="font-size: 3.5rem;">🚀</div>
-        <h1 style="font-size: 2.2rem; color: var(--primary); margin-bottom: 0.5rem;" id="cert-title">Certificato di Web Creator (Livello 2)</h1>
-        <p style="color: var(--text-muted); font-size: 1.15rem;" id="cert-sub">
-          Padronanza di Layout Moderni, Flexbox, Grid e Creazione di Siti
-        </p>
-
-        <div style="font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 1.5rem 0; border-bottom: 3px solid #3b82f6; display: inline-block; padding: 0 2rem 0.5rem;" id="cert-name">
-          Riccardo
+        <div style="font-size:3.4rem">🚀</div>
+        <h1 style="color:var(--primary)"><span class="it">Certificato di Web Creator — Livello 2</span><span class="es">Certificado de Web Creator — Nivel 2</span></h1>
+        <p class="lead"><span class="it">HTML semantico, Flexbox, Grid, design responsive e creazione di siti</span><span class="es">HTML semántico, Flexbox, Grid, diseño responsive y creación de sitios</span></p>
+        <div class="cert-name">Riccardo</div>
+        <p style="max-width:620px;margin:0 auto"><span class="it">Ha completato il <strong>Livello 2</strong> imparando a costruire siti completi, adatti agli smartphone e pronti per clienti reali, insieme al suo mentore argentino.</span><span class="es">Completó el <strong>Nivel 2</strong> aprendiendo a construir sitios completos, adaptados a smartphones y listos para clientes reales, junto a su mentor argentino.</span></p>
+        <div class="cert-signs">
+          <div><div>Riccardo</div><small>Web Creator</small></div>
+          <div><div>Mentore 🇦🇷</div><small><span class="it">Docente & Guida</span><span class="es">Docente & Guía</span></small></div>
         </div>
-
-        <p style="max-width: 620px; margin: 1.5rem auto; font-size: 1.05rem;" id="cert-desc">
-          Ha completato con successo il <strong>Livello 2 Avanzato</strong> imparando a costruire siti web completi, reattivi per smartphone e pronti per il mercato con il suo mentore argentino.
-        </p>
-
-        <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem;">
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Riccardo</div>
-            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-student">Web Creator</div>
-          </div>
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Mentore 🇦🇷</div>
-            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-          <button class="btn-verify" onclick="window.print()" id="btn-print-cert">🖨️ Stampa o Salva PDF</button>
-          <a href="modulo3.html" class="btn-verify" style="background: #f59e0b; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" id="btn-go-lvl3">
-            ⚡ Passa al Livello 3 (JavaScript) ➔
-          </a>
-          <a href="index.html" class="btn-back-level" style="padding: 10px 18px;" id="btn-footer-home">⬅️ Torna al Livello 1</a>
+        <div class="cert-status no-print"></div>
+        <div class="btn-row no-print" style="justify-content:center;margin-top:2rem">
+          <button type="button" class="btn" onclick="window.print()">🖨️ <span class="it">Stampa o Salva PDF</span><span class="es">Imprimir o Guardar PDF</span></button>
+          <a href="modulo3.html" class="btn green">⚡ <span class="it">Passa al Livello 3: JavaScript ➔</span><span class="es">Pasar al Nivel 3: JavaScript ➔</span></a>
         </div>
       </div>
     </section>
 
   </main>
 
+  <div id="toast" role="status"></div>
+  <div id="modal"><div class="box">
+    <strong id="modal-title"></strong>
+    <textarea id="modal-text" readonly></textarea>
+    <button type="button" class="btn" onclick="document.getElementById('modal').classList.remove('show')">OK</button>
+  </div></div>
+
   <script>
-    let currentLang = 'it';
-    let currentSection = 0;
-    const totalSections = 5;
+const PAGE = { id: "l2", title: { it: 'Livello 2: Layout & Siti Reali — Corso di Riccardo', es: 'Nivel 2: Maquetación & Sitios Reales — Curso de Ricardo' } };
+/* ===== Motore comune del corso (Riccardo) ===== */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage non disponibile */ } }
+};
+let LANG = store.get('riccardo_lang_v2', 'it');
+if (LANG !== 'it' && LANG !== 'es') LANG = 'it';
+const STATE_KEY = 'riccardo_' + PAGE.id + '_v2';
+const state = Object.assign({ done: {}, answers: {}, checks: {}, last: 0, labs: {} }, store.get(STATE_KEY, {}));
+const save = () => store.set(STATE_KEY, state);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const tr = (it, es) => (LANG === 'es' ? es : it);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sections = () => $$('section.module-card');
+let current = 0;
 
-    let userAnswers = { 0: {}, 1: {}, 2: {} };
-    let completedSections = { 0: false, 1: false, 2: false, 3: false, 4: false };
+/* ---------- Lingua ---------- */
+function setLanguage(lang) {
+  LANG = lang;
+  store.set('riccardo_lang_v2', lang);
+  document.documentElement.lang = lang;
+  document.title = tr(PAGE.title.it, PAGE.title.es);
+  $$('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  $$('[data-ph-it]').forEach(el => { el.placeholder = lang === 'es' ? el.dataset.phEs : el.dataset.phIt; });
+  $$('.copy-btn').forEach(b => { b.textContent = tr('Copia', 'Copiar'); });
+  $$('.cert-name').forEach(el => { el.textContent = tr('Riccardo', 'Ricardo'); });
+  renderAllQuizzes();
+  updateProgress();
+  if (typeof PAGE.onLang === 'function') PAGE.onLang(lang);
+}
 
-    const quizData = {
-      0: [{
-        correct: 1,
-        feedback: {
-          it: {
-            correct: "Bravissimo! I tag semantici danno significato al contenuto, facilitano l'indicizzazione su Google (SEO) e migliorano la leggibilità del codice.",
-            wrong: "Riprova: Usare tag semantici come <nav> o <header> è la prassi moderna per SEO e ordine pulito del progetto."
-          },
-          es: {
-            correct: "¡Excelente! Las etiquetas semánticas aportan significado, facilitan el posicionamiento en Google (SEO) y mejoran el orden del código.",
-            wrong: "Reintenta: Usar etiquetas semánticas como <nav> o <header> es el estándar moderno para SEO y código profesional."
-          }
-        }
-      }],
-      1: [{
-        correct: 0,
-        feedback: {
-          it: {
-            correct: "Perfetto! Flexbox è il re indiscusso per allineare elementi su una singola riga o colonna.",
-            wrong: "Attenzione: Per una barra di navigazione flessibile e moderna, 'display: flex' è lo standard dell'industria."
-          },
-          es: {
-            correct: "¡Perfecto! Flexbox es el rey indiscutido para alinear elementos en una sola fila o columna.",
-            wrong: "Atención: Para una barra de navegación flexible y moderna, 'display: flex' es el estándar."
-          }
-        }
-      }],
-      2: [{
-        correct: 0,
-        feedback: {
-          it: {
-            correct: "Esattamente! Le Media Queries permettono al design di trasformarsi fluidamente quando viene aperto su cellulari.",
-            wrong: "Riprova: @media applica modifiche di layout in base alla larghezza dello schermo del visitatore."
-          },
-          es: {
-            correct: "¡Exactamente! Las Media Queries permiten que el diseño se transforme fluidamente cuando se abre en móviles.",
-            wrong: "Reintenta: @media aplica cambios de maquetación según el ancho de la pantalla del visitante."
-          }
-        }
-      }]
+/* ---------- Navigazione tra sezioni ---------- */
+function showSection(i, scroll = true) {
+  const secs = sections();
+  i = Math.max(0, Math.min(secs.length - 1, Number(i) || 0));
+  current = i;
+  secs.forEach((s, k) => { s.hidden = k !== i; s.classList.toggle('printing', k === i); });
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('active', k === i));
+  const nl = $('.nav-list'), an = $$('.nav-item')[i];
+  if (nl && an && nl.scrollWidth > nl.clientWidth) nl.scrollLeft = an.parentElement.offsetLeft - 10;
+  state.last = i; save();
+  if (secs[i].dataset.done === 'visit') markDone(i);
+  if (typeof PAGE.onShow === 'function') PAGE.onShow(i);
+  if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+  try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) { }
+}
+function markDone(i) {
+  if (!state.done[i]) { state.done[i] = true; save(); }
+  updateProgress();
+}
+function updateProgress() {
+  const secs = sections();
+  const finalIdx = secs.findIndex(s => s.dataset.done === 'final');
+  const others = secs.map((s, k) => k).filter(k => k !== finalIdx);
+  const allOthers = others.every(k => state.done[k]);
+  if (finalIdx >= 0) state.done[finalIdx] = allOthers;
+  const count = secs.filter((s, k) => state.done[k]).length;
+  const pct = Math.round(count / secs.length * 100);
+  const pe = $('#progress-percent'); if (pe) pe.textContent = pct + '%';
+  const pf = $('#progress-fill'); if (pf) pf.style.width = pct + '%';
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('completed', !!state.done[k]));
+  const missing = others.filter(k => !state.done[k]).length;
+  $$('.cert-status').forEach(el => {
+    el.classList.toggle('ok', allOthers);
+    el.textContent = allOthers
+      ? tr('✅ Tutte le sezioni completate: il diploma è meritato!', '✅ Todas las secciones completadas: ¡el diploma está merecido!')
+      : tr(`Ti mancano ancora ${missing} sezioni (rispondi bene ai quiz o visita la sezione) per completare il livello.`,
+           `Todavía te faltan ${missing} secciones (responde bien los quiz o visita la sección) para completar el nivel.`);
+  });
+}
+
+/* ---------- Quiz ---------- */
+function renderAllQuizzes() { $$('[data-quiz]').forEach(el => renderQuiz(el)); }
+function renderQuiz(el) {
+  const sec = el.dataset.quiz;
+  const qs = (PAGE.quiz || {})[sec] || [];
+  const ans = state.answers[sec] || {};
+  const checked = !!(state.answers[sec] && state.answers[sec]._checked);
+  let h = `<div class="quiz-title">📝 ${tr('Verifica Rapida', 'Comprobación Rápida')} <span class="muted">(${qs.length} ${tr('domande', 'preguntas')})</span></div>`;
+  qs.forEach((q, qi) => {
+    h += `<div class="question-block"><div class="question-text">${qi + 1}. ${esc(tr(q.q[0], q.q[1]))}</div><div class="options-list">`;
+    q.o.forEach((o, oi) => {
+      let cls = ans[qi] === oi ? 'selected' : '';
+      if (checked && ans[qi] !== undefined) {
+        if (oi === q.c && ans[qi] === oi) cls = 'correct';
+        else if (ans[qi] === oi) cls = 'wrong';
+      }
+      h += `<button type="button" class="option-btn ${cls}" data-q="${qi}" data-o="${oi}">${esc(tr(o[0], o[1]))}</button>`;
+    });
+    h += `</div>`;
+    if (checked && ans[qi] !== undefined) {
+      const ok = ans[qi] === q.c;
+      h += `<div class="feedback-box ${ok ? 'correct' : 'wrong'}">${ok ? '✅ ' : '❌ '}${esc(ok ? tr(q.e[0], q.e[1]) : tr(q.w ? q.w[0] : 'Non è questa. Rileggi la spiegazione sopra e riprova.', q.w ? q.w[1] : 'No es esa. Relee la explicación de arriba y reintenta.'))}</div>`;
+    }
+    h += `</div>`;
+  });
+  const score = qs.filter((q, qi) => ans[qi] === q.c).length;
+  h += `<div class="quiz-submit-row"><button type="button" class="btn" data-check>${tr('Verifica Risposte', 'Verificar Respuestas')}</button>`;
+  if (checked) h += `<span class="score-badge">${score}/${qs.length} ${tr('corrette', 'correctas')}${score === qs.length ? ' 🎉' : ''}</span>`;
+  h += `</div>`;
+  el.innerHTML = h;
+  el.classList.add('quiz-container');
+}
+document.addEventListener('click', e => {
+  const opt = e.target.closest('[data-quiz] .option-btn');
+  if (opt) {
+    const sec = opt.closest('[data-quiz]').dataset.quiz;
+    state.answers[sec] = state.answers[sec] || {};
+    state.answers[sec][opt.dataset.q] = Number(opt.dataset.o);
+    state.answers[sec]._checked = false;
+    save(); renderQuiz(opt.closest('[data-quiz]'));
+    return;
+  }
+  const chk = e.target.closest('[data-quiz] [data-check]');
+  if (chk) {
+    const box = chk.closest('[data-quiz]'); const sec = box.dataset.quiz;
+    const qs = PAGE.quiz[sec]; const ans = state.answers[sec] || {};
+    const answered = qs.filter((q, qi) => ans[qi] !== undefined).length;
+    if (answered < qs.length) { toast(tr('Rispondi a tutte le domande prima di verificare!', '¡Responde todas las preguntas antes de verificar!')); return; }
+    ans._checked = true; state.answers[sec] = ans;
+    if (qs.every((q, qi) => ans[qi] === q.c)) { markDone(Number(sec)); toast(tr('Perfetto! Sezione completata ✓', '¡Perfecto! Sección completada ✓')); }
+    save(); renderQuiz(box);
+    return;
+  }
+  const go = e.target.closest('[data-go]');
+  if (go) { showSection(go.dataset.go); return; }
+  const lb = e.target.closest('.lang-btn');
+  if (lb) { setLanguage(lb.dataset.lang); return; }
+  const cp = e.target.closest('.copy-btn');
+  if (cp) {
+    const src = cp.dataset.copyTarget ? $(cp.dataset.copyTarget) : (cp.parentElement.querySelector('.prompt-text.' + LANG) || cp.parentElement.querySelector('code, .prompt-text'));
+    const text = src ? (src.value !== undefined && src.tagName === 'TEXTAREA' ? src.value : src.innerText) : '';
+    copyText(text).then(ok => {
+      if (ok) { const old = cp.textContent; cp.textContent = tr('Copiato!', '¡Copiado!'); setTimeout(() => cp.textContent = old, 1400); }
+      else showModal(text, tr('Seleziona tutto il testo e copialo (Ctrl+C):', 'Selecciona todo el texto y cópialo (Ctrl+C):'));
+    });
+  }
+});
+
+/* ---------- Checklist delle sfide ---------- */
+function initChecklists() {
+  $$('.checklist[data-key]').forEach(ul => {
+    const key = ul.dataset.key;
+    const boxes = $$('input[type=checkbox]', ul);
+    const counter = document.createElement('div'); counter.className = 'challenge-count';
+    ul.after(counter);
+    const upd = () => {
+      const n = boxes.filter(b => b.checked).length;
+      counter.innerHTML = `<span class="it">Fatto: ${n}/${boxes.length}${n === boxes.length ? ' — Grande, Riccardo! 💪' : ''}</span><span class="es">Hecho: ${n}/${boxes.length}${n === boxes.length ? ' — ¡Genial, Ricardo! 💪' : ''}</span>`;
     };
+    boxes.forEach((b, i) => {
+      b.checked = !!(state.checks[key] || {})[i];
+      b.addEventListener('change', () => { state.checks[key] = state.checks[key] || {}; state.checks[key][i] = b.checked; save(); upd(); });
+    });
+    upd();
+  });
+}
 
-    const i18n = {
-      it: {
-        studentBadge: "Livello 2: <strong>Riccardo</strong>",
-        courseTitle: "Creazione di Siti Web Reali",
-        mentorNote: "Con il tuo mentore argentino 🇦🇷🇮🇹",
-        progressLabel: "Progresso Livello 2",
-        lnkBackLvl1: "⬅️ Torna al Livello 1 (Fondamenti)",
-        txtTopBack: "Torna al Livello 1 (Fondamenti & DB)",
-        navS0: "1. Anatomia di un Sito",
-        navS1: "2. Flexbox & CSS Grid",
-        navS2: "3. Responsive & Mobile",
-        navS3: "4. Site Builder dal Vivo",
-        navS4: "5. Diploma Web Creator",
+/* ---------- Laboratori live (iframe isolato) ---------- */
+function initLabs() {
+  $$('.lab[data-lab]').forEach(lab => {
+    const id = lab.dataset.lab;
+    const ta = $('.lab-code', lab), frame = $('.lab-view', lab);
+    const original = ta.value;
+    if (state.labs[id] !== undefined) ta.value = state.labs[id];
+    let t;
+    const render = () => { frame.srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;padding:12px;margin:0;color:#0f172a}</style></head><body>' + ta.value + '</body></html>'; };
+    ta.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { render(); state.labs[id] = ta.value; save(); }, 300); });
+    ta.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); const s = ta.selectionStart; ta.setRangeText('  ', s, ta.selectionEnd, 'end'); } });
+    const reset = $('[data-lab-reset]', lab);
+    if (reset) reset.addEventListener('click', () => { ta.value = original; delete state.labs[id]; save(); render(); });
+    const run = $('[data-lab-run]', lab);
+    if (run) run.addEventListener('click', render);
+    $$('[data-lab-width]', lab).forEach(b => b.addEventListener('click', () => {
+      $$('[data-lab-width]', lab).forEach(x => x.classList.toggle('active', x === b));
+      frame.style.width = b.dataset.labWidth; frame.style.marginInline = 'auto'; frame.style.display = 'block';
+    }));
+    const dl = $('[data-lab-download]', lab);
+    if (dl) dl.addEventListener('click', () => downloadFile((lab.dataset.file || 'esercizio') + '.html',
+      '<!DOCTYPE html>\n<html lang="it">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Esercizio di Riccardo</title>\n</head>\n<body>\n' + ta.value + '\n</body>\n</html>\n'));
+    render();
+  });
+}
 
-        // S0
-        tagS0: "Fase 1",
-        titleS0: "L'Anatomia di una Pagina Web Professionale",
-        subS0: "Come strutturano i loro progetti i professionisti usando HTML semantico.",
-        tipS0Title: "Le 5 Sezioni Sacre di qualsiasi sito",
-        tipS0Text: "Che si tratti del sito di un ristorante italiano, di uno studio o di una landing page, c'è sempre uno schema vincente: <strong>Header</strong> (Logo e Menu) ➔ <strong>Hero Section</strong> (Titolo d'impatto con pulsante d'azione) ➔ <strong>Features / Servizi</strong> (Griglia a colonne) ➔ <strong>Contatto</strong> (Form per ricevere clienti) ➔ <strong>Footer</strong> (Copyright e contatti).",
-        h2S0Semantic: "1. I Tag Semantici (Non usare solo <div>!)",
-        pS0Semantic: "Nel Livello 1 abbiamo visto i tag base. Ora vediamo i tag che fanno capire a Google e agli smartphone cosa c'è nella pagina:",
-        quizS0Title: "Verifica Rapida: Sezione 1",
-        q00Text: "1. Perché è molto meglio usare <header>, <nav> e <footer> invece di usare solo <div> dappertutto?",
-        btnNext0: "Avanti alla Fase 2: Flexbox & CSS Grid ➔",
+/* ---------- Utilità: copia, scarica, toast, modale ---------- */
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; } catch (e2) { return false; }
+  }
+}
+function downloadFile(name, content) {
+  try {
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast(tr(`📥 File "${name}" scaricato: aprilo con doppio clic!`, `📥 Archivo "${name}" descargado: ¡ábrelo con doble clic!`));
+  } catch (e) {
+    showModal(content, tr(`Non riesco a scaricare: copia questo codice e salvalo come ${name}`, `No puedo descargar: copia este código y guárdalo como ${name}`));
+  }
+}
+let toastTimer;
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+function showModal(text, title) {
+  const m = $('#modal'); $('#modal-title').textContent = title; $('#modal-text').value = text;
+  m.classList.add('show'); $('#modal-text').select();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').classList.remove('show'); });
 
-        // S1
-        tagS1: "Fase 2",
-        titleS1: "I Due Grandi Maestri del Layout: Flexbox & CSS Grid",
-        subS1: "Come mettere qualsiasi elemento dove vuoi senza impazzire.",
-        mentorS1Title: "La Regola Chiara del tuo Mentor",
-        mentorS1Text: "Riccardo, un tempo allineare elementi in CSS era un incubo. Oggi c'è una regola d'oro chiarissima:<br>• Usa <strong>Flexbox</strong> per cose su <strong>una riga</strong> (es: menu con logo a sinistra e link a destra).<br>• Usa <strong>CSS Grid</strong> per <strong>griglie a due dimensioni</strong> (es: schede prodotti 3x3 o gallerie di foto).",
-        h2S1Flex: "1. Flexbox in 3 righe magiche",
-        h2S1Grid: "2. CSS Grid: Griglie Automatiche che si adattano da sole",
-        pS1Grid: "Questa riga singola è il segreto più potente del web moderno. Dice al browser: <em>'Crea colonne che si adattano automaticamente, con larghezza minima di 260px'</em>:",
-        quizS1Title: "Verifica Rapida: Sezione 2",
-        q10Text: "1. Qual è lo strumento perfetto per allineare gli elementi di una barra di navigazione orizzontale?",
-        btnNext1: "Avanti alla Fase 3: Responsive & Mobile ➔",
+/* ---------- Avvio ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  try { if (typeof PAGE.init === 'function') PAGE.init(); } catch (e) { console.error(e); }
+  initChecklists();
+  initLabs();
+  setLanguage(LANG);
+  const m = /^#s(\d+)$/.exec(location.hash);
+  showSection(m ? Number(m[1]) - 1 : state.last, false);
+});
+window.addEventListener('hashchange', () => {
+  const m = /^#s(\d+)$/.exec(location.hash);
+  if (m && Number(m[1]) - 1 !== current) showSection(Number(m[1]) - 1);
+});
 
-        // S2
-        tagS2: "Fase 3",
-        titleS2: "Design Responsive: Funzionare su Cellulari & PC",
-        subS2: "Più del 70% dei visitatori userà lo smartphone. Ecco come adattare il sito.",
-        tipS2Title: "La Media Query: L'interruttore del Design",
-        tipS2Text: "Una <strong>Media Query</strong> è una condizione CSS che dice: <em>'Se lo schermo è più stretto di 768px (un cellulare o tablet verticale), applica queste nuove regole (es: metti il menu in colonna invece che in riga)'</em>.",
-        quizS2Title: "Verifica Rapida: Sezione 3",
-        q20Text: "1. A cosa serve la regola @media (max-width: 768px)?",
-        btnNext2: "Avanti alla Fase 4: Crea il tuo Sito dal Vivo ➔",
+/* ===== Livello 2: dati e logica specifica ===== */
+PAGE.quiz = {
+  0: [
+    { q: ["Perché è meglio usare <header>, <nav>, <main> e <footer> invece di soli <div>?", "¿Por qué es mejor usar <header>, <nav>, <main> y <footer> en vez de solo <div>?"],
+      o: [["Perché rende il codice più lento", "Porque hace el código más lento"],
+          ["Perché Google e i lettori di schermo capiscono meglio la pagina e il codice è più ordinato", "Porque Google y los lectores de pantalla entienden mejor la página y el código es más ordenado"],
+          ["Perché senza di loro il CSS non funziona", "Porque sin ellas el CSS no funciona"]], c: 1,
+      e: ["Bravissimo! I tag semantici danno significato al contenuto (SEO e accessibilità).", "¡Excelente! Las etiquetas semánticas dan significado al contenido (SEO y accesibilidad)."] },
+    { q: ['Cosa fa il link <a href="#contatti">?', '¿Qué hace el enlace <a href="#contatti">?'],
+      o: [["Apre un altro sito", "Abre otro sitio"], ['Porta alla sezione con id="contatti" della stessa pagina', 'Lleva a la sección con id="contatti" de la misma página'], ["Invia un'email", "Envía un email"]], c: 1,
+      e: ["Esatto: così funzionano i menu delle pagine singole.", "Exacto: así funcionan los menús de las páginas únicas."] },
+    { q: ["Quale sezione contiene di solito il titolo d'impatto e il pulsante d'azione principale?", "¿Qué sección contiene normalmente el título de impacto y el botón de acción principal?"],
+      o: [["Il footer", "El footer"], ["La hero", "La hero"], ["Il <head>", "El <head>"]], c: 1,
+      e: ["Giusto: la hero è la prima cosa che il visitatore vede.", "Correcto: la hero es lo primero que ve el visitante."] }
+  ],
+  1: [
+    { q: ["Qual è lo strumento ideale per allineare gli elementi di un menu orizzontale?", "¿Cuál es la herramienta ideal para alinear los elementos de un menú horizontal?"],
+      o: [["Flexbox (display: flex)", "Flexbox (display: flex)"], ["Un database SQL", "Una base de datos SQL"], ["Una vecchia tabella <table>", "Una vieja tabla <table>"]], c: 0,
+      e: ["Perfetto! Flexbox è il re delle righe e delle colonne singole.", "¡Perfecto! Flexbox es el rey de las filas y columnas simples."] },
+    { q: ["Quale proprietà Flexbox centra gli elementi in verticale (in una riga)?", "¿Qué propiedad de Flexbox centra los elementos en vertical (en una fila)?"],
+      o: [["justify-content: center", "justify-content: center"], ["align-items: center", "align-items: center"], ["text-align: middle", "text-align: middle"]], c: 1,
+      e: ["Esatto: justify-content lavora in orizzontale, align-items in verticale.", "Exacto: justify-content trabaja en horizontal, align-items en vertical."] },
+    { q: ["Cosa fa repeat(auto-fit, minmax(260px, 1fr))?", "¿Qué hace repeat(auto-fit, minmax(260px, 1fr))?"],
+      o: [["Crea sempre 260 colonne", "Crea siempre 260 columnas"], ["Crea tante colonne quante ne entrano, larghe almeno 260px", "Crea tantas columnas como entren, de al menos 260px"], ["Nasconde le colonne su mobile", "Oculta las columnas en el celular"]], c: 1,
+      e: ["Giusto: è la griglia che si adatta da sola a ogni schermo.", "Correcto: es la grilla que se adapta sola a cada pantalla."] }
+  ],
+  2: [
+    { q: ["A cosa serve @media (max-width: 768px)?", "¿Para qué sirve @media (max-width: 768px)?"],
+      o: [["Ad applicare regole CSS solo quando lo schermo è largo al massimo 768px", "Para aplicar reglas CSS solo cuando la pantalla mide como máximo 768px"],
+          ["A limitare la velocità di internet", "Para limitar la velocidad de internet"], ["A bloccare i visitatori da cellulare", "Para bloquear a los visitantes desde celular"]], c: 0,
+      e: ["Esattamente! Le media query trasformano il design sui cellulari.", "¡Exactamente! Las media queries transforman el diseño en los celulares."] },
+    { q: ["Quale tag nel <head> è indispensabile per un sito responsive?", "¿Qué etiqueta en el <head> es indispensable para un sitio responsive?"],
+      o: [['<meta name="viewport" content="width=device-width, initial-scale=1.0">', '<meta name="viewport" content="width=device-width, initial-scale=1.0">'], ["<title>", "<title>"], ["<mobile>", "<mobile>"]], c: 0,
+      e: ["Giusto: senza viewport il cellulare mostra il sito rimpicciolito.", "Correcto: sin viewport el celular muestra el sitio achicado."] },
+    { q: ["Come eviti che una foto esca dallo schermo del cellulare?", "¿Cómo evitas que una foto se salga de la pantalla del celular?"],
+      o: [["img { width: 2000px; }", "img { width: 2000px; }"], ["img { max-width: 100%; }", "img { max-width: 100%; }"], ["Non usando foto", "No usando fotos"]], c: 1,
+      e: ["Perfetto: la foto non sarà mai più larga del suo contenitore.", "Perfecto: la foto nunca será más ancha que su contenedor."] }
+  ]
+};
 
-        // S3 (Builder)
-        tagS3: "Fase 4",
-        titleS3: "Il Tuo Primo Sito Web Completo (Site Builder dal Vivo)",
-        subS3: "Personalizza i parametri qui sotto, guarda come cambia il sito in tempo reale e copia il codice finito!",
-        lblTheme: "Tipo di Attività / Tema:",
-        lblSiteTitle: "Nome del Sito / Brand:",
-        lblHeroText: "Slogan Principale:",
-        lblColor: "Colore Primario:",
-        txtExportHelp: "Ti piace questo sito? Puoi copiare il codice HTML/CSS completo per usarlo dove vuoi:",
-        btnCopyFullSite: "📋 Copia Codice del Sito Completo",
-        btnNext3: "Visualizza il Diploma di Web Creator ➔",
+/* ---------- Playground Flexbox / Grid ---------- */
+function updatePlayground() {
+  const g = id => document.getElementById(id);
+  const mode = g('pg-mode').value, gap = g('pg-gap').value, n = Number(g('pg-n').value), min = g('pg-min').value;
+  g('pg-gap-v').textContent = gap; g('pg-n-v').textContent = n; g('pg-min-v').textContent = min;
+  document.querySelector('.pg-flex').hidden = mode !== 'flex';
+  document.querySelector('.pg-grid').hidden = mode !== 'grid';
+  const stage = g('pg-stage');
+  stage.innerHTML = Array.from({ length: n }, (_, i) => `<div class="pg-item">${i + 1}</div>`).join('');
+  let css;
+  if (mode === 'flex') {
+    css = { display: 'flex', 'flex-direction': g('pg-dir').value, 'justify-content': g('pg-justify').value, 'align-items': g('pg-align').value, 'flex-wrap': g('pg-wrap').value, gap: gap + 'px' };
+  } else {
+    css = { display: 'grid', 'grid-template-columns': `repeat(auto-fit, minmax(${min}px, 1fr))`, gap: gap + 'px' };
+  }
+  stage.removeAttribute('style');
+  stage.style.minHeight = '220px';
+  Object.entries(css).forEach(([k, v]) => stage.style.setProperty(k, v));
+  g('pg-css').textContent = '.contenitore {\n' + Object.entries(css).map(([k, v]) => `  ${k}: ${v};`).join('\n') + '\n}';
+}
 
-        // Cert
-        certTitle: "Certificato di Web Creator (Livello 2)",
-        certSub: "Padronanza di Layout Moderni, Flexbox, Grid e Creazione di Siti",
-        certDesc: "Ha completato con successo il <strong>Livello 2 Avanzato</strong> imparando a costruire siti web completi, reattivi per smartphone e pronti per il mercato con il suo mentore argentino.",
-        certRoleStudent: "Web Creator",
-        certRoleMentor: "Docente & Guida 🇦🇷",
-        btnPrintCert: "🖨️ Stampa o Salva PDF",
-        btnFooterHome: "⬅️ Torna al Livello 1"
-      },
-      es: {
-        studentBadge: "Nivel 2: <strong>Ricardo</strong>",
-        courseTitle: "Creación de Sitios Web Reales",
-        mentorNote: "Con tu mentor argentino 🇦🇷🇮🇹",
-        progressLabel: "Progreso Nivel 2",
-        lnkBackLvl1: "⬅️ Volver al Nivel 1 (Fundamentos)",
-        txtTopBack: "Volver al Nivel 1 (Fundamentos & DB)",
-        navS0: "1. Anatomía de un Sitio",
-        navS1: "2. Flexbox & CSS Grid",
-        navS2: "3. Responsive & Mobile",
-        navS3: "4. Creador de Sitios en Vivo",
-        navS4: "5. Diploma Web Creator",
-
-        // S0
-        tagS0: "Fase 1",
-        titleS0: "La Anatomía de una Página Web Profesional",
-        subS0: "Cómo estructuran sus proyectos los profesionales usando HTML semántico.",
-        tipS0Title: "Las 5 Secciones Sagradas de cualquier sitio",
-        tipS0Text: "Ya sea el sitio de un restaurante italiano, un estudio o una landing page, siempre hay un esquema ganador: <strong>Header</strong> (Logo y Menú) ➔ <strong>Hero Section</strong> (Título de impacto con botón de llamada a la acción) ➔ <strong>Servicios / Características</strong> (Grilla de tarjetas) ➔ <strong>Contacto</strong> (Formulario para clientes) ➔ <strong>Footer</strong> (Copyright y datos).",
-        h2S0Semantic: "1. Etiquetas Semánticas (¡No uses solo <div>!)",
-        pS0Semantic: "En el Nivel 1 vimos las etiquetas básicas. Ahora veamos las que hacen que Google y los celulares entiendan exactamente qué hay en la página:",
-        quizS0Title: "Comprobación Rápida: Sección 1",
-        q00Text: "1. ¿Por qué es mucho mejor usar <header>, <nav> y <footer> en lugar de poner solo <div> en todos lados?",
-        btnNext0: "Avanzar a la Fase 2: Flexbox & CSS Grid ➔",
-
-        // S1
-        tagS1: "Fase 2",
-        titleS1: "Los Dos Grandes Maestros del Diseño: Flexbox & CSS Grid",
-        subS1: "Cómo posicionar cualquier elemento exactamente donde quieras.",
-        mentorS1Title: "La Regla Clara de tu Mentor",
-        mentorS1Text: "Ricardo, en el pasado alinear cosas con CSS era un dolor de cabeza. Hoy existe una regla de oro muy clara:<br>• Usa <strong>Flexbox</strong> para elementos en <strong>una sola fila o columna</strong> (ej: menú con logo a la izquierda y enlaces a la derecha).<br>• Usa <strong>CSS Grid</strong> para <strong>grillas en 2 dimensiones</strong> (ej: tarjetas de productos o galerías).",
-        h2S1Flex: "1. Flexbox en 3 líneas mágicas",
-        h2S1Grid: "2. CSS Grid: Grillas automáticas que se adaptan solas",
-        pS1Grid: "Esta sola línea es el secreto más potente del diseño web moderno. Le dice al navegador: <em>'Crea columnas que se acomoden solas con ancho mínimo de 260px'</em>:",
-        quizS1Title: "Comprobación Rápida: Sección 2",
-        q10Text: "1. ¿Cuál es la herramienta perfecta para alinear los elementos de una barra de navegación horizontal?",
-        btnNext1: "Avanzar a la Fase 3: Responsive & Mobile ➔",
-
-        // S2
-        tagS2: "Fase 3",
-        titleS2: "Diseño Responsive: Funcionamiento en Celulares & PC",
-        subS2: "Más del 70% de tus visitantes vendrán desde un smartphone. Así se adapta el sitio.",
-        tipS2Title: "La Media Query: El interruptor del Diseño",
-        tipS2Text: "Una <strong>Media Query</strong> es una condición CSS que dice: <em>'Si la pantalla es menor a 768px (un celular o tablet vertical), aplica estas nuevas reglas (ej: pon el menú en columna vertical)'</em>.",
-        quizS2Title: "Comprobación Rápida: Sección 3",
-        q20Text: "1. ¿Para qué sirve la regla @media (max-width: 768px)?",
-        btnNext2: "Avanzar a la Fase 4: Crea tu Sitio en Vivo ➔",
-
-        // S3 (Builder)
-        tagS3: "Fase 4",
-        titleS3: "Tu Primer Sitio Web Completo (Creador en Vivo)",
-        subS3: "¡Personaliza los parámetros abajo, mira cómo cambia el sitio en tiempo real y copia el código terminado!",
-        lblTheme: "Tipo de Actividad / Tema:",
-        lblSiteTitle: "Nombre del Sitio / Marca:",
-        lblHeroText: "Eslogan Principal:",
-        lblColor: "Color Principal:",
-        txtExportHelp: "¿Te gusta este sitio? Puedes copiar el código HTML/CSS completo para usarlo donde quieras:",
-        btnCopyFullSite: "📋 Copiar Código del Sitio Completo",
-        btnNext3: "Ver el Diploma de Web Creator ➔",
-
-        // Cert
-        certTitle: "Certificado de Web Creator (Nivel 2)",
-        certSub: "Dominio de Maquetación Moderna, Flexbox, Grid y Creación de Sitios",
-        certDesc: "Completó con éxito el <strong>Nivel 2 Avanzado</strong> aprendiendo a crear sitios web completos, responsivos para teléfonos y listos para clientes reales junto a su mentor argentino.",
-        certRoleStudent: "Web Creator",
-        certRoleMentor: "Docente & Guía 🇦🇷",
-        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
-        btnFooterHome: "⬅️ Volver al Nivel 1"
-      }
-    };
-
-    function init() {
-      const savedLang = localStorage.getItem('riccardo_lang') || 'it';
-      setLanguage(savedLang);
-      loadSavedState();
-      updateLiveSite();
-      updateProgressBar();
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('riccardo_lang', lang);
-
-      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
-      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
-
-      const t = i18n[lang];
-
-      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
-      document.getElementById('txt-course-title').innerText = t.courseTitle;
-      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
-      document.getElementById('txt-progress-label').innerText = t.progressLabel;
-      document.getElementById('lnk-back-lvl1').innerText = t.lnkBackLvl1;
-      document.getElementById('txt-top-back').innerText = t.txtTopBack;
-
-      document.getElementById('nav-s0').innerText = t.navS0;
-      document.getElementById('nav-s1').innerText = t.navS1;
-      document.getElementById('nav-s2').innerText = t.navS2;
-      document.getElementById('nav-s3').innerText = t.navS3;
-      document.getElementById('nav-s4').innerText = t.navS4;
-
-      // S0
-      document.getElementById('tag-s0').innerText = t.tagS0;
-      document.getElementById('title-s0').innerText = t.titleS0;
-      document.getElementById('sub-s0').innerText = t.subS0;
-      document.getElementById('tip-s0-title').innerText = t.tipS0Title;
-      document.getElementById('tip-s0-text').innerHTML = t.tipS0Text;
-      document.getElementById('h2-s0-semantic').innerText = t.h2S0Semantic;
-      document.getElementById('p-s0-semantic').innerText = t.pS0Semantic;
-      document.getElementById('quiz-s0-title').innerText = t.quizS0Title;
-      document.getElementById('q-0-0-text').innerText = t.q00Text;
-      document.getElementById('btn-next-0').querySelector('span').innerText = t.btnNext0;
-
-      // S1
-      document.getElementById('tag-s1').innerText = t.tagS1;
-      document.getElementById('title-s1').innerText = t.titleS1;
-      document.getElementById('sub-s1').innerText = t.subS1;
-      document.getElementById('mentor-s1-title').innerText = t.mentorS1Title;
-      document.getElementById('mentor-s1-text').innerHTML = t.mentorS1Text;
-      document.getElementById('h2-s1-flex').innerText = t.h2S1Flex;
-      document.getElementById('h2-s1-grid').innerText = t.h2S1Grid;
-      document.getElementById('p-s1-grid').innerHTML = t.pS1Grid;
-      document.getElementById('quiz-s1-title').innerText = t.quizS1Title;
-      document.getElementById('q-1-0-text').innerText = t.q10Text;
-      document.getElementById('btn-next-1').querySelector('span').innerText = t.btnNext1;
-
-      // S2
-      document.getElementById('tag-s2').innerText = t.tagS2;
-      document.getElementById('title-s2').innerText = t.titleS2;
-      document.getElementById('sub-s2').innerText = t.subS2;
-      document.getElementById('tip-s2-title').innerText = t.tipS2Title;
-      document.getElementById('tip-s2-text').innerHTML = t.tipS2Text;
-      document.getElementById('quiz-s2-title').innerText = t.quizS2Title;
-      document.getElementById('q-2-0-text').innerText = t.q20Text;
-      document.getElementById('btn-next-2').querySelector('span').innerText = t.btnNext2;
-
-      // S3 Builder
-      document.getElementById('tag-s3').innerText = t.tagS3;
-      document.getElementById('title-s3').innerText = t.titleS3;
-      document.getElementById('sub-s3').innerText = t.subS3;
-      document.getElementById('lbl-theme').innerText = t.lblTheme;
-      document.getElementById('lbl-site-title').innerText = t.lblSiteTitle;
-      document.getElementById('lbl-hero-text').innerText = t.lblHeroText;
-      document.getElementById('lbl-color').innerText = t.lblColor;
-      document.getElementById('txt-export-help').innerText = t.txtExportHelp;
-      document.getElementById('btn-copy-full-site').innerText = t.btnCopyFullSite;
-      document.getElementById('btn-next-3').querySelector('span').innerText = t.btnNext3;
-
-      // Cert
-      document.getElementById('cert-title').innerText = t.certTitle;
-      document.getElementById('cert-sub').innerText = t.certSub;
-      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
-      document.getElementById('cert-desc').innerHTML = t.certDesc;
-      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
-      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
-      document.getElementById('btnPrintCert').innerText = t.btnPrintCert;
-      document.getElementById('btn-footer-home').innerText = t.btnFooterHome;
-
-      for (let s = 0; s < 3; s++) {
-        if (completedSections[s]) renderQuizFeedback(s);
-      }
-    }
-
-    function switchSection(index) {
-      currentSection = index;
-      for (let i = 0; i < totalSections; i++) {
-        const sec = document.getElementById(`sec-${i}`);
-        if (sec) sec.style.display = (i === index) ? 'block' : 'none';
-
-        const nav = document.querySelectorAll('.nav-item')[i];
-        if (nav) nav.classList.toggle('active', i === index);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // ==========================================
-    // LIVE SITE BUILDER LOGIC
-    // ==========================================
-    function setDeviceView(type) {
-      const dev = document.getElementById('preview-device');
-      const btnDesk = document.getElementById('btn-view-desktop');
-      const btnMob = document.getElementById('btn-view-mobile');
-
-      if (type === 'mobile') {
-        dev.className = 'preview-device mobile';
-        btnMob.classList.add('active');
-        btnDesk.classList.remove('active');
-      } else {
-        dev.className = 'preview-device';
-        btnDesk.classList.add('active');
-        btnMob.classList.remove('active');
-      }
-    }
-
-    function updateLiveSite() {
-      const theme = document.getElementById('b-theme').value;
-      const title = document.getElementById('b-title').value.trim() || 'Il Mio Sito';
-      const slogan = document.getElementById('b-slogan').value.trim() || 'Benvenuto nella nostra pagina.';
-      const color = document.getElementById('b-color').value;
-
-      document.getElementById('mock-brand').innerText = title;
-      document.getElementById('mock-hero-title').innerText = title;
-      document.getElementById('mock-hero-desc').innerText = slogan;
-      document.getElementById('mock-hero').style.backgroundColor = color;
-      document.getElementById('mock-hero-btn').style.color = color;
-      document.getElementById('mock-contact-btn').style.backgroundColor = color;
-      document.getElementById('mock-footer-text').innerText = `© 2026 ${title} - Realizzato con Riccardo & Mentore`;
-
-      // Preset contents according to theme
-      if (theme === 'ristorante') {
-        document.getElementById('card-1-title').innerText = "Pizze Tradizionali";
-        document.getElementById('card-1-desc').innerText = "Impasto lievitato 48h con farine selezionate.";
-        document.getElementById('card-2-title').innerText = "Pasta Fresca";
-        document.getElementById('card-2-desc').innerText = "Fatta a mano ogni mattina.";
-        document.getElementById('card-3-title').innerText = "Vini Pregiati";
-        document.getElementById('card-3-desc').innerText = "Cantina con oltre 100 etichette.";
-      } else if (theme === 'portfolio') {
-        document.getElementById('card-1-title').innerText = "Web Design";
-        document.getElementById('card-1-desc').innerText = "Siti moderni e responsive con HTML e CSS.";
-        document.getElementById('card-2-title').innerText = "Basi di Dati";
-        document.getElementById('card-2-desc').innerText = "Integrazione SQLite e backend sicuro.";
-        document.getElementById('card-3-title').innerText = "Sviluppo con IA";
-        document.getElementById('card-3-desc').innerText = "Automazione e prototipazione rapida.";
-      } else {
-        document.getElementById('card-1-title').innerText = "Consulenza Diretta";
-        document.getElementById('card-1-desc').innerText = "Analisi personalizzata delle esigenze.";
-        document.getElementById('card-2-title').innerText = "Gestione Pratiche";
-        document.getElementById('card-2-desc').innerText = "Rapidità, precisione e trasparenza.";
-        document.getElementById('card-3-title').innerText = "Assistenza 24/7";
-        document.getElementById('card-3-desc').innerText = "Sempre al tuo fianco per ogni necessità.";
-      }
-    }
-
-    function copyFullSiteCode() {
-      const title = document.getElementById('b-title').value.trim() || 'Il Mio Sito';
-      const slogan = document.getElementById('b-slogan').value.trim() || 'Benvenuto nella nostra pagina.';
-      const color = document.getElementById('b-color').value;
-
-      const fullHtml = `<!DOCTYPE html>
-<html lang="it">
+/* ---------- Generatore di siti ---------- */
+const THEMES = {
+  ristorante: {
+    it: { title: 'Trattoria Bella Italia', slogan: 'Sapori autentici preparati con passione ogni giorno.', cta: 'Prenota un tavolo',
+      cards: [['🍕', 'Pizze tradizionali', 'Impasto a lunga lievitazione e forno a legna.'], ['🍝', 'Pasta fresca', 'Fatta a mano ogni mattina.'], ['🍷', 'Vini selezionati', 'Le migliori etichette italiane.']],
+      about: 'Dal 1998 portiamo in tavola la cucina della nonna, con ingredienti freschi del territorio.' },
+    es: { title: 'Trattoria Bella Italia', slogan: 'Sabores auténticos preparados con pasión todos los días.', cta: 'Reserva una mesa',
+      cards: [['🍕', 'Pizzas tradicionales', 'Masa de larga fermentación y horno a leña.'], ['🍝', 'Pasta fresca', 'Hecha a mano cada mañana.'], ['🍷', 'Vinos seleccionados', 'Las mejores etiquetas italianas.']],
+      about: 'Desde 1998 llevamos a la mesa la cocina de la abuela, con ingredientes frescos de la zona.' } },
+  palestra: {
+    it: { title: 'Palestra Forza', slogan: 'Allenati con noi: risultati veri, persone vere.', cta: 'Prova gratuita',
+      cards: [['🏋️', 'Sala pesi', 'Attrezzi moderni e istruttori sempre presenti.'], ['🧘', 'Yoga e pilates', 'Corsi per tutti i livelli, mattina e sera.'], ['🥊', 'Boxe', 'Tecnica, fiato e tanta energia.']],
+      about: 'Una palestra di quartiere dove ognuno viene seguito con un programma su misura.' },
+    es: { title: 'Gimnasio Fuerza', slogan: 'Entrena con nosotros: resultados reales, gente real.', cta: 'Clase de prueba gratis',
+      cards: [['🏋️', 'Sala de pesas', 'Equipos modernos e instructores siempre presentes.'], ['🧘', 'Yoga y pilates', 'Clases para todos los niveles, mañana y tarde.'], ['🥊', 'Boxeo', 'Técnica, aire y mucha energía.']],
+      about: 'Un gimnasio de barrio donde cada uno tiene un programa a medida.' } },
+  portfolio: {
+    it: { title: 'Riccardo — Web Designer', slogan: 'Creo siti moderni e veloci per attività locali.', cta: 'Vedi i miei lavori',
+      cards: [['🎨', 'Web design', 'Siti su misura con HTML e CSS.'], ['📱', 'Siti responsive', 'Perfetti su cellulare, tablet e PC.'], ['🤖', 'Prototipi con IA', 'Idee trasformate in pagine in pochi giorni.']],
+      about: 'Sono Riccardo, web designer. Aiuto ristoranti, negozi e professionisti a farsi trovare online.' },
+    es: { title: 'Ricardo — Diseñador Web', slogan: 'Creo sitios modernos y rápidos para negocios locales.', cta: 'Mira mis trabajos',
+      cards: [['🎨', 'Diseño web', 'Sitios a medida con HTML y CSS.'], ['📱', 'Sitios responsive', 'Perfectos en celular, tablet y PC.'], ['🤖', 'Prototipos con IA', 'Ideas convertidas en páginas en pocos días.']],
+      about: 'Soy Ricardo, diseñador web. Ayudo a restaurantes, tiendas y profesionales a que los encuentren online.' } },
+  studio: {
+    it: { title: 'Studio Rossi & Associati', slogan: 'Consulenza chiara e assistenza sempre al tuo fianco.', cta: 'Prenota una consulenza',
+      cards: [['💼', 'Consulenza', 'Analisi personalizzata delle tue esigenze.'], ['📄', 'Gestione pratiche', 'Rapidità, precisione e trasparenza.'], ['🤝', 'Assistenza continua', 'Ti seguiamo in ogni passo.']],
+      about: 'Professionisti con oltre 20 anni di esperienza al servizio di famiglie e imprese.' },
+    es: { title: 'Estudio Rossi & Asociados', slogan: 'Asesoramiento claro y acompañamiento constante.', cta: 'Reserva una consulta',
+      cards: [['💼', 'Asesoramiento', 'Análisis personalizado de tus necesidades.'], ['📄', 'Gestión de trámites', 'Rapidez, precisión y transparencia.'], ['🤝', 'Acompañamiento', 'Te seguimos en cada paso.']],
+      about: 'Profesionales con más de 20 años de experiencia al servicio de familias y empresas.' } }
+};
+const SITE_TXT = {
+  it: { home: 'Home', services: 'Servizi', about: 'Chi siamo', contact: 'Contatti', what: 'Cosa offriamo', write: 'Scrivici', name: 'Nome', email: 'Email', msg: 'Messaggio', send: 'Invia', made: 'Sito creato da Riccardo', note: 'Nel Livello 4 collegheremo questo modulo a un servizio reale.' },
+  es: { home: 'Inicio', services: 'Servicios', about: 'Quiénes somos', contact: 'Contacto', what: 'Qué ofrecemos', write: 'Escríbenos', name: 'Nombre', email: 'Email', msg: 'Mensaje', send: 'Enviar', made: 'Sitio creado por Ricardo', note: 'En el Nivel 4 conectaremos este formulario a un servicio real.' }
+};
+function buildSite() {
+  const g = id => document.getElementById(id);
+  const th = THEMES[g('b-theme').value][g('b-lang').value];
+  const L = SITE_TXT[g('b-lang').value], lang = g('b-lang').value;
+  const title = esc(g('b-title').value.trim() || th.title), slogan = esc(g('b-slogan').value.trim() || th.slogan), color = g('b-color').value;
+  const year = new Date().getFullYear();
+  const cards = th.cards.map(c => `      <article class="card">\n        <div class="icon">${c[0]}</div>\n        <h3>${c[1]}</h3>\n        <p>${c[2]}</p>\n      </article>`).join('\n');
+  return `<!DOCTYPE html>
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
+  <meta name="description" content="${slogan}">
   <style>
+    /* ===== Colori del sito: cambia qui ===== */
+    :root { --brand: ${color}; --text: #1e293b; --light: #f8fafc; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; color: #1e293b; line-height: 1.6; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2rem; border-bottom: 1px solid #e2e8f0; }
-    nav a { margin-left: 1.5rem; text-decoration: none; color: #475569; font-weight: 500; }
-    .hero { background: ${color}; color: white; padding: 4rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1.15rem; max-width: 600px; margin: 0 auto 1.5rem; opacity: 0.9; }
-    .hero button { background: white; color: ${color}; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; }
-    .card { background: white; border: 1px solid #e2e8f0; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
-    footer { text-align: center; padding: 2rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem; }
-    @media (max-width: 768px) {
-      header { flex-direction: column; gap: 1rem; }
-      nav a { margin: 0 0.5rem; }
+    body { font-family: system-ui, sans-serif; color: var(--text); line-height: 1.6; }
+    img { max-width: 100%; }
+
+    /* Header con Flexbox */
+    header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; background: white; }
+    header strong { font-size: 1.2rem; color: var(--brand); }
+    nav a { margin-left: 1.25rem; text-decoration: none; color: #475569; font-weight: 600; }
+    nav a:hover { color: var(--brand); }
+
+    /* Hero */
+    .hero { background: var(--brand); color: white; padding: 5rem 2rem; text-align: center; }
+    .hero h1 { font-size: 2.6rem; margin-bottom: .75rem; }
+    .hero p { font-size: 1.15rem; max-width: 600px; margin: 0 auto 1.5rem; opacity: .95; }
+    .btn { display: inline-block; background: white; color: var(--brand); padding: 12px 28px; border-radius: 8px; font-weight: 700; text-decoration: none; }
+
+    /* Sezioni */
+    section { padding: 4rem 1.5rem; }
+    h2 { text-align: center; font-size: 1.9rem; margin-bottom: 2rem; }
+
+    /* Griglia dei servizi con CSS Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.75rem; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,.05); }
+    .card .icon { font-size: 2.4rem; }
+    .card h3 { margin: .5rem 0; color: var(--brand); }
+
+    .about { background: var(--light); text-align: center; }
+    .about p { max-width: 650px; margin: 0 auto; font-size: 1.1rem; }
+
+    /* Modulo contatti */
+    form { max-width: 480px; margin: 0 auto; display: flex; flex-direction: column; gap: .8rem; }
+    input, textarea { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    button { background: var(--brand); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+
+    footer { text-align: center; padding: 2rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: .9rem; }
+
+    /* Cellulare: menu in colonna e titoli più piccoli */
+    @media (max-width: 640px) {
+      header { flex-direction: column; gap: .5rem; padding: 1rem; }
+      nav a { margin: 0 .5rem; }
+      .hero { padding: 3.5rem 1.25rem; }
+      .hero h1 { font-size: 1.9rem; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h2>${title}</h2>
+    <strong>${title}</strong>
     <nav>
-      <a href="#home">Home</a>
-      <a href="#servizi">Servizi</a>
-      <a href="#contatti">Contatti</a>
+      <a href="#servizi">${L.services}</a>
+      <a href="#chi-siamo">${L.about}</a>
+      <a href="#contatti">${L.contact}</a>
     </nav>
   </header>
+
   <main>
     <section class="hero" id="home">
       <h1>${title}</h1>
       <p>${slogan}</p>
-      <button>Scopri di Più</button>
+      <a class="btn" href="#contatti">${th.cta}</a>
     </section>
-    <section class="features" id="servizi">
-      <div class="card">
-        <h3>Qualità & Passione</h3>
-        <p>Curiamo ogni singolo dettaglio con dedizione e maestria artigianale.</p>
+
+    <section id="servizi">
+      <h2>${L.what}</h2>
+      <div class="grid">
+${cards}
       </div>
-      <div class="card">
-        <h3>Esperienza Garantita</h3>
-        <p>Anni di esperienza al servizio dei nostri clienti più esigenti.</p>
-      </div>
-      <div class="card">
-        <h3>Contatto Rapido</h3>
-        <p>Rispondiamo in tempi record per offrirti sempre la soluzione ideale.</p>
-      </div>
+    </section>
+
+    <section class="about" id="chi-siamo">
+      <h2>${L.about}</h2>
+      <p>${th.about}</p>
+    </section>
+
+    <section id="contatti">
+      <h2>${L.write}</h2>
+      <!-- ${L.note} -->
+      <form>
+        <input type="text" placeholder="${L.name}" required>
+        <input type="email" placeholder="${L.email}" required>
+        <textarea rows="4" placeholder="${L.msg}"></textarea>
+        <button type="submit">${L.send}</button>
+      </form>
     </section>
   </main>
-  <footer id="contatti">
-    <p>&copy; 2026 ${title} - Creato con orgoglio da Riccardo.</p>
+
+  <footer>
+    <p>&copy; ${year} ${title} — ${L.made}</p>
   </footer>
 </body>
-</html>`;
+</html>
+`;
+}
+let siteTimer;
+function refreshSite() {
+  clearTimeout(siteTimer);
+  siteTimer = setTimeout(() => {
+    const code = buildSite();
+    document.getElementById('b-frame').srcdoc = code;
+    document.getElementById('b-code').value = code;
+  }, 200);
+}
+function applyThemeDefaults() {
+  const th = THEMES[document.getElementById('b-theme').value][document.getElementById('b-lang').value];
+  document.getElementById('b-title').value = th.title;
+  document.getElementById('b-slogan').value = th.slogan;
+}
 
-      navigator.clipboard.writeText(fullHtml).then(() => {
-        alert(currentLang === 'it' 
-          ? "Codice HTML/CSS completo del sito copiato negli appunti! Puoi incollarlo in qualsiasi editor (come Blocco Note o VS Code)." 
-          : "¡Código HTML/CSS completo copiado al portapapeles! Puedes pegarlo en cualquier editor (como Bloc de Notas o VS Code).");
-      });
-    }
+PAGE.init = () => {
+  ['pg-mode', 'pg-dir', 'pg-justify', 'pg-align', 'pg-wrap', 'pg-gap', 'pg-n', 'pg-min'].forEach(id => {
+    document.getElementById(id).addEventListener('input', updatePlayground);
+  });
+  updatePlayground();
+  document.getElementById('b-theme').addEventListener('change', () => { applyThemeDefaults(); refreshSite(); });
+  document.getElementById('b-lang').addEventListener('change', () => { applyThemeDefaults(); refreshSite(); });
+  ['b-title', 'b-slogan', 'b-color'].forEach(id => document.getElementById(id).addEventListener('input', refreshSite));
+  document.getElementById('b-view').addEventListener('click', e => {
+    const b = e.target.closest('[data-view]'); if (!b) return;
+    document.querySelectorAll('#b-view button').forEach(x => x.classList.toggle('active', x === b));
+    document.getElementById('b-frame-wrap').className = 'frame-wrap ' + b.dataset.view;
+  });
+  document.getElementById('b-download').addEventListener('click', () => downloadFile('index.html', buildSite()));
+  document.getElementById('b-copy').addEventListener('click', () => copyText(buildSite()).then(ok => ok
+    ? toast(tr('Codice copiato! Incollalo in un file index.html.', '¡Código copiado! Pégalo en un archivo index.html.'))
+    : showModal(buildSite(), tr('Copia questo codice (Ctrl+A, Ctrl+C):', 'Copia este código (Ctrl+A, Ctrl+C):'))));
+  refreshSite();
+};
 
-    // ==========================================
-    // QUIZ SYSTEM
-    // ==========================================
-    function selectOption(secId, qId, optIndex) {
-      userAnswers[secId][qId] = optIndex;
-      const qBlock = document.getElementById(`q-block-${secId}-${qId}`);
-      const btns = qBlock.querySelectorAll('.option-btn');
-      btns.forEach((btn, idx) => {
-        btn.classList.toggle('selected', idx === optIndex);
-      });
-    }
-
-    function checkSectionQuiz(secId) {
-      const questions = quizData[secId];
-      let correctCount = 0;
-      let answeredCount = 0;
-
-      questions.forEach((q, qIndex) => {
-        const userChoice = userAnswers[secId][qIndex];
-        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
-        const qBlock = document.getElementById(`q-block-${secId}-${qIndex}`);
-        const btns = qBlock.querySelectorAll('.option-btn');
-
-        if (userChoice !== undefined) {
-          answeredCount++;
-          if (userChoice === q.correct) {
-            correctCount++;
-            fbBox.className = 'feedback-box correct';
-            fbBox.innerText = q.feedback[currentLang].correct;
-            btns[userChoice].className = 'option-btn correct';
-          } else {
-            fbBox.className = 'feedback-box wrong';
-            fbBox.innerText = q.feedback[currentLang].wrong;
-            btns[userChoice].className = 'option-btn wrong';
-            btns[q.correct].className = 'option-btn correct';
-          }
-        }
-      });
-
-      if (answeredCount < questions.length) {
-        alert(currentLang === 'it' ? 'Rispondi alla domanda prima di verificare!' : '¡Responde la pregunta antes de verificar!');
-        return;
-      }
-
-      const badge = document.getElementById(`score-badge-${secId}`);
-      badge.innerText = `${correctCount}/${questions.length} ${currentLang === 'it' ? 'Corretta' : 'Correcta'}`;
-
-      if (correctCount === questions.length) {
-        completedSections[secId] = true;
-        document.getElementById(`check-${secId}`).style.display = 'inline-block';
-        document.querySelectorAll('.nav-item')[secId].classList.add('completed');
-      }
-
-      saveState();
-      updateProgressBar();
-    }
-
-    function renderQuizFeedback(secId) {
-      const questions = quizData[secId];
-      questions.forEach((q, qIndex) => {
-        const userChoice = userAnswers[secId][qIndex];
-        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
-        if (userChoice !== undefined && fbBox) {
-          const isCorrect = userChoice === q.correct;
-          fbBox.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
-          fbBox.innerText = isCorrect ? q.feedback[currentLang].correct : q.feedback[currentLang].wrong;
-        }
-      });
-    }
-
-    function updateProgressBar() {
-      let count = 0;
-      for (let i = 0; i < 3; i++) {
-        if (completedSections[i]) count++;
-      }
-      // Section 3 (Builder) auto-completes once tested
-      completedSections[3] = true;
-      document.getElementById('check-3').style.display = 'inline-block';
-      document.querySelectorAll('.nav-item')[3].classList.add('completed');
-      count++;
-
-      if (count >= 4) {
-        completedSections[4] = true;
-        document.getElementById('check-4').style.display = 'inline-block';
-        document.querySelectorAll('.nav-item')[4].classList.add('completed');
-        count = 5;
-      }
-
-      const percent = Math.round((count / 5) * 100);
-      document.getElementById('progress-percent').innerText = `${percent}%`;
-      document.getElementById('progress-fill').style.width = `${percent}%`;
-    }
-
-    function copyCode(btn) {
-      const code = btn.parentElement.querySelector('code').innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        const oldText = btn.innerText;
-        btn.innerText = currentLang === 'it' ? 'Copiato!' : '¡Copiado!';
-        setTimeout(() => btn.innerText = oldText, 1500);
-      });
-    }
-
-    function saveState() {
-      const state = { answers: userAnswers, completed: completedSections };
-      localStorage.setItem('riccardo_m2_state', JSON.stringify(state));
-    }
-
-    function loadSavedState() {
-      const saved = localStorage.getItem('riccardo_m2_state');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          userAnswers = parsed.answers || userAnswers;
-          completedSections = parsed.completed || completedSections;
-          for (let i = 0; i < 5; i++) {
-            if (completedSections[i]) {
-              const chk = document.getElementById(`check-${i}`);
-              if (chk) chk.style.display = 'inline-block';
-              const nav = document.querySelectorAll('.nav-item')[i];
-              if (nav) nav.classList.add('completed');
-            }
-          }
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>

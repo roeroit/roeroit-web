@@ -3,906 +3,1193 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Livello 4: Progetto Reale & Salita sul Web - Riccardo</title>
+  <title>Livello 4: Progetto Finale & Pubblicazione — Corso di Riccardo</title>
   <style>
-    :root {
-      --primary: #059669;
-      --primary-hover: #047857;
-      --primary-light: #d1fae5;
-      --secondary: #0f172a;
-      --success: #10b981;
-      --success-light: #d1fae5;
-      --danger: #ef4444;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --sidebar-bg: #064e3b;
-      --sidebar-text: #f0fdf4;
-      --radius: 12px;
-      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-    }
+:root { --primary: #059669; --primary-dark: #047857; --primary-light: #ecfdf5; --primary-soft: #6ee7b7; --sidebar-bg: #062a22; }
+:root {
+  --success: #10b981; --success-dark: #047857; --success-light: #d1fae5;
+  --danger: #ef4444; --danger-light: #fee2e2;
+  --bg: #f8fafc; --card-bg: #ffffff; --text: #0f172a; --text-body: #334155; --text-muted: #64748b;
+  --border: #e2e8f0; --code-bg: #0f172a; --radius: 12px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / .07), 0 2px 4px -2px rgb(0 0 0 / .07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html[lang="it"] .es, html[lang="es"] .it { display: none !important; }
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; display: flex; min-height: 100vh; }
+a { color: var(--primary-dark); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; }
+p code, li code, td code, .callout code { background: #f1f5f9; color: #0f172a; padding: 1px 5px; border-radius: 4px; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ---------- Sidebar ---------- */
+#sidebar { width: 300px; background: var(--sidebar-bg); color: #f1f5f9; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+.sidebar-header { padding: 1.6rem 1.4rem 1.2rem; border-bottom: 1px solid rgb(255 255 255 / .08); }
+.student-badge { display: inline-flex; align-items: center; gap: 8px; background: rgb(255 255 255 / .07); padding: 5px 12px; border-radius: 8px; font-size: .82rem; color: #cbd5e1; margin-bottom: .7rem; }
+.student-badge strong { color: var(--primary-soft); }
+.sidebar-title { font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.3; }
+.mentor-note { font-size: .8rem; color: #94a3b8; margin-top: .4rem; }
+.progress-container { padding: 1.1rem 1.4rem; background: rgb(0 0 0 / .18); border-bottom: 1px solid rgb(255 255 255 / .08); }
+.progress-info { display: flex; justify-content: space-between; font-size: .84rem; margin-bottom: 6px; color: #cbd5e1; }
+.progress-bar { height: 8px; background: rgb(255 255 255 / .1); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary-soft), var(--success)); transition: width .4s; }
+.nav-list { list-style: none; margin: 0; padding: .9rem .7rem; display: flex; flex-direction: column; gap: 4px; }
+.nav-item { width: 100%; text-align: left; background: none; border: 0; font: inherit; padding: 9px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: .88rem; color: #a3aec2; font-weight: 500; transition: background .15s, color .15s; }
+.nav-item:hover { background: rgb(255 255 255 / .07); color: #fff; }
+.nav-item.active { background: var(--primary); color: #fff; font-weight: 600; }
+.nav-item .icon { font-size: 1.05rem; }
+.nav-item .check { margin-left: auto; color: var(--success); font-weight: 700; visibility: hidden; }
+.nav-item.completed .check { visibility: visible; }
+.nav-item.active .check { color: #fff; }
+.sidebar-footer { margin-top: auto; padding: 1.1rem 1.4rem; font-size: .8rem; border-top: 1px solid rgb(255 255 255 / .08); display: flex; flex-direction: column; gap: 8px; }
+.sidebar-footer a { color: var(--primary-soft); text-decoration: none; font-weight: 600; }
+.sidebar-footer small { color: #8792a6; line-height: 1.45; }
 
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-      display: flex;
-      min-height: 100vh;
-    }
+/* ---------- Main ---------- */
+#main-content { flex: 1; min-width: 0; max-width: 1000px; margin: 0 auto; padding: 2.2rem 2.4rem 4rem; }
+.top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+.levels { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: .82rem; font-weight: 600; }
+.levels a, .levels span.cur { text-decoration: none; padding: 5px 10px; border-radius: 7px; background: #f1f5f9; color: var(--text-muted); border: 1px solid transparent; }
+.levels a:hover { color: var(--text); background: #e2e8f0; }
+.levels span.cur { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary-soft); }
+.levels .sep { color: #cbd5e1; }
+.lang-selector { display: flex; background: var(--border); border-radius: 99px; padding: 3px; gap: 3px; }
+.lang-btn { border: 0; background: transparent; padding: 6px 14px; font-size: .86rem; font-weight: 600; border-radius: 99px; cursor: pointer; color: var(--text-muted); }
+.lang-btn.active { background: #fff; color: var(--primary-dark); box-shadow: 0 1px 3px rgb(0 0 0 / .1); }
 
-    #sidebar {
-      width: 320px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      flex-shrink: 0;
-      border-right: 1px solid #047857;
-    }
+.module-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 2.4rem; margin-bottom: 2rem; }
+.module-card[hidden] { display: none; }
+.module-tag { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: .78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: .6rem; }
+h1 { font-size: 1.85rem; margin-bottom: .5rem; line-height: 1.28; }
+h2 { font-size: 1.3rem; margin: 1.9rem 0 .7rem; line-height: 1.35; }
+h3 { font-size: 1.08rem; margin: 1.3rem 0 .5rem; }
+p { margin-bottom: 1rem; color: var(--text-body); }
+.lead { color: var(--text-muted); font-size: 1.05rem; }
+ul, ol { margin: .4rem 0 1.2rem 1.4rem; color: var(--text-body); }
+li { margin-bottom: .45rem; }
+.muted { color: var(--text-muted); font-size: .9rem; }
 
-    #main-content {
-      flex: 1;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 2.5rem;
-      overflow-y: auto;
-    }
+/* Callouts */
+.callout { border-left: 4px solid var(--primary); background: #f8fafc; padding: 1rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.3rem 0; font-size: .95rem; color: var(--text-body); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout.tip { border-left-color: #0ea5e9; background: #f0f9ff; }
+.callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
+.callout.security { border-left-color: #10b981; background: #ecfdf5; }
+.callout.history { border-left-color: #f59e0b; background: #fffbeb; }
+.callout.warn { border-left-color: #ef4444; background: #fef2f2; }
+.callout-title { font-weight: 700; margin-bottom: .35rem; color: var(--text); }
 
-    .top-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+/* Code */
+.code-container { background: var(--code-bg); color: #e2e8f0; border-radius: 10px; padding: 1.1rem 1.1rem 2.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; overflow-x: auto; margin: 1rem 0 1.5rem; position: relative; }
+.code-container pre { margin: 0; white-space: pre; }
+.code-container code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.code-badge { position: absolute; top: 8px; right: 12px; font-size: .68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+.copy-btn { position: absolute; bottom: 8px; right: 10px; background: #334155; color: #f1f5f9; border: 0; border-radius: 5px; padding: 4px 10px; font-size: .75rem; cursor: pointer; }
+.copy-btn:hover { background: #475569; }
+.c-com { color: #7dd3a0; }
 
-    .nav-breadcrumbs {
-      display: flex;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      align-items: center;
-    }
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 7px; background: var(--primary); color: #fff; border: 0; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: .92rem; cursor: pointer; text-decoration: none; font-family: inherit; }
+.btn:hover { background: var(--primary-dark); }
+.btn.ghost { background: #fff; color: var(--text-body); border: 1px solid var(--border); }
+.btn.ghost:hover { background: #f1f5f9; }
+.btn.dark { background: #0f172a; } .btn.dark:hover { background: #1e293b; }
+.btn.green { background: var(--success); } .btn.green:hover { background: var(--success-dark); }
+.btn.sm { padding: 6px 12px; font-size: .82rem; }
+.btn-next-module { margin-top: 1.6rem; background: var(--success); padding: 12px 22px; font-weight: 700; }
+.btn-next-module:hover { background: var(--success-dark); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-    .nav-breadcrumbs a {
-      color: #64748b;
-      text-decoration: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: #f1f5f9;
-    }
+/* Diagram & cards */
+.diagram-box { background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; margin: 1.4rem 0; display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 8px; text-align: center; }
+.diagram-arrow { align-self: center; }
+.diagram-step { background: #fff; padding: 12px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: .84rem; flex: 1 1 130px; max-width: 190px; }
+.diagram-step .big { font-size: 1.5rem; }
+.diagram-step p { font-size: .78rem; color: var(--text-muted); margin: 2px 0 0; }
+.diagram-arrow { font-size: 1.25rem; color: var(--text-muted); font-weight: 800; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 1.4rem 0; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem; display: flex; flex-direction: column; }
+.card p { font-size: .87rem; flex: 1; margin-bottom: .6rem; }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: .6rem; }
+.card-icon { font-size: 1.6rem; background: #f1f5f9; padding: 5px 10px; border-radius: 8px; }
+.badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 3px; background: var(--primary-light); color: var(--primary-dark); }
+.card .ideal { font-size: .78rem; font-weight: 700; color: var(--success-dark); }
+.step-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 6px; }
 
-    .nav-breadcrumbs a:hover {
-      color: #0f172a;
-      background: #e2e8f0;
-    }
+table.simple { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1rem 0 1.5rem; }
+table.simple th, table.simple td { padding: 9px 11px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+table.simple th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
 
-    .lang-selector {
-      display: flex;
-      background: var(--border);
-      border-radius: 9999px;
-      padding: 3px;
-      gap: 4px;
-    }
+/* Choice selector (path / wizard) */
+.choice-box { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); color: #fff; padding: 1.8rem; border-radius: var(--radius); margin: 1.8rem 0; }
+.choice-box h3 { color: #fff; margin-top: 0; }
+.choice-box p { color: #cbd5e1; }
+.choice-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 1rem; }
+.choice-btn { background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .2); color: #fff; padding: 14px; border-radius: 10px; cursor: pointer; text-align: left; font: inherit; transition: background .15s, border-color .15s; }
+.choice-btn:hover { background: rgb(255 255 255 / .14); border-color: #38bdf8; }
+.choice-btn.selected { background: #4f46e5; border-color: #a5b4fc; }
+.choice-btn small { display: block; color: #cbd5e1; font-size: .8rem; margin-top: 3px; }
+.choice-result { margin-top: 1.3rem; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .15); border-radius: 8px; padding: 16px 18px; line-height: 1.55; }
+.choice-result ul { color: #e2e8f0; margin-bottom: 0; }
+.choice-result a { color: #7dd3fc; }
 
-    .lang-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 14px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      color: var(--text-muted);
-    }
+/* Box model */
+.box-model-demo { background: #fed7aa; border: 2px dashed #ea580c; padding: 18px; border-radius: 8px; text-align: center; margin: 1.5rem 0; font-size: .84rem; color: #7c2d12; }
+.box-model-border { background: #fef08a; border: 2px solid #ca8a04; padding: 14px; border-radius: 6px; color: #713f12; margin-top: 8px; }
+.box-model-padding { background: #bbf7d0; border: 2px dashed #16a34a; padding: 12px; border-radius: 4px; color: #14532d; margin-top: 8px; }
+.box-model-content { background: #bfdbfe; border: 2px solid #2563eb; padding: 12px; border-radius: 4px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
 
-    .lang-btn.active {
-      background: #ffffff;
-      color: #059669;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+/* Labs */
+.lab { background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; margin: 1.5rem 0; }
+.lab-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: .7rem; }
+.lab-title { font-weight: 700; font-size: .95rem; }
+.lab-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lab-code { width: 100%; min-height: 230px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; resize: vertical; background: #0f172a; color: #e2e8f0; tab-size: 2; }
+.lab-code:focus { outline: 2px solid var(--primary-soft); }
+.lab-view { width: 100%; min-height: 230px; height: 100%; border: 1px dashed #94a3b8; border-radius: 8px; background: #fff; }
+.lab-label { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.lab.tall .lab-code, .lab.tall .lab-view { min-height: 330px; }
 
-    /* Sidebar */
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      border-bottom: 1px solid #047857;
-    }
+/* Challenge */
+.challenge { border: 2px dashed var(--primary-soft); background: var(--primary-light); border-radius: 12px; padding: 1.2rem 1.3rem; margin: 1.6rem 0; }
+.challenge-title { font-weight: 800; color: var(--primary-dark); margin-bottom: .4rem; font-size: 1rem; }
+.challenge p { margin-bottom: .6rem; }
+.checklist { list-style: none; margin: .4rem 0 0; }
+.checklist li { margin-bottom: 6px; }
+.checklist label { display: flex; gap: 9px; align-items: flex-start; cursor: pointer; font-size: .92rem; color: var(--text-body); }
+.checklist input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--success); flex-shrink: 0; }
+.checklist input:checked + span { color: var(--text-muted); text-decoration: line-through; }
+.challenge-count { font-size: .8rem; font-weight: 700; color: var(--primary-dark); margin-top: 6px; }
 
-    .student-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #047857;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #d1fae5;
-      margin-bottom: 0.75rem;
-    }
-    .student-badge strong { color: #ffffff; }
+/* Quiz */
+.quiz-container { background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.6rem; margin-top: 2rem; }
+.quiz-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.1rem; }
+.question-block { background: #fff; padding: 1.15rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
+.question-text { font-weight: 600; margin-bottom: .8rem; }
+.options-list { display: flex; flex-direction: column; gap: 7px; }
+.option-btn { text-align: left; padding: 10px 14px; border: 1px solid var(--border); border-radius: 7px; background: #fff; cursor: pointer; font: inherit; font-size: .9rem; color: var(--text); }
+.option-btn:hover { background: #f1f5f9; }
+.option-btn.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+.option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
+.option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
+.feedback-box { margin-top: .7rem; padding: 9px 13px; border-radius: 7px; font-size: .87rem; display: none; }
+.feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
+.feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
+.quiz-submit-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.score-badge { font-weight: 700; color: var(--primary-dark); }
 
-    .sidebar-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.3;
-    }
+/* Prompt boxes */
+.prompt-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1rem 1rem 2.4rem; margin: .8rem 0; position: relative; }
+.prompt-label { font-size: .74rem; font-weight: 700; color: #6366f1; text-transform: uppercase; margin-bottom: 4px; }
+.prompt-text { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .86rem; color: #1e293b; }
 
-    .mentor-note {
-      font-size: 0.8rem;
-      color: #a7f3d0;
-      margin-top: 0.5rem;
-    }
+/* Forms & builders */
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px; background: #fff; border-bottom: 1px solid var(--border); }
+.control-group label { display: block; font-size: .78rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
+.control-group input, .control-group select, .control-group textarea, .field { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: .9rem; font-family: inherit; background: #fff; }
+.builder { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+.builder-toolbar { background: #0f172a; color: #fff; padding: 11px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.builder-toolbar strong { color: var(--primary-soft); font-size: .92rem; }
+.seg { display: flex; gap: 5px; }
+.seg button { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 4px 11px; border-radius: 6px; font-size: .8rem; cursor: pointer; font-family: inherit; }
+.seg button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.frame-wrap { padding: 18px; background: #e2e8f0; display: flex; justify-content: center; }
+.frame-wrap iframe { width: 100%; height: 560px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; box-shadow: 0 10px 25px -5px rgb(0 0 0 / .15); transition: width .3s; }
+.frame-wrap.mobile iframe { width: 375px; border: 8px solid #0f172a; border-radius: 26px; }
+.frame-wrap.tablet iframe { width: 768px; max-width: 100%; }
+.export-bar { padding: 13px 16px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.export-bar span { font-size: .86rem; color: #475569; }
+details.code-peek { border-top: 1px solid var(--border); background: #fff; }
+details.code-peek summary { cursor: pointer; padding: 10px 16px; font-size: .86rem; font-weight: 600; color: var(--primary-dark); }
+details.code-peek textarea { width: 100%; height: 260px; border: 0; border-top: 1px solid var(--border); padding: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem; background: #0f172a; color: #e2e8f0; resize: vertical; }
 
-    .progress-container {
-      padding: 1.25rem 1.5rem;
-      background: #022c22;
-      border-bottom: 1px solid #047857;
-    }
+/* Playground */
+.pg { display: grid; grid-template-columns: 260px 1fr; gap: 14px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin: 1.4rem 0; }
+.pg .control-group { margin-bottom: 10px; }
+.pg-stage { background: #fff; border: 1px dashed #94a3b8; border-radius: 8px; min-height: 220px; padding: 10px; }
+.pg-item { background: var(--primary); color: #fff; font-weight: 700; border-radius: 6px; padding: 14px 18px; text-align: center; }
+.pg-item:nth-child(2) { background: #0ea5e9; } .pg-item:nth-child(3) { background: #10b981; } .pg-item:nth-child(4) { background: #f59e0b; } .pg-item:nth-child(5) { background: #ef4444; } .pg-item:nth-child(6) { background: #8b5cf6; }
+.pg-css { margin-top: 10px; background: #0f172a; color: #a7f3d0; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; padding: 10px 12px; border-radius: 8px; white-space: pre; overflow-x: auto; }
 
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: #a7f3d0;
-    }
+/* SQL workbench */
+.sql-workbench { background: #0f172a; border-radius: 10px; color: #f8fafc; overflow: hidden; margin-top: 1rem; border: 1px solid #334155; }
+.sql-toolbar { background: #1e293b; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; flex-wrap: wrap; gap: 8px; }
+.sql-title { font-size: .85rem; font-weight: 700; color: #38bdf8; }
+.sql-toolbar select, .sql-toolbar button { background: #0b1120; color: #cbd5e1; border: 1px solid #475569; padding: 3px 8px; border-radius: 5px; font-size: .78rem; cursor: pointer; font-family: inherit; }
+.sql-chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px; background: #131c31; border-bottom: 1px solid #1e293b; }
+.sql-chip-btn { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: .77rem; cursor: pointer; font-family: ui-monospace, Menlo, monospace; }
+.sql-chip-btn:hover { background: #334155; color: #fff; }
+.sql-input-area { padding: 12px 14px; }
+.sql-textarea { width: 100%; height: 74px; background: #070b14; border: 1px solid #334155; color: #7dd3fc; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88rem; padding: 10px; border-radius: 6px; resize: vertical; }
+.sql-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 10px; flex-wrap: wrap; }
+.sql-actions span { font-size: .76rem; color: #94a3b8; }
+.sql-log { background: #070b14; padding: 8px 14px; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; color: #34d399; border-top: 1px solid #1e293b; min-height: 34px; }
+.sql-log.error { color: #f87171; }
+.sql-result { background: #fff; padding: 12px; color: #1e293b; overflow-x: auto; }
+.db-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.db-table th, .db-table td { padding: 7px 11px; border-bottom: 1px solid var(--border); text-align: left; }
+.db-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
 
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #064e3b;
-      border-radius: 9999px;
-      overflow: hidden;
-    }
+/* Demo boxes (L3) */
+.demo-area { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.4rem; text-align: center; margin-top: .8rem; transition: background .3s, color .3s; }
+.demo-area.dark { background: #0f172a; color: #f8fafc; border-color: #334155; }
+.demo-area.dark p { color: #cbd5e1; }
+.counter-display { font-size: 2.4rem; font-weight: 800; color: var(--primary-dark); margin: 6px 0; }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #34d399, #10b981);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
+/* Certificate */
+.certificate-card { border: 4px double #cbd5e1; background: linear-gradient(135deg, #fff 0%, var(--primary-light) 140%); padding: 3rem 2rem; text-align: center; border-radius: 16px; box-shadow: var(--shadow-lg); }
+.cert-name { font-size: 1.9rem; font-weight: 800; margin: 1.4rem 0; border-bottom: 3px solid var(--primary); display: inline-block; padding: 0 2rem .45rem; }
+.cert-signs { display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap; }
+.cert-signs div div:first-child { font-weight: 700; border-top: 1px solid #94a3b8; padding-top: 6px; width: 180px; }
+.cert-signs small { color: var(--text-muted); }
+.cert-status { margin: 1.2rem auto 0; max-width: 560px; font-size: .9rem; padding: 9px 13px; border-radius: 8px; background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.cert-status.ok { background: var(--success-light); color: #065f46; border-color: #a7f3d0; }
 
-    .nav-list {
-      list-style: none;
-      padding: 1rem 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+/* Toast & modal */
+#toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0f172a; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: .9rem; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50; max-width: 90vw; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#modal { position: fixed; inset: 0; background: rgb(15 23 42 / .6); display: none; align-items: center; justify-content: center; z-index: 60; padding: 20px; }
+#modal.show { display: flex; }
+#modal .box { background: #fff; border-radius: 12px; padding: 1.3rem; width: min(760px, 100%); }
+#modal textarea { width: 100%; height: 320px; font-family: ui-monospace, Menlo, monospace; font-size: .78rem; margin: .7rem 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; }
 
-    .nav-item {
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.925rem;
-      color: #a7f3d0;
-      transition: all 0.2s ease;
-      font-weight: 500;
-    }
+@media (max-width: 960px) {
+  body { flex-direction: column; }
+  #sidebar { width: 100%; height: auto; position: relative; }
+  .sidebar-header { padding: 1rem 1rem .8rem; }
+  .mentor-note, .sidebar-footer small { display: none; }
+  .progress-container { padding: .7rem 1rem; }
+  .nav-list { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: .6rem; gap: 6px; }
+  .nav-list li { flex-shrink: 0; }
+  .nav-item { width: auto; white-space: nowrap; background: rgb(255 255 255 / .06); }
+  .sidebar-footer { flex-direction: row; flex-wrap: wrap; gap: 14px; padding: .7rem 1rem; }
+  #main-content { width: 100%; margin: 0; padding: 1.1rem .8rem 3rem; }
+  .top-controls { gap: 8px; }
+  .frame-wrap { padding: 8px; }
+  .frame-wrap.mobile iframe { width: 100%; border-width: 4px; }
+  .module-card { padding: 1.4rem 1.1rem; }
+  .lab-split, .pg { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}
+@media print {
+  #sidebar, .top-controls, .module-card:not(.printing), .no-print, .btn-next-module { display: none !important; }
+  body { display: block; background: #fff; }
+  #main-content { padding: 0; max-width: none; }
+  .module-card.printing { display: block !important; box-shadow: none; border: 0; }
+}
 
-    .nav-item:hover { background: #047857; color: #ffffff; }
-    .nav-item.active { background: #10b981; color: #022c22; font-weight: 700; }
-    .nav-item .icon { font-size: 1.15rem; }
-    .nav-item .check { margin-left: auto; font-size: 0.85rem; color: #34d399; display: none; }
-    .nav-item.completed .check { display: inline-block; }
-
-    /* Module cards */
-    .module-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 2.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .module-tag {
-      background: #d1fae5;
-      color: #065f46;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    h1 { font-size: 1.9rem; margin-bottom: 0.5rem; color: #0f172a; line-height: 1.3; }
-    h2 { font-size: 1.35rem; margin: 1.75rem 0 0.75rem; color: #0f172a; }
-    h3 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; color: #0f172a; }
-    p { margin-bottom: 1.1rem; color: #334155; }
-    ul, ol { margin: 0.5rem 0 1.25rem 1.5rem; color: #334155; }
-    li { margin-bottom: 0.4rem; }
-
-    .callout {
-      border-left: 4px solid var(--primary);
-      background: #f8fafc;
-      padding: 1.1rem 1.3rem;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 1.35rem 0;
-      font-size: 0.95rem;
-    }
-    .callout.tip { border-left-color: #059669; background: #ecfdf5; }
-    .callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
-
-    .callout-title { font-weight: 700; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 6px; }
-
-    /* Publishing Steps Grid */
-    .steps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin: 1.5rem 0;
-    }
-
-    .step-card {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-    }
-
-    .step-number {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #059669;
-      margin-bottom: 4px;
-    }
-
-    /* Final Project Workshop Box */
-    .workshop-box {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .workshop-controls {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 1.25rem;
-    }
-
-    .workshop-controls label {
-      display: block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #475569;
-      margin-bottom: 4px;
-    }
-
-    .workshop-controls input, .workshop-controls select {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.9rem;
-    }
-
-    .preview-box-mini {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-
-    .btn-verify {
-      background: #059669; color: white; border: none;
-      padding: 10px 20px; border-radius: 6px; font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-verify:hover { background: #047857; }
-
-    .btn-next-module {
-      background: var(--success); color: white; border: none;
-      padding: 12px 24px; border-radius: 8px; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center;
-      gap: 8px; margin-top: 1.5rem;
-    }
-
-    .certificate-card {
-      border: 6px double #34d399;
-      background: linear-gradient(135deg, #ffffff 0%, #ecfdf5 100%);
-      padding: 3.5rem 2rem; text-align: center;
-      border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #sidebar { width: 100%; height: auto; position: relative; }
-      #main-content { padding: 1.5rem; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="sidebar-header">
-      <div class="student-badge">
-        <span>🏆</span>
-        <span id="txt-student-badge">Livello 4: <strong>Riccardo</strong></span>
-      </div>
-      <div class="sidebar-title" id="txt-course-title">Progetto Reale & Salita sul Web</div>
-      <div class="mentor-note" id="txt-mentor-note">Con il tuo mentore argentino 🇦🇷🇮🇹</div>
+      <div class="student-badge"><span>🌐</span><span class="it">Livello 4: <strong>Riccardo</strong></span><span class="es">Nivel 4: <strong>Ricardo</strong></span></div>
+      <div class="sidebar-title"><span class="it">Progetto Reale & Volare da Solo</span><span class="es">Proyecto Real & Volar Solo</span></div>
+      <div class="mentor-note"><span class="it">Insieme al tuo mentore argentino 🇦🇷🇮🇹</span><span class="es">Junto a tu mentor argentino 🇦🇷🇮🇹</span></div>
     </div>
-
     <div class="progress-container">
-      <div class="progress-info">
-        <span id="txt-progress-label">Progresso Livello 4</span>
-        <span id="progress-percent">0%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
+      <div class="progress-info"><span class="it">Progresso Livello 4</span><span class="es">Progreso Nivel 4</span><span id="progress-percent">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
-
     <ul class="nav-list">
-      <li class="nav-item active" onclick="switchSection(0)">
-        <span class="icon">🚀</span>
-        <span id="nav-s0">1. Come si Pubblica un Sito</span>
-        <span class="check" id="check-0">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(1)">
-        <span class="icon">🛠️</span>
-        <span id="nav-s1">2. Il Taller del Progetto Finale</span>
-        <span class="check" id="check-1">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(2)">
-        <span class="icon">🤝</span>
-        <span id="nav-s2">3. Lavorare con Clienti Reali</span>
-        <span class="check" id="check-2">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(3)">
-        <span class="icon">🎓</span>
-        <span id="nav-s3">4. Gran Diploma Finale</span>
-        <span class="check" id="check-3">✓</span>
-      </li>
+      <li><button type="button" class="nav-item" data-go="0"><span class="icon">🧭</span><span>1. <span class="it">Che Metodo Uso?</span><span class="es">¿Qué Método Uso?</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="1"><span class="icon">🛠️</span><span>2. <span class="it">Il Progetto Finale</span><span class="es">El Proyecto Final</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="2"><span class="icon">✅</span><span>3. <span class="it">Checklist Prima di Pubblicare</span><span class="es">Checklist Antes de Publicar</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="3"><span class="icon">🚀</span><span>4. <span class="it">Pubblicare Online</span><span class="es">Publicar Online</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="4"><span class="icon">🤝</span><span>5. <span class="it">Clienti Reali</span><span class="es">Clientes Reales</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="5"><span class="icon">🗺️</span><span>6. <span class="it">Il Tuo Piano da Solo</span><span class="es">Tu Plan en Solitario</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="6"><span class="icon">🎓</span><span>7. <span class="it">Gran Diploma Finale</span><span class="es">Gran Diploma Final</span></span><span class="check">✓</span></button></li>
     </ul>
-
-    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #a7f3d0; border-top: 1px solid #047857;">
-      <a href="index.html" style="color: #ffffff; text-decoration: none; font-weight: 600; display: block; margin-bottom: 6px;">🏠 Torna alla Home (Livello 1)</a>
-      <a href="modulo3.html" style="color: #6ee7b7; text-decoration: none; font-weight: 600; display: block;">⬅️ Torna al Livello 3 (JavaScript)</a>
+    <div class="sidebar-footer">
+      <a href="modulo3.html">⬅️ <span class="it">Torna al Livello 3</span><span class="es">Volver al Nivel 3</span></a>
+      <small><span class="it">Corso 100% nel browser. I progressi si salvano su questo computer.</span><span class="es">Curso 100% en el navegador. El progreso se guarda en esta computadora.</span></small>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main id="main-content">
     <div class="top-controls">
-      <div class="nav-breadcrumbs">
-        <a href="index.html">Livello 1</a>
-        <span>➔</span>
-        <a href="modulo2.html">Livello 2</a>
-        <span>➔</span>
-        <a href="modulo3.html">Livello 3</a>
-        <span>➔</span>
-        <span style="color: #059669; font-weight: 700;">Livello 4 (Traguardo)</span>
-      </div>
-
+      <nav class="levels" aria-label="Livelli"><a href="index.html"><span class="it">Livello 1</span><span class="es">Nivel 1</span></a><span class="sep">➔</span><a href="modulo2.html"><span class="it">Livello 2</span><span class="es">Nivel 2</span></a><span class="sep">➔</span><a href="modulo3.html"><span class="it">Livello 3</span><span class="es">Nivel 3</span></a><span class="sep">➔</span><span class="cur"><span class="it">Livello 4</span><span class="es">Nivel 4</span></span></nav>
       <div class="lang-selector">
-        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
-        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+        <button type="button" class="lang-btn active" data-lang="it">🇮🇹 Italiano</button>
+        <button type="button" class="lang-btn" data-lang="es">🇪🇸 Español</button>
       </div>
     </div>
 
-    <!-- SECTION 0: HOW TO PUBLISH -->
-    <section class="module-card" id="sec-0">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s0">Fase 1: Uscita nel Mondo</span>
-        <h1 id="title-s0">Dalla Tua Cartella al Mondo Intero: Come Funziona il Web Reale</h1>
-        <p id="sub-s0" style="color: var(--text-muted); font-size: 1.05rem;">
-          Cosa serve esattamente per far sì che chiunque digiti www.tuosito.it dal cellulare e veda la tua pagina.
-        </p>
-      </div>
+    <!-- ============ SEZIONE 1: CHE METODO USO? ============ -->
+    <section class="module-card">
+      <span class="module-tag"><span class="it">Fase 1: Decidere</span><span class="es">Fase 1: Decidir</span></span>
+      <h1 class="it">Che Metodo Uso per Questo Progetto?</h1>
+      <h1 class="es">¿Qué Método Uso para Este Proyecto?</h1>
+      <p class="lead it">La domanda che ti farai a ogni nuovo cliente. Ecco come rispondere da solo, in 2 minuti.</p>
+      <p class="lead es">La pregunta que te harás con cada cliente nuevo. Así se responde solo, en 2 minutos.</p>
 
       <div class="callout mentor">
-        <div class="callout-title">🤝 <span id="mentor-s0-title">La Spiegazione del tuo Mentor</span></div>
-        <div id="mentor-s0-text">
-          Riccardo, pubblicare un sito sembra una magia, ma sono solo 3 pezzi di un puzzle chiarissimi:
-          <br>1. <strong>Il Dominio:</strong> Il nome (es: <em>www.riccardoweb.it</em>). È come l'indirizzo civico di casa tua.
-          <br>2. <strong>L'Hosting:</strong> Il computer sempre acceso connesso a internet (es: la cartella <code>public_html</code> che abbiamo usato oggi). È il terreno su cui costruisci.
-          <br>3. <strong>I tuoi File (HTML, CSS, JS):</strong> I mattoni e l'arredamento che carichi nella cartella!
-        </div>
+        <div class="callout-title">🤝 <span class="it">Il consiglio del tuo mentore</span><span class="es">El consejo de tu mentor</span></div>
+        <p class="it">Riccardo, non esiste il metodo "migliore": esiste quello giusto per <strong>quel</strong> cliente. Le domande decisive sono sempre le stesse: chi aggiornerà il sito? Serve vendere online? Quanto è grande? Quanto tempo c'è?</p>
+        <p class="es">Ricardo, no existe el método "mejor": existe el adecuado para <strong>ese</strong> cliente. Las preguntas decisivas son siempre las mismas: ¿quién va a actualizar el sitio? ¿Hay que vender online? ¿Qué tan grande es? ¿Cuánto tiempo hay?</p>
       </div>
 
-      <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-number">01</div>
-          <strong id="card-step1-t">Scegliere il Dominio</strong>
-          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step1-d">
-            Registri il nome (es: su Register.it, Namecheap o Aruba) per circa 10€ all'anno.
-          </p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">02</div>
-          <strong id="card-step2-t">Attivare l'Hosting</strong>
-          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step2-d">
-            Uno spazio con cPanel o un hosting statico gratuito (come GitHub Pages o Netlify).
-          </p>
-        </div>
-        <div class="step-card">
-          <div class="step-number">03</div>
-          <strong id="card-step3-t">Caricare i File (index.html)</strong>
-          <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="card-step3-d">
-            Trascini i file dentro <code>public_html</code> via FTP o File Manager e il sito è subito online!
-          </p>
-        </div>
+      <h2><span class="it">1. Le 4 strade a confronto</span><span class="es">1. Los 4 caminos comparados</span></h2>
+      <div class="table-wrap"><table class="simple">
+        <tr><th></th><th>🧱 <span class="it">Codice puro</span><span class="es">Código puro</span></th><th>🎨 <span class="it">Template</span><span class="es">Plantilla</span></th><th>🛍️ CMS</th><th>🤖 <span class="it">IA</span><span class="es">IA</span></th></tr>
+        <tr><td><strong><span class="it">Esempi</span><span class="es">Ejemplos</span></strong></td><td>HTML, CSS, JS</td><td>Bootstrap, Tailwind, <span class="it">il generatore di questo livello</span><span class="es">el generador de este nivel</span></td><td>WordPress, Shopify, Wix</td><td>ChatGPT, Claude, Gemini</td></tr>
+        <tr><td><strong><span class="it">Chi aggiorna</span><span class="es">Quién actualiza</span></strong></td><td><span class="it">Tu</span><span class="es">Tú</span></td><td><span class="it">Tu</span><span class="es">Tú</span></td><td><span class="it">Il cliente, da un pannello</span><span class="es">El cliente, desde un panel</span></td><td><span class="it">Tu (con il copilota)</span><span class="es">Tú (con el copiloto)</span></td></tr>
+        <tr><td><strong><span class="it">Costi fissi</span><span class="es">Costos fijos</span></strong></td><td><span class="it">Solo dominio/hosting (o gratis)</span><span class="es">Solo dominio/hosting (o gratis)</span></td><td><span class="it">Solo dominio/hosting</span><span class="es">Solo dominio/hosting</span></td><td><span class="it">Hosting + spesso abbonamento o plugin</span><span class="es">Hosting + muchas veces suscripción o plugins</span></td><td><span class="it">Eventuale abbonamento all'IA</span><span class="es">Eventual suscripción a la IA</span></td></tr>
+        <tr><td><strong><span class="it">Velocità</span><span class="es">Velocidad</span></strong></td><td>⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐⭐⭐</td></tr>
+        <tr><td><strong><span class="it">Controllo</span><span class="es">Control</span></strong></td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td><td>⭐⭐</td><td><span class="it">Dipende da quanto capisci</span><span class="es">Depende de cuánto entiendas</span></td></tr>
+        <tr><td><strong><span class="it">Quando NO</span><span class="es">Cuándo NO</span></strong></td><td><span class="it">Il cliente vuole modificare tutto da solo</span><span class="es">El cliente quiere modificar todo solo</span></td><td><span class="it">Serve un design unico</span><span class="es">Hace falta un diseño único</span></td><td><span class="it">Sito di 1 pagina che non cambia mai</span><span class="es">Sitio de 1 página que nunca cambia</span></td><td><span class="it">Non sai leggere il codice che ti dà</span><span class="es">No sabes leer el código que te da</span></td></tr>
+      </table></div>
+      <p class="it">Nota: l'IA non è un'alternativa alle altre tre, ma un <strong>acceleratore</strong> che puoi usare con tutte.</p>
+      <p class="es">Nota: la IA no es una alternativa a las otras tres, sino un <strong>acelerador</strong> que puedes usar con todas.</p>
+
+      <div class="choice-box" id="wizard">
+        <h3>🧭 <span class="it">Il Consulente: rispondi a 4 domande sul progetto</span><span class="es">El Asesor: responde 4 preguntas sobre el proyecto</span></h3>
+        <p><span class="it">Pensa a un cliente reale (o immaginario) e scegli una risposta per riga.</span><span class="es">Piensa en un cliente real (o imaginario) y elige una respuesta por fila.</span></p>
+        <div id="wizard-questions"></div>
+        <div class="choice-result" id="wizard-result" hidden></div>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(1)" id="btn-next-0">
-        <span id="txt-btn-next-0">Avanti alla Fase 2: Il Taller del Progetto Finale ➔</span>
-      </button>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: decidi per 3 clienti</span><span class="es">Desafío: decide para 3 clientes</span></div>
+        <p class="it">Usa il Consulente per questi casi e annota la risposta su un quaderno. Poi confrontala con il tuo mentore:</p>
+        <p class="es">Usa el Asesor para estos casos y anota la respuesta en un cuaderno. Después compárala con tu mentor:</p>
+        <ul class="checklist" data-key="l4-s0">
+          <li><label><input type="checkbox"><span><span class="it">Il barbiere sotto casa: vuole solo farsi trovare su Google e ricevere prenotazioni su WhatsApp.</span><span class="es">El peluquero de la esquina: solo quiere que lo encuentren en Google y recibir turnos por WhatsApp.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Un negozio di vini che vuole vendere bottiglie online con carta di credito.</span><span class="es">Una vinoteca que quiere vender botellas online con tarjeta de crédito.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Una nutrizionista che vuole scrivere un articolo nuovo ogni settimana.</span><span class="es">Una nutricionista que quiere escribir un artículo nuevo cada semana.</span></span></label></li>
+        </ul>
+      </div>
+
+      <div data-quiz="0"></div>
+      <button type="button" class="btn btn-next-module" data-go="1"><span class="it">Avanti alla Fase 2: Il Progetto Finale ➔</span><span class="es">Avanzar a la Fase 2: El Proyecto Final ➔</span></button>
     </section>
 
-    <!-- SECTION 1: FINAL PROJECT WORKSHOP -->
-    <section class="module-card" id="sec-1" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s1">Fase 2: Laboratorio Pratico</span>
-        <h1 id="title-s1">Il Taller del Tuo Progetto Finale (Metti le mani in pasta)</h1>
-        <p id="sub-s1" style="color: var(--text-muted); font-size: 1.05rem;">
-          Personalizza il tuo primo sito professionale, testalo dal vivo e scarica il codice completo.
-        </p>
-      </div>
+    <!-- ============ SEZIONE 2: PROGETTO FINALE ============ -->
+    <section class="module-card" data-done="visit" hidden>
+      <span class="module-tag"><span class="it">Fase 2: Laboratorio Pratico</span><span class="es">Fase 2: Laboratorio Práctico</span></span>
+      <h1 class="it">Il Tuo Progetto Finale: un Sito Vero per un'Attività</h1>
+      <h1 class="es">Tu Proyecto Final: un Sitio Real para un Negocio</h1>
+      <p class="lead it">Compila i dati di un'attività, guarda il sito completo (con WhatsApp, orari, mappa e modulo) e scarica il file pronto da pubblicare.</p>
+      <p class="lead es">Completa los datos de un negocio, mira el sitio completo (con WhatsApp, horarios, mapa y formulario) y descarga el archivo listo para publicar.</p>
 
-      <div class="workshop-box">
-        <h3 style="margin-bottom: 12px; color: #065f46;" id="wk-box-title">⚙️ Configura il Tuo Sito Finale:</h3>
-
-        <div class="workshop-controls">
-          <div>
-            <label id="lbl-wk-type">Tipo di Progetto:</label>
-            <select id="wk-type" onchange="updateFinalProject()">
-              <option value="pizzeria">🍕 Pizzeria & Ristorante Italiano</option>
-              <option value="portfolio">👨‍💻 Portfolio Personale di Riccardo</option>
-              <option value="servizi">💼 Studio Professionale & Consulenze</option>
-            </select>
-          </div>
-          <div>
-            <label id="lbl-wk-name">Nome dell'Attività:</label>
-            <input type="text" id="wk-name" value="Da Riccardo - Pizzeria Artigianale" oninput="updateFinalProject()">
-          </div>
-          <div>
-            <label id="lbl-wk-wa">Numero WhatsApp / Telefono:</label>
-            <input type="text" id="wk-wa" value="+39 340 1234567" oninput="updateFinalProject()">
-          </div>
-          <div>
-            <label id="lbl-wk-color">Colore Brand:</label>
-            <select id="wk-color" onchange="updateFinalProject()">
-              <option value="#059669">Verde Smeraldo Italiano (#059669)</option>
-              <option value="#dc2626">Rosso Passione (#dc2626)</option>
-              <option value="#2563eb">Blu Elegante (#2563eb)</option>
-              <option value="#b45309">Ambra Caldo (#b45309)</option>
-            </select>
-          </div>
+      <div class="builder">
+        <div class="builder-toolbar">
+          <strong>⚙️ <span class="it">Configura il sito finale</span><span class="es">Configura el sitio final</span></strong>
+          <div class="seg" id="f-view"><button type="button" data-view="" class="active">💻 Desktop</button><button type="button" data-view="tablet">📟 Tablet</button><button type="button" data-view="mobile">📱 Mobile</button></div>
         </div>
-
-        <!-- Live Preview inside workshop -->
-        <div class="preview-box-mini" id="final-preview-box">
-          <h2 id="prev-title" style="color: #059669; font-size: 1.7rem; margin-bottom: 8px;">Da Riccardo - Pizzeria Artigianale</h2>
-          <p id="prev-slogan" style="color: #64748b; font-size: 1rem; max-width: 500px; margin: 0 auto 16px;">
-            Impasto tradizionale a lievitazione naturale 48h. Ingredienti 100% italiani.
-          </p>
-          <div style="display: inline-flex; gap: 10px;">
-            <button id="prev-cta" style="background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer;">
-              Prenota un Tavolo
-            </button>
-            <a id="prev-wa-link" href="#" style="background: #25d366; color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
-              💬 WhatsApp
-            </a>
-          </div>
+        <div class="controls">
+          <div class="control-group"><label><span class="it">Tipo di attività</span><span class="es">Tipo de negocio</span></label>
+            <select id="f-type">
+              <option value="pizzeria">🍕 Pizzeria / Ristorante</option>
+              <option value="barbiere">💈 Barbiere / Parrucchiere</option>
+              <option value="bnb">🛏️ B&amp;B / Casa vacanze</option>
+              <option value="portfolio">👨‍💻 Portfolio Web Designer</option>
+              <option value="studio">💼 Studio professionale</option>
+            </select></div>
+          <div class="control-group"><label><span class="it">Nome dell'attività</span><span class="es">Nombre del negocio</span></label><input type="text" id="f-name"></div>
+          <div class="control-group"><label><span class="it">Slogan</span><span class="es">Eslogan</span></label><input type="text" id="f-slogan"></div>
+          <div class="control-group"><label><span class="it">Colore del brand</span><span class="es">Color de la marca</span></label><input type="color" id="f-color" value="#059669" style="height:38px;padding:3px"></div>
+          <div class="control-group"><label>WhatsApp</label><input type="text" id="f-wa" value="+39 340 1234567"></div>
+          <div class="control-group"><label><span class="it">Indirizzo</span><span class="es">Dirección</span></label><input type="text" id="f-address" value="Via Roma 10, Bologna"></div>
+          <div class="control-group"><label><span class="it">Orari</span><span class="es">Horarios</span></label><input type="text" id="f-hours"></div>
+          <div class="control-group"><label><span class="it">Lingua del sito</span><span class="es">Idioma del sitio</span></label><select id="f-lang"><option value="it">Italiano</option><option value="es">Español</option></select></div>
         </div>
-
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
-          <span style="font-size: 0.85rem; color: #64748b;" id="txt-wk-export">Pronto per il tuo hosting? Copia il codice HTML/CSS completo:</span>
-          <button class="btn-verify" onclick="copyFinalProjectCode()" id="btn-export-final">
-            📋 Copia Codice del Progetto Finale
-          </button>
+        <div class="frame-wrap" id="f-frame-wrap"><iframe id="f-frame" title="Anteprima del progetto finale" sandbox="allow-scripts allow-popups"></iframe></div>
+        <div class="export-bar">
+          <span><span class="it">Pronto? Scarica <code>index.html</code>: è il file da pubblicare nella Fase 4.</span><span class="es">¿Listo? Descarga <code>index.html</code>: es el archivo que publicarás en la Fase 4.</span></span>
+          <div class="btn-row"><button type="button" class="btn ghost" id="f-copy">📋 <span class="it">Copia codice</span><span class="es">Copiar código</span></button><button type="button" class="btn" id="f-download">📥 <span class="it">Scarica index.html</span><span class="es">Descargar index.html</span></button></div>
         </div>
-      </div>
-
-      <button class="btn-next-module" onclick="switchSection(2)" id="btn-next-1">
-        <span id="txt-btn-next-1">Avanti alla Fase 3: Lavorare con Clienti Reali ➔</span>
-      </button>
-    </section>
-
-    <!-- SECTION 2: WORKING WITH CLIENTS -->
-    <section class="module-card" id="sec-2" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s2">Fase 3: Professione</span>
-        <h1 id="title-s2">I 3 Consigli d'Oro per Lavorare con Clienti Reali</h1>
-        <p id="sub-s2" style="color: var(--text-muted); font-size: 1.05rem;">
-          Cosa separa chi sa solo il codice da chi guadagna creando siti per le aziende.
-        </p>
+        <details class="code-peek"><summary><span class="it">👀 Guarda il codice: ogni parte è commentata</span><span class="es">👀 Mira el código: cada parte está comentada</span></summary><textarea id="f-code" readonly spellcheck="false"></textarea></details>
       </div>
 
       <div class="callout tip">
-        <div class="callout-title">💡 <span id="tip-s2-title">Il Segreto del Web Designer di Successo</span></div>
-        <div id="tip-s2-text">
-          Al cliente non interessa quante righe di codice scrivi: gli interessa che il sito <strong>porti clienti al suo locale</strong>, che funzioni benissimo sullo smartphone e che si carichi in meno di 2 secondi.
-        </div>
+        <div class="callout-title">✉️ <span class="it">Far funzionare il modulo contatti</span><span class="es">Hacer funcionar el formulario de contacto</span></div>
+        <p class="it">Un sito statico non ha un server che riceve i messaggi. Le soluzioni semplici sono due: <strong>Formspree</strong> (crei un account gratuito, ti dà un indirizzo tipo <code>https://formspree.io/f/abc123</code> da mettere in <code>action</code> del modulo) oppure, se pubblichi su Netlify, i <strong>Netlify Forms</strong> (basta aggiungere <code>data-netlify="true"</code> al <code>&lt;form&gt;</code>). I messaggi arrivano via email. Nel codice trovi il commento esatto dove farlo.</p>
+        <p class="es">Un sitio estático no tiene un servidor que reciba los mensajes. Las soluciones simples son dos: <strong>Formspree</strong> (creas una cuenta gratuita y te da una dirección tipo <code>https://formspree.io/f/abc123</code> para poner en el <code>action</code> del formulario) o, si publicas en Netlify, los <strong>Netlify Forms</strong> (alcanza con agregar <code>data-netlify="true"</code> al <code>&lt;form&gt;</code>). Los mensajes llegan por email. En el código está el comentario exacto de dónde hacerlo.</p>
       </div>
 
-      <ul id="list-s2-tips" style="line-height: 1.7;">
-        <li><strong>1. Mobile-First sempre:</strong> Più del 70% dei clienti del tuo cliente aprirà il sito da cellulare mentre cammina per strada. Se non funziona su smartphone, il sito non serve a nulla.</li>
-        <li><strong>2. Pulsante di chiamata o WhatsApp subito visibile:</strong> Non nascondere i contatti. Metti il bottone d'azione verde in evidenza nella parte alta della pagina.</li>
-        <li><strong>3. Usa l'IA per scrivere i testi e accelerare:</strong> Chiedi all'IA: <em>"Scrivimi 3 frasi persuasive per la copertina di una pizzeria a Roma"</em> per non perdere ore bloccato sulla grafica.</li>
-      </ul>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida finale: il sito per un'attività vera</span><span class="es">Desafío final: el sitio para un negocio real</span></div>
+        <ul class="checklist" data-key="l4-s1">
+          <li><label><input type="checkbox"><span><span class="it">Scegli un'attività reale (un amico, un parente, il bar sotto casa) e chiedi il permesso di fargli un sito di prova.</span><span class="es">Elige un negocio real (un amigo, un familiar, el bar de la esquina) y pide permiso para hacerle un sitio de prueba.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Compila il generatore con i suoi dati veri e scarica il file.</span><span class="es">Completa el generador con sus datos reales y descarga el archivo.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">In VS Code cambia i testi dei servizi e del "Chi siamo" con quelli reali (puoi farteli suggerire dall'IA).</span><span class="es">En VS Code cambia los textos de los servicios y de "Quiénes somos" por los reales (puedes pedirle sugerencias a la IA).</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi almeno una foto vera con <code>&lt;img src="foto.jpg" alt="..."&gt;</code> (la foto va nella stessa cartella).</span><span class="es">Agrega al menos una foto real con <code>&lt;img src="foto.jpg" alt="..."&gt;</code> (la foto va en la misma carpeta).</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi una sezione tutta tua (es. "Recensioni" o "Galleria") usando quello che sai di Grid.</span><span class="es">Agrega una sección propia (ej. "Reseñas" o "Galería") usando lo que sabes de Grid.</span></span></label></li>
+        </ul>
+      </div>
 
-      <button class="btn-next-module" onclick="switchSection(3)" id="btn-next-2">
-        <span id="txt-btn-next-2">Visualizza il Gran Diploma Finale ➔</span>
-      </button>
+      <button type="button" class="btn btn-next-module" data-go="2"><span class="it">Avanti alla Fase 3: Checklist prima di pubblicare ➔</span><span class="es">Avanzar a la Fase 3: Checklist antes de publicar ➔</span></button>
     </section>
 
-    <!-- SECTION 3: GRAND DIPLOMA -->
-    <section class="module-card" id="sec-3" style="display: none;">
+    <!-- ============ SEZIONE 3: CHECKLIST ============ -->
+    <section class="module-card" data-done="visit" hidden>
+      <span class="module-tag"><span class="it">Fase 3: Qualità</span><span class="es">Fase 3: Calidad</span></span>
+      <h1 class="it">La Checklist Prima di Pubblicare</h1>
+      <h1 class="es">La Checklist Antes de Publicar</h1>
+      <p class="lead it">I professionisti non pubblicano "a occhio": controllano sempre la stessa lista. Usala per ogni sito, anche quando lavorerai da solo.</p>
+      <p class="lead es">Los profesionales no publican "a ojo": revisan siempre la misma lista. Úsala en cada sitio, también cuando trabajes solo.</p>
+
+      <div class="challenge" style="background:#fff">
+        <div class="challenge-title">✅ <span class="it">Contenuti e SEO</span><span class="es">Contenidos y SEO</span></div>
+        <ul class="checklist" data-key="l4-check-a">
+          <li><label><input type="checkbox"><span><span class="it"><code>&lt;title&gt;</code> chiaro con nome e città (es. "Pizzeria Da Mario — Bologna").</span><span class="es"><code>&lt;title&gt;</code> claro con nombre y ciudad (ej. "Pizzería Da Mario — Bolonia").</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it"><code>&lt;meta name="description"&gt;</code> di 1–2 frasi: è il testo che appare sotto il link su Google.</span><span class="es"><code>&lt;meta name="description"&gt;</code> de 1–2 frases: es el texto que aparece debajo del enlace en Google.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Un solo <code>&lt;h1&gt;</code> per pagina e titoli <code>&lt;h2&gt;</code> per le sezioni.</span><span class="es">Un solo <code>&lt;h1&gt;</code> por página y títulos <code>&lt;h2&gt;</code> para las secciones.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Tutte le immagini hanno <code>alt</code> descrittivo.</span><span class="es">Todas las imágenes tienen un <code>alt</code> descriptivo.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Testi riletti: nessun errore di battitura, nessun "Lorem ipsum" dimenticato.</span><span class="es">Textos releídos: sin errores de tipeo, sin "Lorem ipsum" olvidado.</span></span></label></li>
+        </ul>
+      </div>
+      <div class="challenge" style="background:#fff">
+        <div class="challenge-title">📱 <span class="it">Cellulare e velocità</span><span class="es">Celular y velocidad</span></div>
+        <ul class="checklist" data-key="l4-check-b">
+          <li><label><input type="checkbox"><span><span class="it">Provato su un cellulare vero (non solo in F12).</span><span class="es">Probado en un celular real (no solo con F12).</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Telefono e WhatsApp cliccabili (<code>tel:</code> e <code>wa.me</code>) e visibili in alto.</span><span class="es">Teléfono y WhatsApp cliqueables (<code>tel:</code> y <code>wa.me</code>) y visibles arriba.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Foto compresse (es. con squoosh.app): niente immagini da 5 MB.</span><span class="es">Fotos comprimidas (ej. con squoosh.app): nada de imágenes de 5 MB.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Tutti i link del menu portano alla sezione giusta.</span><span class="es">Todos los enlaces del menú llevan a la sección correcta.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Il modulo contatti invia davvero (fai una prova e controlla l'email).</span><span class="es">El formulario de contacto envía de verdad (haz una prueba y revisa el email).</span></span></label></li>
+        </ul>
+      </div>
+      <div class="challenge" style="background:#fff">
+        <div class="challenge-title">⚖️ <span class="it">Dati obbligatori (attività in Italia)</span><span class="es">Datos obligatorios (negocios en Italia)</span></div>
+        <ul class="checklist" data-key="l4-check-c">
+          <li><label><input type="checkbox"><span><span class="it">Nel footer: ragione sociale e <strong>Partita IVA</strong> dell'attività.</span><span class="es">En el footer: razón social y <strong>Partita IVA</strong> (número fiscal) del negocio.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Se il sito raccoglie dati (modulo) o usa cookie di terze parti: pagina di informativa privacy/cookie (GDPR). Il testo va concordato con il cliente o con il suo consulente.</span><span class="es">Si el sitio recolecta datos (formulario) o usa cookies de terceros: página de política de privacidad/cookies (GDPR). El texto se acuerda con el cliente o su asesor.</span></span></label></li>
+        </ul>
+      </div>
+      <p class="muted it">Questa lista è una guida pratica, non una consulenza legale: per i dubbi sugli obblighi rimanda il cliente al suo commercialista o consulente.</p>
+      <p class="muted es">Esta lista es una guía práctica, no asesoramiento legal: ante dudas sobre las obligaciones, deriva al cliente a su contador o asesor.</p>
+
+      <button type="button" class="btn btn-next-module" data-go="3"><span class="it">Avanti alla Fase 4: Pubblicare online ➔</span><span class="es">Avanzar a la Fase 4: Publicar online ➔</span></button>
+    </section>
+
+    <!-- ============ SEZIONE 4: PUBBLICARE ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag"><span class="it">Fase 4: Uscita nel Mondo</span><span class="es">Fase 4: Salida al Mundo</span></span>
+      <h1 class="it">Dalla Tua Cartella al Mondo: Pubblicare il Sito</h1>
+      <h1 class="es">De tu Carpeta al Mundo: Publicar el Sitio</h1>
+      <p class="lead it">Cosa serve perché chiunque possa aprire il tuo sito dal cellulare, e come farlo gratis in 5 minuti.</p>
+      <p class="lead es">Qué hace falta para que cualquiera pueda abrir tu sitio desde el celular, y cómo hacerlo gratis en 5 minutos.</p>
+
+      <div class="callout mentor">
+        <div class="callout-title">🤝 <span class="it">I 3 pezzi del puzzle</span><span class="es">Las 3 piezas del rompecabezas</span></div>
+        <ol class="it">
+          <li><strong>Il dominio:</strong> il nome (es. <em>www.riccardoweb.it</em>). È come l'indirizzo di casa.</li>
+          <li><strong>L'hosting:</strong> un computer sempre acceso e collegato a internet che conserva i tuoi file. È il terreno su cui costruisci.</li>
+          <li><strong>I tuoi file:</strong> <code>index.html</code> (la pagina principale, deve chiamarsi così), CSS, JS e immagini.</li>
+        </ol>
+        <ol class="es">
+          <li><strong>El dominio:</strong> el nombre (ej. <em>www.ricardoweb.com</em>). Es como la dirección de tu casa.</li>
+          <li><strong>El hosting:</strong> una computadora siempre prendida y conectada a internet que guarda tus archivos. Es el terreno donde construyes.</li>
+          <li><strong>Tus archivos:</strong> <code>index.html</code> (la página principal, debe llamarse así), CSS, JS e imágenes.</li>
+        </ol>
+      </div>
+
+      <h2><span class="it">Strada A — Gratis in 5 minuti: Netlify Drop</span><span class="es">Camino A — Gratis en 5 minutos: Netlify Drop</span></h2>
+      <div class="cards-grid">
+        <div class="card"><div class="step-number">01</div><strong><span class="it">Prepara la cartella</span><span class="es">Prepara la carpeta</span></strong><p><span class="it">Una cartella con <code>index.html</code> e le eventuali foto (es. <code>sito-pizzeria</code>).</span><span class="es">Una carpeta con <code>index.html</code> y las fotos que uses (ej. <code>sitio-pizzeria</code>).</span></p></div>
+        <div class="card"><div class="step-number">02</div><strong><span class="it">Trascinala</span><span class="es">Arrástrala</span></strong><p><span class="it">Apri <em>app.netlify.com/drop</em> e trascina la cartella nel riquadro. Non serve nemmeno un account per la prima prova.</span><span class="es">Abre <em>app.netlify.com/drop</em> y arrastra la carpeta al recuadro. Ni siquiera hace falta una cuenta para la primera prueba.</span></p></div>
+        <div class="card"><div class="step-number">03</div><strong><span class="it">Condividi il link</span><span class="es">Comparte el enlace</span></strong><p><span class="it">In pochi secondi ricevi un indirizzo che finisce in <code>.netlify.app</code>. Crea un account gratuito per tenerlo e aggiornarlo.</span><span class="es">En segundos recibes una dirección que termina en <code>.netlify.app</code>. Crea una cuenta gratuita para conservarlo y actualizarlo.</span></p></div>
+      </div>
+      <p class="it"><strong>Per aggiornare:</strong> modifichi i file sul tuo computer e trascini di nuovo la cartella nella pagina del sito su Netlify (sezione "Deploys").</p>
+      <p class="es"><strong>Para actualizar:</strong> modificas los archivos en tu computadora y vuelves a arrastrar la carpeta en la página del sitio en Netlify (sección "Deploys").</p>
+
+      <h2><span class="it">Strada B — Gratis per sempre con GitHub Pages</span><span class="es">Camino B — Gratis para siempre con GitHub Pages</span></h2>
+      <p class="it">Crei un account su GitHub, un nuovo "repository", carichi i file con "Add file → Upload files" e attivi <em>Settings → Pages</em>. È un po' più lungo, ma ti insegna GitHub, lo strumento che usano tutti gli sviluppatori: vale la pena impararlo come passo successivo.</p>
+      <p class="es">Creas una cuenta en GitHub, un nuevo "repository", subes los archivos con "Add file → Upload files" y activas <em>Settings → Pages</em>. Es un poco más largo, pero te enseña GitHub, la herramienta que usan todos los desarrolladores: vale la pena aprenderlo como paso siguiente.</p>
+
+      <h2><span class="it">Strada C — Per un cliente: dominio proprio</span><span class="es">Camino C — Para un cliente: dominio propio</span></h2>
+      <p class="it">Un cliente vorrà <em>www.suonome.it</em>. Il dominio si registra presso un registrar (es. Aruba, Register.it, Namecheap) con una spesa annuale, di solito contenuta per un .it. Poi lo colleghi a Netlify o GitHub Pages dalle loro impostazioni "Domain", oppure usi un hosting tradizionale e carichi i file nella cartella <code>public_html</code> tramite il "File Manager". <strong>Importante:</strong> registra il dominio a nome del cliente, non a nome tuo.</p>
+      <p class="es">Un cliente va a querer <em>www.sunombre.it</em>. El dominio se registra en un registrador (ej. Aruba, Register.it, Namecheap) con un gasto anual, normalmente bajo para un .it. Después lo conectas a Netlify o GitHub Pages desde su configuración "Domain", o usas un hosting tradicional y subes los archivos a la carpeta <code>public_html</code> con el "File Manager". <strong>Importante:</strong> registra el dominio a nombre del cliente, no al tuyo.</p>
+
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: il tuo sito è online!</span><span class="es">Desafío: ¡tu sitio está online!</span></div>
+        <ul class="checklist" data-key="l4-s3">
+          <li><label><input type="checkbox"><span><span class="it">Metti il file del progetto finale in una cartella e pubblicalo con Netlify Drop.</span><span class="es">Pon el archivo del proyecto final en una carpeta y publícalo con Netlify Drop.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Apri il link dal tuo cellulare e mandalo al tuo mentore.</span><span class="es">Abre el enlace desde tu celular y mándaselo a tu mentor.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Fai una modifica, ripubblica e verifica che il link mostri la nuova versione.</span><span class="es">Haz un cambio, vuelve a publicar y verifica que el enlace muestre la versión nueva.</span></span></label></li>
+        </ul>
+      </div>
+
+      <div data-quiz="3"></div>
+      <button type="button" class="btn btn-next-module" data-go="4"><span class="it">Avanti alla Fase 5: Lavorare con clienti reali ➔</span><span class="es">Avanzar a la Fase 5: Trabajar con clientes reales ➔</span></button>
+    </section>
+
+    <!-- ============ SEZIONE 5: CLIENTI ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag"><span class="it">Fase 5: Professione</span><span class="es">Fase 5: Profesión</span></span>
+      <h1 class="it">Lavorare con Clienti Reali</h1>
+      <h1 class="es">Trabajar con Clientes Reales</h1>
+      <p class="lead it">Cosa separa chi sa solo scrivere codice da chi crea siti che le attività pagano volentieri.</p>
+      <p class="lead es">Lo que separa a quien solo sabe escribir código de quien crea sitios que los negocios pagan con gusto.</p>
+
+      <div class="callout tip">
+        <div class="callout-title">💡 <span class="it">Il segreto del web designer di successo</span><span class="es">El secreto del diseñador web exitoso</span></div>
+        <p class="it">Al cliente non interessa quante righe di codice scrivi: gli interessa che il sito <strong>gli porti clienti</strong>, che funzioni benissimo sul cellulare e che si carichi in fretta.</p>
+        <p class="es">Al cliente no le importa cuántas líneas de código escribes: le importa que el sitio <strong>le traiga clientes</strong>, que funcione muy bien en el celular y que cargue rápido.</p>
+      </div>
+
+      <h2><span class="it">1. I 3 consigli d'oro</span><span class="es">1. Los 3 consejos de oro</span></h2>
+      <ol class="it">
+        <li><strong>Mobile prima di tutto:</strong> la maggior parte dei clienti del tuo cliente aprirà il sito dal cellulare, magari camminando per strada. Progetta e prova prima su smartphone.</li>
+        <li><strong>Contatto subito visibile:</strong> pulsante WhatsApp o "Chiama" in alto, ben evidente. Non nascondere mai i contatti.</li>
+        <li><strong>Usa l'IA per i testi e per accelerare:</strong> <em>"Scrivimi 3 frasi persuasive per la hero di una pizzeria di Bologna, tono familiare"</em>. Poi rileggi e adatta con il cliente.</li>
+      </ol>
+      <ol class="es">
+        <li><strong>Celular primero:</strong> la mayoría de los clientes de tu cliente abrirá el sitio desde el celular, quizás caminando por la calle. Diseña y prueba primero en smartphone.</li>
+        <li><strong>Contacto bien visible:</strong> botón de WhatsApp o "Llamar" arriba, bien destacado. Nunca escondas los contactos.</li>
+        <li><strong>Usa la IA para los textos y para acelerar:</strong> <em>"Escríbeme 3 frases persuasivas para la hero de una pizzería de Bolonia, tono familiar"</em>. Después relee y ajusta con el cliente.</li>
+      </ol>
+
+      <h2><span class="it">2. Le domande da fare al primo incontro</span><span class="es">2. Las preguntas para la primera reunión</span></h2>
+      <div class="challenge" style="background:#fff">
+        <ul class="checklist" data-key="l4-brief">
+          <li><label><input type="checkbox"><span><span class="it">Qual è l'obiettivo del sito? (prenotazioni, chiamate, vendite, farsi conoscere)</span><span class="es">¿Cuál es el objetivo del sitio? (reservas, llamadas, ventas, darse a conocer)</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Chi sono i suoi clienti e da dove arrivano?</span><span class="es">¿Quiénes son sus clientes y de dónde llegan?</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Quali sezioni servono? (servizi, menu, orari, galleria, recensioni)</span><span class="es">¿Qué secciones hacen falta? (servicios, menú, horarios, galería, reseñas)</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Chi aggiornerà il sito e quanto spesso? (questo decide il metodo!)</span><span class="es">¿Quién va a actualizar el sitio y con qué frecuencia? (¡esto decide el método!)</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Ha già logo, colori, foto e testi? Ha già un dominio?</span><span class="es">¿Ya tiene logo, colores, fotos y textos? ¿Ya tiene un dominio?</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Quali siti gli piacciono (anche di concorrenti) e perché?</span><span class="es">¿Qué sitios le gustan (incluso de la competencia) y por qué?</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Qual è il budget e per quando lo vuole online?</span><span class="es">¿Cuál es el presupuesto y para cuándo lo quiere online?</span></span></label></li>
+        </ul>
+      </div>
+
+      <h2><span class="it">3. Il flusso di lavoro in 5 passi</span><span class="es">3. El flujo de trabajo en 5 pasos</span></h2>
+      <div class="diagram-box">
+        <div class="diagram-step"><div class="big">📝</div><strong>1. Brief</strong><p><span class="it">Le domande qui sopra, per iscritto</span><span class="es">Las preguntas de arriba, por escrito</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">💶</div><strong><span class="it">2. Preventivo</span><span class="es">2. Presupuesto</span></strong><p><span class="it">Cosa è incluso e quanti giri di modifiche</span><span class="es">Qué incluye y cuántas rondas de cambios</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🎨</div><strong><span class="it">3. Bozza</span><span class="es">3. Borrador</span></strong><p><span class="it">Online su Netlify, da vedere sul cellulare</span><span class="es">Online en Netlify, para ver en el celular</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🔁</div><strong><span class="it">4. Modifiche</span><span class="es">4. Cambios</span></strong><p><span class="it">Raccolte in un'unica lista</span><span class="es">Juntadas en una sola lista</span></p></div>
+        <div class="diagram-arrow">➔</div>
+        <div class="diagram-step"><div class="big">🚀</div><strong><span class="it">5. Consegna</span><span class="es">5. Entrega</span></strong><p><span class="it">Dominio, accessi e istruzioni al cliente</span><span class="es">Dominio, accesos e instrucciones al cliente</span></p></div>
+      </div>
+
+      <div data-quiz="4"></div>
+      <button type="button" class="btn btn-next-module" data-go="5"><span class="it">Avanti alla Fase 6: Il tuo piano da solo ➔</span><span class="es">Avanzar a la Fase 6: Tu plan en solitario ➔</span></button>
+    </section>
+
+    <!-- ============ SEZIONE 6: PIANO ============ -->
+    <section class="module-card" data-done="visit" hidden>
+      <span class="module-tag"><span class="it">Fase 6: Volare da Solo</span><span class="es">Fase 6: Volar Solo</span></span>
+      <h1 class="it">Il Tuo Piano per Continuare da Solo</h1>
+      <h1 class="es">Tu Plan para Seguir Solo</h1>
+      <p class="lead it">Il corso finisce, la pratica no. Ecco 4 settimane di progetti per diventare autonomo davvero.</p>
+      <p class="lead es">El curso termina, la práctica no. Estas son 4 semanas de proyectos para volverte autónomo de verdad.</p>
+
+      <div class="challenge">
+        <div class="challenge-title">🗓️ <span class="it">Le prossime 4 settimane</span><span class="es">Las próximas 4 semanas</span></div>
+        <ul class="checklist" data-key="l4-plan">
+          <li><label><input type="checkbox"><span><span class="it"><strong>Settimana 1 — Ripasso attivo:</strong> rifai da zero, senza copiare, la pagina di presentazione del Livello 1 e la card del CSS.</span><span class="es"><strong>Semana 1 — Repaso activo:</strong> rehaz desde cero, sin copiar, la página de presentación del Nivel 1 y la tarjeta de CSS.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it"><strong>Settimana 2 — Primo sito pubblicato:</strong> un sito di una pagina per un'attività reale, pubblicato su Netlify e controllato con la checklist.</span><span class="es"><strong>Semana 2 — Primer sitio publicado:</strong> un sitio de una página para un negocio real, publicado en Netlify y revisado con la checklist.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it"><strong>Settimana 3 — Sito con più pagine:</strong> <code>index.html</code>, <code>servizi.html</code>, <code>contatti.html</code> con un solo <code>style.css</code> condiviso e un menu mobile in JavaScript.</span><span class="es"><strong>Semana 3 — Sitio con varias páginas:</strong> <code>index.html</code>, <code>servizi.html</code>, <code>contatti.html</code> con un solo <code>style.css</code> compartido y un menú móvil en JavaScript.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it"><strong>Settimana 4 — Prova le altre strade:</strong> rifai lo stesso sito partendo da un template Bootstrap, poi prova WordPress in locale o in una versione gratuita. Confronta: cosa è stato più veloce? Cosa ti ha dato più controllo?</span><span class="es"><strong>Semana 4 — Prueba los otros caminos:</strong> rehaz el mismo sitio partiendo de una plantilla Bootstrap, después prueba WordPress en local o en una versión gratuita. Compara: ¿qué fue más rápido? ¿Qué te dio más control?</span></span></label></li>
+        </ul>
+      </div>
+
+      <h2><span class="it">Quando sei bloccato: la routine in 4 passi</span><span class="es">Cuando te trabas: la rutina en 4 pasos</span></h2>
+      <ol class="it">
+        <li>Premi <strong>F12 → Console</strong>: l'errore in rosso dice quasi sempre la riga del problema.</li>
+        <li>Copia il messaggio di errore e cercalo su Google (in inglese trovi molte più risposte).</li>
+        <li>Chiedi all'IA con il prompt di debugging del Livello 1: codice + cosa ti aspettavi + cosa succede.</li>
+        <li>Se dopo 30 minuti sei ancora fermo, scrivi al tuo mentore con il codice e lo screenshot.</li>
+      </ol>
+      <ol class="es">
+        <li>Presiona <strong>F12 → Console</strong>: el error en rojo casi siempre indica la línea del problema.</li>
+        <li>Copia el mensaje de error y búscalo en Google (en inglés encuentras muchas más respuestas).</li>
+        <li>Pregúntale a la IA con el prompt de debugging del Nivel 1: código + qué esperabas + qué pasa.</li>
+        <li>Si después de 30 minutos sigues trabado, escríbele a tu mentor con el código y una captura.</li>
+      </ol>
+
+      <h2><span class="it">Risorse gratuite da tenere nei preferiti</span><span class="es">Recursos gratuitos para tener en favoritos</span></h2>
+      <div class="cards-grid">
+        <div class="card"><div class="card-head"><div class="card-icon">📚</div><strong>MDN Web Docs</strong></div><p><span class="it">Il manuale di riferimento di HTML, CSS e JavaScript. Cerca "mdn" + quello che ti serve.</span><span class="es">El manual de referencia de HTML, CSS y JavaScript. Busca "mdn" + lo que necesitas.</span></p><a href="https://developer.mozilla.org" target="_blank" rel="noopener">developer.mozilla.org</a></div>
+        <div class="card"><div class="card-head"><div class="card-icon">🏋️</div><strong>freeCodeCamp</strong></div><p><span class="it">Corsi pratici gratuiti con esercizi, per continuare con JavaScript e progetti più grandi.</span><span class="es">Cursos prácticos gratuitos con ejercicios, para seguir con JavaScript y proyectos más grandes.</span></p><a href="https://www.freecodecamp.org" target="_blank" rel="noopener">freecodecamp.org</a></div>
+        <div class="card"><div class="card-head"><div class="card-icon">⚡</div><strong>W3Schools</strong></div><p><span class="it">Esempi brevi e veloci da provare subito nel browser.</span><span class="es">Ejemplos cortos y rápidos para probar enseguida en el navegador.</span></p><a href="https://www.w3schools.com" target="_blank" rel="noopener">w3schools.com</a></div>
+        <div class="card"><div class="card-head"><div class="card-icon">🎨</div><strong>Google Fonts · Coolors · Squoosh</strong></div><p><span class="it">Font gratuiti, palette di colori e compressione delle foto.</span><span class="es">Fuentes gratuitas, paletas de colores y compresión de fotos.</span></p><a href="https://fonts.google.com" target="_blank" rel="noopener">fonts.google.com</a></div>
+      </div>
+
+      <button type="button" class="btn btn-next-module" data-go="6"><span class="it">Vai al Gran Diploma Finale ➔</span><span class="es">Ir al Gran Diploma Final ➔</span></button>
+    </section>
+
+    <!-- ============ SEZIONE 7: GRAN DIPLOMA ============ -->
+    <section class="module-card" data-done="final" hidden>
       <div class="certificate-card">
-        <div style="font-size: 4rem;">🎓🇮🇹🇦🇷</div>
-        <h1 style="font-size: 2.3rem; color: #065f46; margin-bottom: 0.5rem;" id="cert-title">Gran Diploma di Web Designer & Developer</h1>
-        <p style="color: #047857; font-size: 1.2rem; font-weight: 600;" id="cert-sub">
-          Percorso Completo: Fondamenti, Layout Moderni, Interattività, Database & Pubblicazione
-        </p>
-
-        <div style="font-size: 2rem; font-weight: 800; color: #0f172a; margin: 1.5rem 0; border-bottom: 3px solid #10b981; display: inline-block; padding: 0 2.5rem 0.5rem;" id="cert-name">
-          Riccardo
+        <div style="font-size:3.6rem">🎓🇮🇹🇦🇷</div>
+        <h1 style="color:var(--primary-dark)"><span class="it">Gran Diploma di Web Designer</span><span class="es">Gran Diploma de Diseñador Web</span></h1>
+        <p class="lead"><span class="it">Percorso completo: Fondamenti, Layout, Interattività, Database, IA, Progetto reale e Pubblicazione</span><span class="es">Trayecto completo: Fundamentos, Maquetación, Interactividad, Bases de Datos, IA, Proyecto real y Publicación</span></p>
+        <div class="cert-name">Riccardo</div>
+        <p style="max-width:640px;margin:0 auto"><span class="it">Ha completato i <strong>4 livelli</strong> del percorso, imparando a scegliere il metodo giusto per ogni progetto e a creare, controllare e pubblicare siti web reali con HTML5, CSS3, JavaScript e Intelligenza Artificiale, insieme al suo mentore argentino.</span><span class="es">Completó los <strong>4 niveles</strong> del trayecto, aprendiendo a elegir el método adecuado para cada proyecto y a crear, revisar y publicar sitios web reales con HTML5, CSS3, JavaScript e Inteligencia Artificial, junto a su mentor argentino.</span></p>
+        <div class="cert-signs">
+          <div><div>Riccardo</div><small>Web Designer & Creator</small></div>
+          <div><div>Mentore 🇦🇷</div><small><span class="it">Docente & Guida</span><span class="es">Docente & Guía</span></small></div>
         </div>
-
-        <p style="max-width: 640px; margin: 1.5rem auto; font-size: 1.1rem; color: #334155;" id="cert-desc">
-          Ha completato brillantemente l'intero percorso di formazione in <strong>4 Livelli Progressivi</strong>, acquisendo le competenze pratiche per creare pagine web reali con HTML5, CSS3, JavaScript, Database SQLite e Intelligenza Artificiale insieme al suo mentore argentino.
-        </p>
-
-        <div style="display: flex; justify-content: center; gap: 3.5rem; margin-top: 2.5rem;">
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 2px solid #059669; padding-top: 6px; width: 190px;">Riccardo</div>
-            <div style="font-size: 0.85rem; color: #64748b;" id="cert-role-student">Web Developer & Creator</div>
-          </div>
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 2px solid #059669; padding-top: 6px; width: 190px;">Mentore 🇦🇷</div>
-            <div style="font-size: 0.85rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-          <button class="btn-verify" onclick="window.print()" id="btnPrintCert" style="padding: 12px 24px; font-size: 1rem;">🖨️ Stampa o Salva PDF</button>
-          <a href="index.html" class="btn-verify" style="background: #0f172a; text-decoration: none; padding: 12px 24px; font-size: 1rem;" id="btn-home">🏠 Torna al Livello 1</a>
+        <div class="cert-status no-print"></div>
+        <div class="btn-row no-print" style="justify-content:center;margin-top:2rem">
+          <button type="button" class="btn" onclick="window.print()">🖨️ <span class="it">Stampa o Salva PDF</span><span class="es">Imprimir o Guardar PDF</span></button>
+          <a href="index.html" class="btn dark">🏠 <span class="it">Torna al Livello 1</span><span class="es">Volver al Nivel 1</span></a>
         </div>
       </div>
     </section>
 
   </main>
 
+  <div id="toast" role="status"></div>
+  <div id="modal"><div class="box">
+    <strong id="modal-title"></strong>
+    <textarea id="modal-text" readonly></textarea>
+    <button type="button" class="btn" onclick="document.getElementById('modal').classList.remove('show')">OK</button>
+  </div></div>
+
   <script>
-    let currentLang = 'it';
-    let currentSection = 0;
-    const totalSections = 4;
-    let completedSections = { 0: false, 1: false, 2: false, 3: false };
+const PAGE = { id: "l4", title: { it: 'Livello 4: Progetto Finale & Pubblicazione — Corso di Riccardo', es: 'Nivel 4: Proyecto Final & Publicación — Curso de Ricardo' } };
+/* ===== Motore comune del corso (Riccardo) ===== */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage non disponibile */ } }
+};
+let LANG = store.get('riccardo_lang_v2', 'it');
+if (LANG !== 'it' && LANG !== 'es') LANG = 'it';
+const STATE_KEY = 'riccardo_' + PAGE.id + '_v2';
+const state = Object.assign({ done: {}, answers: {}, checks: {}, last: 0, labs: {} }, store.get(STATE_KEY, {}));
+const save = () => store.set(STATE_KEY, state);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const tr = (it, es) => (LANG === 'es' ? es : it);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sections = () => $$('section.module-card');
+let current = 0;
 
-    const i18n = {
-      it: {
-        studentBadge: "Livello 4: <strong>Riccardo</strong>",
-        courseTitle: "Progetto Reale & Salita sul Web",
-        mentorNote: "Con il tuo mentore argentino 🇦🇷🇮🇹",
-        progressLabel: "Progresso Livello 4",
-        navS0: "1. Come si Pubblica un Sito",
-        navS1: "2. Il Taller del Progetto Finale",
-        navS2: "3. Lavorare con Clienti Reali",
-        navS3: "4. Gran Diploma Finale",
+/* ---------- Lingua ---------- */
+function setLanguage(lang) {
+  LANG = lang;
+  store.set('riccardo_lang_v2', lang);
+  document.documentElement.lang = lang;
+  document.title = tr(PAGE.title.it, PAGE.title.es);
+  $$('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  $$('[data-ph-it]').forEach(el => { el.placeholder = lang === 'es' ? el.dataset.phEs : el.dataset.phIt; });
+  $$('.copy-btn').forEach(b => { b.textContent = tr('Copia', 'Copiar'); });
+  $$('.cert-name').forEach(el => { el.textContent = tr('Riccardo', 'Ricardo'); });
+  renderAllQuizzes();
+  updateProgress();
+  if (typeof PAGE.onLang === 'function') PAGE.onLang(lang);
+}
 
-        // S0
-        tagS0: "Fase 1: Uscita nel Mondo",
-        titleS0: "Dalla Tua Cartella al Mondo Intero: Come Funziona il Web Reale",
-        subS0: "Cosa serve esattamente per far sì che chiunque digiti www.tuosito.it dal cellulare e veda la tua pagina.",
-        mentorS0Title: "La Spiegazione del tuo Mentor",
-        mentorS0Text: "Riccardo, pubblicare un sito sembra una magia, ma sono solo 3 pezzi di un puzzle chiarissimi:<br>1. <strong>Il Dominio:</strong> Il nome (es: <em>www.riccardoweb.it</em>). È come l'indirizzo civico di casa tua.<br>2. <strong>L'Hosting:</strong> Il computer sempre acceso connesso a internet (es: la cartella <code>public_html</code> che abbiamo usato oggi). È il terreno su cui costruisci.<br>3. <strong>I tuoi File (HTML, CSS, JS):</strong> I mattoni e l'arredamento che carichi nella cartella!",
-        cardStep1T: "Scegliere il Dominio",
-        cardStep1D: "Registri il nome (es: su Register.it, Namecheap o Aruba) per circa 10€ all'anno.",
-        cardStep2T: "Attivare l'Hosting",
-        cardStep2D: "Uno spazio con cPanel o un hosting statico gratuito (come GitHub Pages o Netlify).",
-        cardStep3T: "Caricare i File (index.html)",
-        cardStep3D: "Trascini i file dentro public_html via FTP o File Manager e il sito è subito online!",
-        btnNext0: "Avanti alla Fase 2: Il Taller del Progetto Finale ➔",
+/* ---------- Navigazione tra sezioni ---------- */
+function showSection(i, scroll = true) {
+  const secs = sections();
+  i = Math.max(0, Math.min(secs.length - 1, Number(i) || 0));
+  current = i;
+  secs.forEach((s, k) => { s.hidden = k !== i; s.classList.toggle('printing', k === i); });
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('active', k === i));
+  const nl = $('.nav-list'), an = $$('.nav-item')[i];
+  if (nl && an && nl.scrollWidth > nl.clientWidth) nl.scrollLeft = an.parentElement.offsetLeft - 10;
+  state.last = i; save();
+  if (secs[i].dataset.done === 'visit') markDone(i);
+  if (typeof PAGE.onShow === 'function') PAGE.onShow(i);
+  if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+  try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) { }
+}
+function markDone(i) {
+  if (!state.done[i]) { state.done[i] = true; save(); }
+  updateProgress();
+}
+function updateProgress() {
+  const secs = sections();
+  const finalIdx = secs.findIndex(s => s.dataset.done === 'final');
+  const others = secs.map((s, k) => k).filter(k => k !== finalIdx);
+  const allOthers = others.every(k => state.done[k]);
+  if (finalIdx >= 0) state.done[finalIdx] = allOthers;
+  const count = secs.filter((s, k) => state.done[k]).length;
+  const pct = Math.round(count / secs.length * 100);
+  const pe = $('#progress-percent'); if (pe) pe.textContent = pct + '%';
+  const pf = $('#progress-fill'); if (pf) pf.style.width = pct + '%';
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('completed', !!state.done[k]));
+  const missing = others.filter(k => !state.done[k]).length;
+  $$('.cert-status').forEach(el => {
+    el.classList.toggle('ok', allOthers);
+    el.textContent = allOthers
+      ? tr('✅ Tutte le sezioni completate: il diploma è meritato!', '✅ Todas las secciones completadas: ¡el diploma está merecido!')
+      : tr(`Ti mancano ancora ${missing} sezioni (rispondi bene ai quiz o visita la sezione) per completare il livello.`,
+           `Todavía te faltan ${missing} secciones (responde bien los quiz o visita la sección) para completar el nivel.`);
+  });
+}
 
-        // S1
-        tagS1: "Fase 2: Laboratorio Pratico",
-        titleS1: "Il Taller del Tuo Progetto Finale (Metti le mani in pasta)",
-        subS1: "Personalizza il tuo primo sito professionale, testalo dal vivo e scarica il codice completo.",
-        wkBoxTitle: "⚙️ Configura il Tuo Sito Finale:",
-        lblWkType: "Tipo di Progetto:",
-        lblWkName: "Nome dell'Attività:",
-        lblWkWa: "Numero WhatsApp / Telefono:",
-        lblWkColor: "Colore Brand:",
-        txtWkExport: "Pronto per il tuo hosting? Copia il codice HTML/CSS completo:",
-        btnExportFinal: "📋 Copia Codice del Progetto Finale",
-        btnNext1: "Avanti alla Fase 3: Lavorare con Clienti Reali ➔",
-
-        // S2
-        tagS2: "Fase 3: Professione",
-        titleS2: "I 3 Consigli d'Oro per Lavorare con Clienti Reali",
-        subS2: "Cosa separa chi sa solo il codice da chi guadagna creando siti per le aziende.",
-        tipS2Title: "Il Segreto del Web Designer di Successo",
-        tipS2Text: "Al cliente non interessa quante righe di codice scrivi: gli interessa che il sito <strong>porti clienti al suo locale</strong>, che funzioni benissimo sullo smartphone e che si carichi in meno di 2 secondi.",
-        btnNext2: "Visualizza il Gran Diploma Finale ➔",
-
-        // Cert
-        certTitle: "Gran Diploma di Web Designer & Developer",
-        certSub: "Percorso Completo: Fondamenti, Layout Moderni, Interattività, Database & Pubblicazione",
-        certDesc: "Ha completato brillantemente l'intero percorso di formazione in <strong>4 Livelli Progressivi</strong>, acquisendo le competenze pratiche per creare pagine web reali con HTML5, CSS3, JavaScript, Database SQLite e Intelligenza Artificiale insieme al suo mentore argentino.",
-        certRoleStudent: "Web Developer & Creator",
-        certRoleMentor: "Docente & Guida 🇦🇷",
-        btnPrintCert: "🖨️ Stampa o Salva PDF",
-        btnHome: "🏠 Torna al Livello 1"
-      },
-      es: {
-        studentBadge: "Nivel 4: <strong>Ricardo</strong>",
-        courseTitle: "Proyecto Real & Salida al Mundo",
-        mentorNote: "Con tu mentor argentino 🇦🇷🇮🇹",
-        progressLabel: "Progreso Nivel 4",
-        navS0: "1. Cómo se Publica un Sitio",
-        navS1: "2. El Taller del Proyecto Final",
-        navS2: "3. Trabajar con Clientes Reales",
-        navS3: "4. Gran Diploma Final",
-
-        // S0
-        tagS0: "Fase 1: Salida al Mundo",
-        titleS0: "De tu Carpeta al Mundo Entero: Cómo Funciona la Web Real",
-        subS0: "Qué se necesita exactamente para que cualquier persona escriba www.tusitio.com y vea tu página.",
-        mentorS0Title: "La Explicación de tu Mentor",
-        mentorS0Text: "Ricardo, publicar una web parece magia pero son solo 3 piezas de un rompecabezas muy simple:<br>1. <strong>El Dominio:</strong> El nombre (ej: <em>www.ricardoweb.com</em>). Es como la dirección de tu casa.<br>2. <strong>El Hosting:</strong> La computadora siempre conectada a internet (ej: la carpeta <code>public_html</code> que usamos hoy). Es el terreno donde construyes.<br>3. <strong>Tus Archivos (HTML, CSS, JS):</strong> Los ladrillos y los muebles que subes a esa carpeta.",
-        cardStep1T: "Elegir el Dominio",
-        cardStep1D: "Registras el nombre (ej: en Namecheap, GoDaddy o DonWeb) por unos 10€ al año.",
-        cardStep2T: "Activar el Hosting",
-        cardStep2D: "Un espacio con cPanel o un hosting estático gratuito (como GitHub Pages o Netlify).",
-        cardStep3T: "Subir los Archivos (index.html)",
-        cardStep3D: "Arrastras los archivos a public_html y el sitio ya queda visible en internet.",
-        btnNext0: "Avanzar a la Fase 2: El Taller del Proyecto Final ➔",
-
-        // S1
-        tagS1: "Fase 2: Laboratorio Práctico",
-        titleS1: "El Taller de tu Proyecto Final (Mete mano al código)",
-        subS1: "Personaliza tu primer sitio profesional, pruébalo en vivo y descarga el código completo.",
-        wkBoxTitle: "⚙️ Configura tu Sitio Final:",
-        lblWkType: "Tipo de Proyecto:",
-        lblWkName: "Nombre del Negocio:",
-        lblWkWa: "Número de WhatsApp / Teléfono:",
-        lblWkColor: "Color de Marca:",
-        txtWkExport: "¿Listo para tu hosting? Copia el código HTML/CSS completo:",
-        btnExportFinal: "📋 Copiar Código del Proyecto Final",
-        btnNext1: "Avanzar a la Fase 3: Trabajar con Clientes Reales ➔",
-
-        // S2
-        tagS2: "Fase 3: Profesión",
-        titleS2: "Los 3 Consejos de Oro para Trabajar con Clientes Reales",
-        subS2: "Lo que separa a quien solo sabe código de quien genera ingresos haciendo webs para empresas.",
-        tipS2Title: "El Secreto del Diseñador Web Exitoso",
-        tipS2Text: "Al cliente no le importa cuántas líneas de código escribes: le importa que el sitio <strong>le traiga clientes a su negocio</strong>, que funcione de maravilla en celulares y que cargue rápido.",
-        btnNext2: "Ver el Gran Diploma Final ➔",
-
-        // Cert
-        certTitle: "Gran Diploma de Diseñador & Desarrollador Web",
-        certSub: "Trayecto Completo: Fundamentos, Maquetación, Interactividad, Bases de Datos & Publicación",
-        certDesc: "Completó brillantemente el trayecto formativo en <strong>4 Niveles Progresivos</strong>, adquiriendo las competencias prácticas para crear sitios web reales con HTML5, CSS3, JavaScript, Bases de Datos SQLite e Inteligencia Artificial junto a su mentor argentino.",
-        certRoleStudent: "Web Developer & Creator",
-        certRoleMentor: "Docente & Guía 🇦🇷",
-        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
-        btnHome: "🏠 Volver al Nivel 1"
+/* ---------- Quiz ---------- */
+function renderAllQuizzes() { $$('[data-quiz]').forEach(el => renderQuiz(el)); }
+function renderQuiz(el) {
+  const sec = el.dataset.quiz;
+  const qs = (PAGE.quiz || {})[sec] || [];
+  const ans = state.answers[sec] || {};
+  const checked = !!(state.answers[sec] && state.answers[sec]._checked);
+  let h = `<div class="quiz-title">📝 ${tr('Verifica Rapida', 'Comprobación Rápida')} <span class="muted">(${qs.length} ${tr('domande', 'preguntas')})</span></div>`;
+  qs.forEach((q, qi) => {
+    h += `<div class="question-block"><div class="question-text">${qi + 1}. ${esc(tr(q.q[0], q.q[1]))}</div><div class="options-list">`;
+    q.o.forEach((o, oi) => {
+      let cls = ans[qi] === oi ? 'selected' : '';
+      if (checked && ans[qi] !== undefined) {
+        if (oi === q.c && ans[qi] === oi) cls = 'correct';
+        else if (ans[qi] === oi) cls = 'wrong';
       }
+      h += `<button type="button" class="option-btn ${cls}" data-q="${qi}" data-o="${oi}">${esc(tr(o[0], o[1]))}</button>`;
+    });
+    h += `</div>`;
+    if (checked && ans[qi] !== undefined) {
+      const ok = ans[qi] === q.c;
+      h += `<div class="feedback-box ${ok ? 'correct' : 'wrong'}">${ok ? '✅ ' : '❌ '}${esc(ok ? tr(q.e[0], q.e[1]) : tr(q.w ? q.w[0] : 'Non è questa. Rileggi la spiegazione sopra e riprova.', q.w ? q.w[1] : 'No es esa. Relee la explicación de arriba y reintenta.'))}</div>`;
+    }
+    h += `</div>`;
+  });
+  const score = qs.filter((q, qi) => ans[qi] === q.c).length;
+  h += `<div class="quiz-submit-row"><button type="button" class="btn" data-check>${tr('Verifica Risposte', 'Verificar Respuestas')}</button>`;
+  if (checked) h += `<span class="score-badge">${score}/${qs.length} ${tr('corrette', 'correctas')}${score === qs.length ? ' 🎉' : ''}</span>`;
+  h += `</div>`;
+  el.innerHTML = h;
+  el.classList.add('quiz-container');
+}
+document.addEventListener('click', e => {
+  const opt = e.target.closest('[data-quiz] .option-btn');
+  if (opt) {
+    const sec = opt.closest('[data-quiz]').dataset.quiz;
+    state.answers[sec] = state.answers[sec] || {};
+    state.answers[sec][opt.dataset.q] = Number(opt.dataset.o);
+    state.answers[sec]._checked = false;
+    save(); renderQuiz(opt.closest('[data-quiz]'));
+    return;
+  }
+  const chk = e.target.closest('[data-quiz] [data-check]');
+  if (chk) {
+    const box = chk.closest('[data-quiz]'); const sec = box.dataset.quiz;
+    const qs = PAGE.quiz[sec]; const ans = state.answers[sec] || {};
+    const answered = qs.filter((q, qi) => ans[qi] !== undefined).length;
+    if (answered < qs.length) { toast(tr('Rispondi a tutte le domande prima di verificare!', '¡Responde todas las preguntas antes de verificar!')); return; }
+    ans._checked = true; state.answers[sec] = ans;
+    if (qs.every((q, qi) => ans[qi] === q.c)) { markDone(Number(sec)); toast(tr('Perfetto! Sezione completata ✓', '¡Perfecto! Sección completada ✓')); }
+    save(); renderQuiz(box);
+    return;
+  }
+  const go = e.target.closest('[data-go]');
+  if (go) { showSection(go.dataset.go); return; }
+  const lb = e.target.closest('.lang-btn');
+  if (lb) { setLanguage(lb.dataset.lang); return; }
+  const cp = e.target.closest('.copy-btn');
+  if (cp) {
+    const src = cp.dataset.copyTarget ? $(cp.dataset.copyTarget) : (cp.parentElement.querySelector('.prompt-text.' + LANG) || cp.parentElement.querySelector('code, .prompt-text'));
+    const text = src ? (src.value !== undefined && src.tagName === 'TEXTAREA' ? src.value : src.innerText) : '';
+    copyText(text).then(ok => {
+      if (ok) { const old = cp.textContent; cp.textContent = tr('Copiato!', '¡Copiado!'); setTimeout(() => cp.textContent = old, 1400); }
+      else showModal(text, tr('Seleziona tutto il testo e copialo (Ctrl+C):', 'Selecciona todo el texto y cópialo (Ctrl+C):'));
+    });
+  }
+});
+
+/* ---------- Checklist delle sfide ---------- */
+function initChecklists() {
+  $$('.checklist[data-key]').forEach(ul => {
+    const key = ul.dataset.key;
+    const boxes = $$('input[type=checkbox]', ul);
+    const counter = document.createElement('div'); counter.className = 'challenge-count';
+    ul.after(counter);
+    const upd = () => {
+      const n = boxes.filter(b => b.checked).length;
+      counter.innerHTML = `<span class="it">Fatto: ${n}/${boxes.length}${n === boxes.length ? ' — Grande, Riccardo! 💪' : ''}</span><span class="es">Hecho: ${n}/${boxes.length}${n === boxes.length ? ' — ¡Genial, Ricardo! 💪' : ''}</span>`;
     };
+    boxes.forEach((b, i) => {
+      b.checked = !!(state.checks[key] || {})[i];
+      b.addEventListener('change', () => { state.checks[key] = state.checks[key] || {}; state.checks[key][i] = b.checked; save(); upd(); });
+    });
+    upd();
+  });
+}
 
-    function init() {
-      const savedLang = localStorage.getItem('riccardo_lang') || 'it';
-      setLanguage(savedLang);
-      updateFinalProject();
-      updateProgressBar();
-    }
+/* ---------- Laboratori live (iframe isolato) ---------- */
+function initLabs() {
+  $$('.lab[data-lab]').forEach(lab => {
+    const id = lab.dataset.lab;
+    const ta = $('.lab-code', lab), frame = $('.lab-view', lab);
+    const original = ta.value;
+    if (state.labs[id] !== undefined) ta.value = state.labs[id];
+    let t;
+    const render = () => { frame.srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;padding:12px;margin:0;color:#0f172a}</style></head><body>' + ta.value + '</body></html>'; };
+    ta.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { render(); state.labs[id] = ta.value; save(); }, 300); });
+    ta.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); const s = ta.selectionStart; ta.setRangeText('  ', s, ta.selectionEnd, 'end'); } });
+    const reset = $('[data-lab-reset]', lab);
+    if (reset) reset.addEventListener('click', () => { ta.value = original; delete state.labs[id]; save(); render(); });
+    const run = $('[data-lab-run]', lab);
+    if (run) run.addEventListener('click', render);
+    $$('[data-lab-width]', lab).forEach(b => b.addEventListener('click', () => {
+      $$('[data-lab-width]', lab).forEach(x => x.classList.toggle('active', x === b));
+      frame.style.width = b.dataset.labWidth; frame.style.marginInline = 'auto'; frame.style.display = 'block';
+    }));
+    const dl = $('[data-lab-download]', lab);
+    if (dl) dl.addEventListener('click', () => downloadFile((lab.dataset.file || 'esercizio') + '.html',
+      '<!DOCTYPE html>\n<html lang="it">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Esercizio di Riccardo</title>\n</head>\n<body>\n' + ta.value + '\n</body>\n</html>\n'));
+    render();
+  });
+}
 
-    function setLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('riccardo_lang', lang);
+/* ---------- Utilità: copia, scarica, toast, modale ---------- */
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; } catch (e2) { return false; }
+  }
+}
+function downloadFile(name, content) {
+  try {
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast(tr(`📥 File "${name}" scaricato: aprilo con doppio clic!`, `📥 Archivo "${name}" descargado: ¡ábrelo con doble clic!`));
+  } catch (e) {
+    showModal(content, tr(`Non riesco a scaricare: copia questo codice e salvalo come ${name}`, `No puedo descargar: copia este código y guárdalo como ${name}`));
+  }
+}
+let toastTimer;
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+function showModal(text, title) {
+  const m = $('#modal'); $('#modal-title').textContent = title; $('#modal-text').value = text;
+  m.classList.add('show'); $('#modal-text').select();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').classList.remove('show'); });
 
-      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
-      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+/* ---------- Avvio ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  try { if (typeof PAGE.init === 'function') PAGE.init(); } catch (e) { console.error(e); }
+  initChecklists();
+  initLabs();
+  setLanguage(LANG);
+  const m = /^#s(\d+)$/.exec(location.hash);
+  showSection(m ? Number(m[1]) - 1 : state.last, false);
+});
+window.addEventListener('hashchange', () => {
+  const m = /^#s(\d+)$/.exec(location.hash);
+  if (m && Number(m[1]) - 1 !== current) showSection(Number(m[1]) - 1);
+});
 
-      const t = i18n[lang];
+/* ===== Livello 4: dati e logica specifica ===== */
+PAGE.quiz = {
+  0: [
+    { q: ["Un cliente vuole vendere prodotti online con carta di credito. Quale strada è più adatta?", "Un cliente quiere vender productos online con tarjeta de crédito. ¿Qué camino es el más adecuado?"],
+      o: [["Un solo file HTML", "Un único archivo HTML"], ["Un CMS per e-commerce come Shopify o WordPress + WooCommerce", "Un CMS de e-commerce como Shopify o WordPress + WooCommerce"], ["Un PDF", "Un PDF"]], c: 1,
+      e: ["Esatto: pagamenti, magazzino e ordini sono già pronti e sicuri.", "Exacto: pagos, stock y pedidos ya vienen listos y seguros."] },
+    { q: ["Il barbiere vuole solo una pagina con servizi, orari e WhatsApp, e non la cambierà quasi mai. Cosa scegli?", "El peluquero quiere solo una página con servicios, horarios y WhatsApp, y casi nunca la va a cambiar. ¿Qué eliges?"],
+      o: [["Template o codice puro: veloce, leggero, nessun costo mensile", "Plantilla o código puro: rápido, liviano, sin costo mensual"], ["Un'applicazione con login", "Una aplicación con login"], ["Un CMS e-commerce", "Un CMS de e-commerce"]], c: 0,
+      e: ["Giusto: per un sito vetrina semplice il codice (o un template) è la scelta più efficiente.", "Correcto: para un sitio vidriera simple el código (o una plantilla) es la opción más eficiente."] },
+    { q: ["Qual è il ruolo dell'IA tra le 4 strade?", "¿Cuál es el rol de la IA entre los 4 caminos?"],
+      o: [["Sostituisce completamente le altre", "Reemplaza completamente a las otras"], ["È un acceleratore che puoi usare con tutte, se capisci il codice", "Es un acelerador que puedes usar con todas, si entiendes el código"], ["Si usa solo per le immagini", "Se usa solo para imágenes"]], c: 1,
+      e: ["Perfetto: l'IA accelera, ma le decisioni e i controlli restano tuoi.", "Perfecto: la IA acelera, pero las decisiones y los controles siguen siendo tuyos."] }
+  ],
+  3: [
+    { q: ["Come deve chiamarsi il file della pagina principale?", "¿Cómo debe llamarse el archivo de la página principal?"],
+      o: [["home.txt", "home.txt"], ["index.html", "index.html"], ["sito.doc", "sito.doc"]], c: 1,
+      e: ["Esatto: i server aprono automaticamente index.html.", "Exacto: los servidores abren automáticamente index.html."] },
+    { q: ["Qual è la differenza tra dominio e hosting?", "¿Cuál es la diferencia entre dominio y hosting?"],
+      o: [["Il dominio è il nome/indirizzo, l'hosting è il computer che conserva i file", "El dominio es el nombre/dirección, el hosting es la computadora que guarda los archivos"], ["Sono la stessa cosa", "Son lo mismo"], ["L'hosting è il colore del sito", "El hosting es el color del sitio"]], c: 0,
+      e: ["Giusto: indirizzo di casa (dominio) e terreno (hosting).", "Correcto: dirección de la casa (dominio) y terreno (hosting)."] },
+    { q: ["A nome di chi registri il dominio di un cliente?", "¿A nombre de quién registras el dominio de un cliente?"],
+      o: [["A nome mio, così lo controllo io", "A mi nombre, así lo controlo yo"], ["A nome del cliente", "A nombre del cliente"], ["Non serve registrarlo", "No hace falta registrarlo"]], c: 1,
+      e: ["Giusto: il dominio è un bene del cliente. È una questione di correttezza e fiducia.", "Correcto: el dominio es un bien del cliente. Es una cuestión de corrección y confianza."] }
+  ],
+  4: [
+    { q: ["Dove deve stare il pulsante WhatsApp o 'Chiama' in un sito per un'attività locale?", "¿Dónde debe estar el botón de WhatsApp o 'Llamar' en un sitio para un negocio local?"],
+      o: [["Nascosto in fondo alla pagina", "Escondido al final de la página"], ["Ben visibile in alto (e facile da toccare sul cellulare)", "Bien visible arriba (y fácil de tocar en el celular)"], ["Solo nella versione PC", "Solo en la versión de PC"]], c: 1,
+      e: ["Esatto: il contatto è l'obiettivo del sito.", "Exacto: el contacto es el objetivo del sitio."] },
+    { q: ["Quale domanda al cliente decide spesso il metodo da usare?", "¿Qué pregunta al cliente suele decidir el método a usar?"],
+      o: [["Qual è il tuo colore preferito?", "¿Cuál es tu color favorito?"], ["Chi aggiornerà il sito e quanto spesso?", "¿Quién va a actualizar el sitio y con qué frecuencia?"], ["Che computer usi?", "¿Qué computadora usas?"]], c: 1,
+      e: ["Giusto: se il cliente aggiorna spesso da solo, serve un CMS.", "Correcto: si el cliente actualiza seguido solo, hace falta un CMS."] },
+    { q: ["Perché nel preventivo conviene indicare quanti giri di modifiche sono inclusi?", "¿Por qué conviene indicar en el presupuesto cuántas rondas de cambios están incluidas?"],
+      o: [["Per evitare modifiche infinite e malintesi", "Para evitar cambios infinitos y malentendidos"], ["Perché è obbligatorio per legge", "Porque es obligatorio por ley"], ["Non serve", "No hace falta"]], c: 0,
+      e: ["Esatto: regole chiare all'inizio = cliente contento alla fine.", "Exacto: reglas claras al principio = cliente contento al final."] }
+  ]
+};
 
-      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
-      document.getElementById('txt-course-title').innerText = t.courseTitle;
-      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
-      document.getElementById('txt-progress-label').innerText = t.progressLabel;
+/* ---------- Il Consulente (wizard) ---------- */
+const WIZ_Q = [
+  { id: 'who', q: ['Chi aggiornerà il sito dopo la consegna?', '¿Quién va a actualizar el sitio después de la entrega?'],
+    o: [['me', 'Io (Riccardo), quando serve', 'Yo (Ricardo), cuando haga falta'], ['client', 'Il cliente da solo, spesso', 'El cliente solo, seguido'], ['none', 'Quasi nessuno: cambia raramente', 'Casi nadie: cambia muy poco']] },
+  { id: 'shop', q: ['Deve vendere online con pagamento?', '¿Tiene que vender online con pago?'],
+    o: [['no', 'No', 'No'], ['yes', 'Sì, con carrello e pagamento', 'Sí, con carrito y pago']] },
+  { id: 'size', q: ['Quanto è grande il progetto?', '¿Qué tan grande es el proyecto?'],
+    o: [['one', '1 pagina vetrina', '1 página vidriera'], ['multi', '3–8 pagine', '3–8 páginas'], ['app', 'Area clienti, login, dati', 'Área de clientes, login, datos']] },
+  { id: 'time', q: ['Tempi e budget?', '¿Tiempos y presupuesto?'],
+    o: [['fast', 'Pochi giorni, budget basso', 'Pocos días, presupuesto bajo'], ['normal', 'Normali', 'Normales'], ['learn', 'Nessuna fretta: voglio imparare', 'Sin apuro: quiero aprender']] }
+];
+const WIZ_R = {
+  template: { it: { t: '🎨 Template + il tuo codice', why: 'Sito piccolo che cambia poco e va consegnato in fretta: parti da una base pronta e personalizzala.',
+      steps: ['Parti dal generatore della Fase 2 di questo livello oppure da un template Bootstrap gratuito.', 'Personalizza colori, testi e foto in VS Code.', 'Fatti aiutare dall\'IA per i testi (hero, servizi, chi siamo).', 'Controlla la checklist e pubblica su Netlify.'] },
+    es: { t: '🎨 Plantilla + tu código', why: 'Sitio chico que cambia poco y hay que entregar rápido: parte de una base lista y personalízala.',
+      steps: ['Parte del generador de la Fase 2 de este nivel o de una plantilla Bootstrap gratuita.', 'Personaliza colores, textos y fotos en VS Code.', 'Pídele ayuda a la IA con los textos (hero, servicios, quiénes somos).', 'Revisa la checklist y publica en Netlify.'] } },
+  code: { it: { t: '🧱 Codice puro (HTML + CSS + un po\' di JS)', why: 'Lo aggiorni tu e vuoi controllo totale: è la strada che ti fa crescere di più e non ha costi di piattaforma.',
+      steps: ['Disegna su carta le sezioni di ogni pagina (header, hero, servizi, contatti, footer).', 'Crea un file style.css condiviso da tutte le pagine.', 'Usa Flexbox per i menu e Grid per le card; prova sempre a 375px.', 'Aggiungi JavaScript solo dove serve (menu mobile, modulo) e pubblica.'] },
+    es: { t: '🧱 Código puro (HTML + CSS + un poco de JS)', why: 'Lo actualizas tú y quieres control total: es el camino que más te hace crecer y no tiene costos de plataforma.',
+      steps: ['Dibuja en papel las secciones de cada página (header, hero, servicios, contacto, footer).', 'Crea un archivo style.css compartido por todas las páginas.', 'Usa Flexbox para los menús y Grid para las tarjetas; prueba siempre a 375px.', 'Agrega JavaScript solo donde haga falta (menú móvil, formulario) y publica.'] } },
+  cms: { it: { t: '🛍️ CMS (WordPress)', why: 'Il cliente vuole aggiornare da solo e spesso: gli serve un pannello facile, non un file HTML.',
+      steps: ['Scegli un hosting che offre WordPress già installato.', 'Usa un tema leggero e personalizzalo con i colori del cliente (qui ti serve il CSS che sai!).', 'Crea le pagine e una breve guida per il cliente su come aggiungere contenuti.', 'Tieni aggiornati WordPress e i plugin: è parte del servizio.'] },
+    es: { t: '🛍️ CMS (WordPress)', why: 'El cliente quiere actualizar solo y seguido: necesita un panel fácil, no un archivo HTML.',
+      steps: ['Elige un hosting que ofrezca WordPress ya instalado.', 'Usa un tema liviano y personalízalo con los colores del cliente (¡acá te sirve el CSS que sabes!).', 'Crea las páginas y una guía corta para el cliente sobre cómo cargar contenidos.', 'Mantén actualizados WordPress y los plugins: es parte del servicio.'] } },
+  shop: { it: { t: '🛒 CMS e-commerce (Shopify o WordPress + WooCommerce)', why: 'Pagamenti, ordini e spedizioni richiedono sicurezza: non reinventare la ruota, usa una piattaforma fatta apposta.',
+      steps: ['Confronta con il cliente i costi mensili e le commissioni delle piattaforme.', 'Configura prodotti, pagamenti e spedizioni con il cliente.', 'Personalizza il tema con CSS per renderlo unico.', 'Prepara le pagine legali (condizioni di vendita, privacy) con il suo consulente.'] },
+    es: { t: '🛒 CMS de e-commerce (Shopify o WordPress + WooCommerce)', why: 'Pagos, pedidos y envíos requieren seguridad: no reinventes la rueda, usa una plataforma hecha para eso.',
+      steps: ['Compara con el cliente los costos mensuales y las comisiones de las plataformas.', 'Configura productos, pagos y envíos junto con el cliente.', 'Personaliza el tema con CSS para hacerlo único.', 'Prepara las páginas legales (condiciones de venta, privacidad) con su asesor.'] } },
+  backend: { it: { t: '🗄️ Applicazione con backend (prossimo livello!)', why: 'Login e dati degli utenti richiedono un server e un database veri: è il passo dopo questo corso.',
+      steps: ['Fai prima l\'interfaccia in HTML/CSS/JS (sai già farlo).', 'Studia un linguaggio lato server (PHP o Node.js) e SQL vero, partendo da ciò che hai visto nel Livello 1.', 'Per i primi progetti valuta servizi pronti che offrono login e database.', 'Finché non ti senti sicuro, collabora con uno sviluppatore più esperto.'] },
+    es: { t: '🗄️ Aplicación con backend (¡el siguiente nivel!)', why: 'El login y los datos de usuarios requieren un servidor y una base de datos reales: es el paso después de este curso.',
+      steps: ['Haz primero la interfaz en HTML/CSS/JS (ya sabes hacerlo).', 'Estudia un lenguaje del lado del servidor (PHP o Node.js) y SQL real, partiendo de lo que viste en el Nivel 1.', 'Para los primeros proyectos evalúa servicios listos que ofrecen login y base de datos.', 'Mientras no te sientas seguro, colabora con un desarrollador con más experiencia.'] } }
+};
+const wiz = {};
+function decide() {
+  if (wiz.shop === 'yes') return 'shop';
+  if (wiz.size === 'app') return 'backend';
+  if (wiz.who === 'client') return 'cms';
+  if (wiz.time === 'learn') return 'code';
+  if (wiz.size === 'one' && (wiz.time === 'fast' || wiz.who === 'none')) return 'template';
+  if (wiz.size === 'multi') return 'code';
+  return 'template';
+}
+function renderWizard() {
+  const box = document.getElementById('wizard-questions');
+  box.innerHTML = WIZ_Q.map((q, qi) => `<div style="margin-top:${qi ? 16 : 6}px"><strong>${qi + 1}. ${esc(tr(q.q[0], q.q[1]))}</strong>
+    <div class="choice-options" style="margin-top:8px">${q.o.map(o => `<button type="button" class="choice-btn${wiz[q.id] === o[0] ? ' selected' : ''}" data-wq="${q.id}" data-wa="${o[0]}">${esc(tr(o[1], o[2]))}</button>`).join('')}</div></div>`).join('');
+  const res = document.getElementById('wizard-result');
+  const answered = WIZ_Q.filter(q => wiz[q.id]).length;
+  if (answered < WIZ_Q.length) {
+    res.hidden = false;
+    res.innerHTML = tr(`Rispondi ancora a ${WIZ_Q.length - answered} domande per vedere il consiglio.`, `Responde ${WIZ_Q.length - answered} preguntas más para ver la recomendación.`);
+    return;
+  }
+  const r = WIZ_R[decide()][LANG];
+  res.hidden = false;
+  res.innerHTML = `<div style="font-size:1.15rem;font-weight:800;margin-bottom:4px">${tr('Il consiglio:', 'La recomendación:')} ${r.t}</div><p style="color:#e2e8f0;margin-bottom:8px">${r.why}</p>
+    <strong>${tr('Primi passi:', 'Primeros pasos:')}</strong><ol style="color:#e2e8f0;margin:6px 0 10px 1.2rem">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+    <small style="color:#cbd5e1">🤖 ${tr('In ogni caso usa l\'IA come copilota per testi, idee ed errori, controllando sempre il risultato.', 'En cualquier caso usa la IA como copiloto para textos, ideas y errores, controlando siempre el resultado.')}</small>`;
+}
 
-      document.getElementById('nav-s0').innerText = t.navS0;
-      document.getElementById('nav-s1').innerText = t.navS1;
-      document.getElementById('nav-s2').innerText = t.navS2;
-      document.getElementById('nav-s3').innerText = t.navS3;
-
-      // S0
-      document.getElementById('tag-s0').innerText = t.tagS0;
-      document.getElementById('title-s0').innerText = t.titleS0;
-      document.getElementById('sub-s0').innerText = t.subS0;
-      document.getElementById('mentor-s0-title').innerText = t.mentorS0Title;
-      document.getElementById('mentor-s0-text').innerHTML = t.mentorS0Text;
-      document.getElementById('card-step1-t').innerText = t.cardStep1T;
-      document.getElementById('card-step1-d').innerText = t.cardStep1D;
-      document.getElementById('card-step2-t').innerText = t.cardStep2T;
-      document.getElementById('card-step2-d').innerText = t.cardStep2D;
-      document.getElementById('card-step3-t').innerText = t.cardStep3T;
-      document.getElementById('card-step3-d').innerText = t.cardStep3D;
-      document.getElementById('btn-next-0').querySelector('span').innerText = t.btnNext0;
-
-      // S1
-      document.getElementById('tag-s1').innerText = t.tagS1;
-      document.getElementById('title-s1').innerText = t.titleS1;
-      document.getElementById('sub-s1').innerText = t.subS1;
-      document.getElementById('wk-box-title').innerText = t.wkBoxTitle;
-      document.getElementById('lbl-wk-type').innerText = t.lblWkType;
-      document.getElementById('lbl-wk-name').innerText = t.lblWkName;
-      document.getElementById('lbl-wk-wa').innerText = t.lblWkWa;
-      document.getElementById('lbl-wk-color').innerText = t.lblWkColor;
-      document.getElementById('txt-wk-export').innerText = t.txtWkExport;
-      document.getElementById('btn-export-final').innerText = t.btnExportFinal;
-      document.getElementById('btn-next-1').querySelector('span').innerText = t.btnNext1;
-
-      // S2
-      document.getElementById('tag-s2').innerText = t.tagS2;
-      document.getElementById('title-s2').innerText = t.titleS2;
-      document.getElementById('sub-s2').innerText = t.subS2;
-      document.getElementById('tip-s2-title').innerText = t.tipS2Title;
-      document.getElementById('tip-s2-text').innerHTML = t.tipS2Text;
-      document.getElementById('btn-next-2').querySelector('span').innerText = t.btnNext2;
-
-      // Cert
-      document.getElementById('cert-title').innerText = t.certTitle;
-      document.getElementById('cert-sub').innerText = t.certSub;
-      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
-      document.getElementById('cert-desc').innerHTML = t.certDesc;
-      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
-      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
-      document.getElementById('btnPrintCert').innerText = t.btnPrintCert;
-      document.getElementById('btn-home').innerText = t.btnHome;
-    }
-
-    function switchSection(index) {
-      currentSection = index;
-      for (let i = 0; i < totalSections; i++) {
-        const sec = document.getElementById(`sec-${i}`);
-        if (sec) sec.style.display = (i === index) ? 'block' : 'none';
-
-        const nav = document.querySelectorAll('.nav-item')[i];
-        if (nav) nav.classList.toggle('active', i === index);
-      }
-      completedSections[index] = true;
-      document.getElementById(`check-${index}`).style.display = 'inline-block';
-      document.querySelectorAll('.nav-item')[index].classList.add('completed');
-      updateProgressBar();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function updateFinalProject() {
-      const type = document.getElementById('wk-type').value;
-      const name = document.getElementById('wk-name').value.trim() || 'Attività';
-      const color = document.getElementById('wk-color').value;
-      const wa = document.getElementById('wk-wa').value.trim() || '+39 340 0000000';
-
-      document.getElementById('prev-title').innerText = name;
-      document.getElementById('prev-title').style.color = color;
-      document.getElementById('prev-cta').style.backgroundColor = color;
-      document.getElementById('prev-wa-link').href = `https://wa.me/${wa.replace(/[^0-9]/g, '')}`;
-
-      if (type === 'pizzeria') {
-        document.getElementById('prev-slogan').innerText = "Impasto tradizionale a lievitazione naturale 48h. Ingredienti 100% italiani.";
-      } else if (type === 'portfolio') {
-        document.getElementById('prev-slogan').innerText = "Siti web moderni, responsive e veloci realizzati su misura per la tua attività.";
-      } else {
-        document.getElementById('prev-slogan').innerText = "Consulenze personalizzate, professionalità garantita e supporto continuo.";
-      }
-    }
-
-    function copyFinalProjectCode() {
-      const name = document.getElementById('wk-name').value.trim() || 'La Mia Attività';
-      const color = document.getElementById('wk-color').value;
-      const wa = document.getElementById('wk-wa').value.trim();
-
-      const siteHtml = `<!DOCTYPE html>
-<html lang="it">
+/* ---------- Generatore del progetto finale ---------- */
+const FT = {
+  pizzeria: {
+    it: { name: 'Da Riccardo — Pizzeria Artigianale', slogan: 'Impasto a lunga lievitazione e ingredienti italiani, cotti nel forno a legna.', hours: 'Mar–Dom 19:00–23:30 · Lunedì chiuso', cta: 'Prenota su WhatsApp',
+      cards: [['🍕', 'Pizze classiche', 'Margherita, marinara, diavola: la tradizione fatta bene.'], ['🌿', 'Pizze speciali', 'Ingredienti di stagione scelti ogni settimana.'], ['🛵', 'Asporto', 'Ordina su WhatsApp e passa a ritirare.']],
+      about: 'Una pizzeria di famiglia dove l\'impasto riposa 48 ore e ogni pizza esce dal forno a legna.' },
+    es: { name: 'Da Ricardo — Pizzería Artesanal', slogan: 'Masa de larga fermentación e ingredientes italianos, al horno de leña.', hours: 'Mar–Dom 19:00–23:30 · Lunes cerrado', cta: 'Reserva por WhatsApp',
+      cards: [['🍕', 'Pizzas clásicas', 'Margherita, marinara, diavola: la tradición bien hecha.'], ['🌿', 'Pizzas especiales', 'Ingredientes de estación elegidos cada semana.'], ['🛵', 'Para llevar', 'Pide por WhatsApp y pasa a retirar.']],
+      about: 'Una pizzería familiar donde la masa descansa 48 horas y cada pizza sale del horno de leña.' } },
+  barbiere: {
+    it: { name: 'Barberia Classica', slogan: 'Taglio, barba e stile, con la cura di una volta.', hours: 'Mar–Sab 9:00–19:30', cta: 'Prenota su WhatsApp',
+      cards: [['✂️', 'Taglio', 'Classico o moderno, su misura per te.'], ['🧔', 'Barba', 'Rifinitura con panno caldo e prodotti naturali.'], ['👦', 'Bambini', 'Taglio per i più piccoli, con pazienza.']],
+      about: 'Una bottega di quartiere dove ogni cliente è seguito con calma e precisione.' },
+    es: { name: 'Barbería Clásica', slogan: 'Corte, barba y estilo, con el cuidado de antes.', hours: 'Mar–Sáb 9:00–19:30', cta: 'Reserva por WhatsApp',
+      cards: [['✂️', 'Corte', 'Clásico o moderno, a tu medida.'], ['🧔', 'Barba', 'Terminación con toalla caliente y productos naturales.'], ['👦', 'Niños', 'Corte para los más chicos, con paciencia.']],
+      about: 'Un local de barrio donde cada cliente es atendido con calma y precisión.' } },
+  bnb: {
+    it: { name: 'B&B Il Portico', slogan: 'Camere accoglienti nel centro storico, colazione fatta in casa.', hours: 'Check-in 14:00–20:00 · Check-out entro le 10:30', cta: 'Chiedi disponibilità',
+      cards: [['🛏️', 'Camere', 'Tranquille, luminose, con bagno privato.'], ['🥐', 'Colazione', 'Dolci fatti in casa e prodotti locali.'], ['📍', 'Posizione', 'A due passi dai principali monumenti.']],
+      about: 'Una casa di famiglia trasformata in B&B per far sentire ogni ospite a casa.' },
+    es: { name: 'B&B Il Portico', slogan: 'Habitaciones acogedoras en el centro histórico, desayuno casero.', hours: 'Check-in 14:00–20:00 · Check-out hasta las 10:30', cta: 'Consulta disponibilidad',
+      cards: [['🛏️', 'Habitaciones', 'Tranquilas, luminosas, con baño privado.'], ['🥐', 'Desayuno', 'Dulces caseros y productos locales.'], ['📍', 'Ubicación', 'A pasos de los principales monumentos.']],
+      about: 'Una casa de familia convertida en B&B para que cada huésped se sienta en casa.' } },
+  portfolio: {
+    it: { name: 'Riccardo — Web Designer', slogan: 'Siti moderni, veloci e perfetti sul cellulare per attività locali.', hours: 'Lun–Ven 9:00–18:00', cta: 'Parliamo del tuo sito',
+      cards: [['🎨', 'Siti vetrina', 'Una pagina chiara che porta clienti.'], ['📱', 'Responsive', 'Perfetti su cellulare, tablet e PC.'], ['🚀', 'Pubblicazione', 'Dominio, hosting e messa online: ci penso io.']],
+      about: 'Sono Riccardo: aiuto ristoranti, negozi e professionisti a farsi trovare online, con siti semplici e curati.' },
+    es: { name: 'Ricardo — Diseñador Web', slogan: 'Sitios modernos, rápidos y perfectos en el celular para negocios locales.', hours: 'Lun–Vie 9:00–18:00', cta: 'Hablemos de tu sitio',
+      cards: [['🎨', 'Sitios vidriera', 'Una página clara que trae clientes.'], ['📱', 'Responsive', 'Perfectos en celular, tablet y PC.'], ['🚀', 'Publicación', 'Dominio, hosting y puesta online: me encargo yo.']],
+      about: 'Soy Ricardo: ayudo a restaurantes, tiendas y profesionales a que los encuentren online, con sitios simples y cuidados.' } },
+  studio: {
+    it: { name: 'Studio Bianchi', slogan: 'Consulenza chiara e assistenza costante per famiglie e imprese.', hours: 'Lun–Ven 9:00–13:00 · 15:00–18:30', cta: 'Prenota una consulenza',
+      cards: [['💼', 'Consulenza', 'Analisi personalizzata della tua situazione.'], ['📄', 'Pratiche', 'Le gestiamo noi, con tempi chiari.'], ['🤝', 'Assistenza', 'Sempre raggiungibili quando serve.']],
+      about: 'Uno studio con oltre vent\'anni di esperienza, vicino alle persone e alle piccole imprese del territorio.' },
+    es: { name: 'Estudio Bianchi', slogan: 'Asesoramiento claro y acompañamiento constante para familias y empresas.', hours: 'Lun–Vie 9:00–13:00 · 15:00–18:30', cta: 'Reserva una consulta',
+      cards: [['💼', 'Asesoramiento', 'Análisis personalizado de tu situación.'], ['📄', 'Trámites', 'Los gestionamos nosotros, con tiempos claros.'], ['🤝', 'Acompañamiento', 'Siempre disponibles cuando haga falta.']],
+      about: 'Un estudio con más de veinte años de experiencia, cerca de las personas y las pequeñas empresas de la zona.' } }
+};
+const FL = {
+  it: { services: 'Servizi', about: 'Chi siamo', where: 'Orari e dove siamo', contact: 'Contatti', hoursT: 'Orari', addrT: 'Indirizzo', map: 'Apri in Google Maps', write: 'Scrivici un messaggio', name: 'Nome', email: 'Email', msg: 'Messaggio', send: 'Invia', vat: 'P.IVA 00000000000', made: 'Sito realizzato da Riccardo', chat: 'Ciao! Vorrei informazioni' },
+  es: { services: 'Servicios', about: 'Quiénes somos', where: 'Horarios y dónde estamos', contact: 'Contacto', hoursT: 'Horarios', addrT: 'Dirección', map: 'Abrir en Google Maps', write: 'Escríbenos un mensaje', name: 'Nombre', email: 'Email', msg: 'Mensaje', send: 'Enviar', vat: 'CUIT / P.IVA 00000000000', made: 'Sitio realizado por Ricardo', chat: '¡Hola! Quisiera información' }
+};
+function buildFinal() {
+  const g = id => document.getElementById(id);
+  const lang = g('f-lang').value, T = FT[g('f-type').value][lang], L = FL[lang];
+  const name = esc(g('f-name').value.trim() || T.name), slogan = esc(g('f-slogan').value.trim() || T.slogan);
+  const hours = esc(g('f-hours').value.trim() || T.hours), addrRaw = g('f-address').value.trim(), addr = esc(addrRaw);
+  const color = g('f-color').value, digits = g('f-wa').value.replace(/[^0-9]/g, '') || '393401234567';
+  const wa = `https://wa.me/${digits}?text=${encodeURIComponent(L.chat)}`;
+  const maps = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(addrRaw || 'Italia');
+  const year = new Date().getFullYear();
+  const cards = T.cards.map(c => `        <article class="card">\n          <div class="icon">${c[0]}</div>\n          <h3>${c[1]}</h3>\n          <p>${c[2]}</p>\n        </article>`).join('\n');
+  return `<!DOCTYPE html>
+<html lang="${lang}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- SEO: titolo e descrizione che appaiono su Google -->
   <title>${name}</title>
+  <meta name="description" content="${slogan}">
   <style>
+    /* ===== 1. COLORI: cambia qui e cambia tutto il sito ===== */
+    :root { --brand: ${color}; --text: #1e293b; --muted: #64748b; --light: #f8fafc; }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; color: #1e293b; line-height: 1.6; }
-    header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2rem; border-bottom: 1px solid #e2e8f0; }
-    nav a { margin-left: 1.5rem; text-decoration: none; color: #475569; font-weight: 600; }
-    .hero { background: ${color}; color: white; padding: 4.5rem 2rem; text-align: center; }
-    .hero h1 { font-size: 2.75rem; margin-bottom: 1rem; }
-    .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 1.5rem; opacity: 0.95; }
-    .btn-wa { background: #25d366; color: white; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; display: inline-block; font-size: 1rem; }
-    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1000px; margin: 3.5rem auto; padding: 0 1.5rem; }
-    .card { background: white; border: 1px solid #e2e8f0; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; }
-    footer { text-align: center; padding: 2.5rem; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 0.9rem; }
-    @media (max-width: 768px) {
-      header { flex-direction: column; gap: 1rem; }
-      nav a { margin: 0 0.5rem; }
+    html { scroll-behavior: smooth; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--text); line-height: 1.6; }
+    img { max-width: 100%; display: block; }
+    a { color: var(--brand); }
+
+    /* ===== 2. HEADER con Flexbox ===== */
+    header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.5rem; background: white; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 10; }
+    .logo { font-weight: 800; font-size: 1.15rem; color: var(--brand); text-decoration: none; }
+    nav { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+    nav a { color: #475569; text-decoration: none; font-weight: 600; }
+    nav a:hover { color: var(--brand); }
+
+    /* ===== 3. HERO ===== */
+    .hero { background: linear-gradient(135deg, var(--brand), #0f172a); color: white; text-align: center; padding: 5.5rem 1.5rem; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: .8rem; }
+    .hero p { font-size: 1.15rem; max-width: 620px; margin: 0 auto 1.8rem; opacity: .95; }
+    .btn { display: inline-block; background: #25d366; color: white; padding: 14px 28px; border-radius: 10px; font-weight: 700; text-decoration: none; font-size: 1.05rem; }
+
+    /* ===== 4. SEZIONI E CARD con CSS Grid ===== */
+    section { padding: 4rem 1.5rem; }
+    h2 { text-align: center; font-size: 1.9rem; margin-bottom: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; max-width: 1050px; margin: 0 auto; }
+    .card { background: white; border: 1px solid #e2e8f0; border-radius: 14px; padding: 1.8rem; text-align: center; box-shadow: 0 6px 18px rgba(0,0,0,.05); }
+    .card .icon { font-size: 2.5rem; }
+    .card h3 { color: var(--brand); margin: .5rem 0; }
+    .about { background: var(--light); text-align: center; }
+    .about p { max-width: 680px; margin: 0 auto; font-size: 1.1rem; }
+    .info { max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .info div { background: var(--light); border-radius: 12px; padding: 1.5rem; }
+    .info h3 { margin-bottom: .4rem; }
+
+    /* ===== 5. MODULO CONTATTI ===== */
+    form { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: .8rem; }
+    input, textarea { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    button { background: var(--brand); color: white; border: none; padding: 13px; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; }
+
+    footer { text-align: center; padding: 2rem 1rem; color: var(--muted); font-size: .9rem; border-top: 1px solid #e2e8f0; }
+
+    /* Pulsante WhatsApp sempre visibile (in basso a destra) */
+    .wa-float { position: fixed; right: 18px; bottom: 18px; width: 58px; height: 58px; border-radius: 50%; background: #25d366; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; text-decoration: none; box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+
+    /* ===== 6. CELLULARE ===== */
+    @media (max-width: 640px) {
+      header { flex-direction: column; padding: .8rem; }
+      nav { justify-content: center; gap: .9rem; font-size: .95rem; }
+      .hero { padding: 4rem 1.2rem; }
+      section { padding: 3rem 1.2rem; }
     }
   </style>
 </head>
 <body>
+
   <header>
-    <h2>${name}</h2>
+    <a class="logo" href="#">${name}</a>
     <nav>
-      <a href="#home">Home</a>
-      <a href="#servizi">Servizi</a>
-      <a href="#contatti">Contatti</a>
+      <a href="#servizi">${L.services}</a>
+      <a href="#chi-siamo">${L.about}</a>
+      <a href="#orari">${L.hoursT}</a>
+      <a href="#contatti">${L.contact}</a>
     </nav>
   </header>
+
   <main>
-    <section class="hero" id="home">
+    <!-- HERO: la prima cosa che si vede. Il pulsante porta a WhatsApp -->
+    <section class="hero">
       <h1>${name}</h1>
-      <p>Esperienza, passione e qualità al servizio dei nostri clienti.</p>
-      <a href="https://wa.me/${wa.replace(/[^0-9]/g, '')}" class="btn-wa">💬 Contattaci su WhatsApp</a>
+      <p>${slogan}</p>
+      <a class="btn" href="${wa}" target="_blank" rel="noopener">💬 ${T.cta}</a>
     </section>
-    <section class="features" id="servizi">
-      <div class="card">
-        <h3>Qualità Garantita</h3>
-        <p>I migliori standard del settore con attenzione artigianale a ogni dettaglio.</p>
+
+    <!-- SERVIZI: per aggiungere una card, copia un blocco <article> -->
+    <section id="servizi">
+      <h2>${L.services}</h2>
+      <div class="grid">
+${cards}
       </div>
-      <div class="card">
-        <h3>Assistenza Rapida</h3>
-        <p>Rispondiamo in tempi record per offrirti sempre la soluzione ideale.</p>
+    </section>
+
+    <section class="about" id="chi-siamo">
+      <h2>${L.about}</h2>
+      <p>${T.about}</p>
+    </section>
+
+    <section id="orari">
+      <h2>${L.where}</h2>
+      <div class="info">
+        <div><h3>🕒 ${L.hoursT}</h3><p>${hours}</p></div>
+        <div><h3>📍 ${L.addrT}</h3><p>${addr}</p><p><a href="${maps}" target="_blank" rel="noopener">${L.map} ➔</a></p></div>
       </div>
-      <div class="card">
-        <h3>Esperienza & Fiducia</h3>
-        <p>Clienti soddisfatti ogni giorno grazie alla nostra dedizione continua.</p>
-      </div>
+    </section>
+
+    <!-- CONTATTI: per ricevere i messaggi via email
+         - Formspree: sostituisci action="#" con action="https://formspree.io/f/IL-TUO-CODICE" e aggiungi method="POST"
+         - Netlify: aggiungi data-netlify="true" al tag <form> -->
+    <section id="contatti">
+      <h2>${L.write}</h2>
+      <form action="#" name="contatti">
+        <input type="text" name="nome" placeholder="${L.name}" required>
+        <input type="email" name="email" placeholder="${L.email}" required>
+        <textarea name="messaggio" rows="4" placeholder="${L.msg}" required></textarea>
+        <button type="submit">${L.send}</button>
+      </form>
     </section>
   </main>
-  <footer id="contatti">
-    <p>&copy; 2026 ${name} - Sito Web Creato da Riccardo con il suo Mentore.</p>
+
+  <footer>
+    <p>&copy; ${year} ${name} · ${addr}</p>
+    <!-- Per le attività italiane: indica qui ragione sociale e Partita IVA reali -->
+    <p>${L.vat} · ${L.made}</p>
   </footer>
+
+  <a class="wa-float" href="${wa}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
 </body>
-</html>`;
+</html>
+`;
+}
+let finalTimer;
+function refreshFinal() {
+  clearTimeout(finalTimer);
+  finalTimer = setTimeout(() => {
+    const code = buildFinal();
+    document.getElementById('f-frame').srcdoc = code;
+    document.getElementById('f-code').value = code;
+  }, 200);
+}
+function applyFinalDefaults() {
+  const T = FT[document.getElementById('f-type').value][document.getElementById('f-lang').value];
+  document.getElementById('f-name').value = T.name;
+  document.getElementById('f-slogan').value = T.slogan;
+  document.getElementById('f-hours').value = T.hours;
+}
 
-      navigator.clipboard.writeText(siteHtml).then(() => {
-        alert(currentLang === 'it' 
-          ? "Codice completo del Progetto Finale copiato negli appunti! Puoi salvarlo in un file 'index.html' e caricarlo su qualsiasi hosting!" 
-          : "¡Código completo del Proyecto Final copiado al portapapeles! ¡Puedes guardarlo en un archivo 'index.html' y subirlo a cualquier hosting!");
-      });
-    }
+PAGE.init = () => {
+  document.getElementById('wizard-questions').addEventListener('click', e => {
+    const b = e.target.closest('[data-wq]'); if (!b) return;
+    wiz[b.dataset.wq] = b.dataset.wa; renderWizard();
+  });
+  applyFinalDefaults();
+  ['f-type', 'f-lang'].forEach(id => document.getElementById(id).addEventListener('change', () => { applyFinalDefaults(); refreshFinal(); }));
+  ['f-name', 'f-slogan', 'f-color', 'f-wa', 'f-address', 'f-hours'].forEach(id => document.getElementById(id).addEventListener('input', refreshFinal));
+  document.getElementById('f-view').addEventListener('click', e => {
+    const b = e.target.closest('[data-view]'); if (!b) return;
+    document.querySelectorAll('#f-view button').forEach(x => x.classList.toggle('active', x === b));
+    document.getElementById('f-frame-wrap').className = 'frame-wrap ' + b.dataset.view;
+  });
+  document.getElementById('f-download').addEventListener('click', () => downloadFile('index.html', buildFinal()));
+  document.getElementById('f-copy').addEventListener('click', () => copyText(buildFinal()).then(ok => ok
+    ? toast(tr('Codice copiato! Incollalo in un file index.html.', '¡Código copiado! Pégalo en un archivo index.html.'))
+    : showModal(buildFinal(), tr('Copia questo codice (Ctrl+A, Ctrl+C):', 'Copia este código (Ctrl+A, Ctrl+C):'))));
+  refreshFinal();
+};
+PAGE.onLang = () => renderWizard();
 
-    function updateProgressBar() {
-      let count = 0;
-      for (let i = 0; i < totalSections; i++) {
-        if (completedSections[i]) count++;
-      }
-      const percent = Math.round((count / totalSections) * 100);
-      document.getElementById('progress-percent').innerText = `${percent}%`;
-      document.getElementById('progress-fill').style.width = `${percent}%`;
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>

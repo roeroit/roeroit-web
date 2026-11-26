@@ -3,1253 +3,960 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Livello 3: Dare Vita al Sito con JavaScript - Riccardo</title>
+  <title>Livello 3: Dare Vita al Sito con JavaScript — Corso di Riccardo</title>
   <style>
-    :root {
-      --primary: #f59e0b;
-      --primary-hover: #d97706;
-      --primary-light: #fef3c7;
-      --secondary: #0f172a;
-      --success: #10b981;
-      --success-light: #d1fae5;
-      --danger: #ef4444;
-      --danger-light: #fee2e2;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-      --sidebar-bg: #1c1917;
-      --sidebar-text: #f8fafc;
-      --radius: 12px;
-      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
-    }
+:root { --primary: #d97706; --primary-dark: #b45309; --primary-light: #fffbeb; --primary-soft: #fcd34d; --sidebar-bg: #1c1917; }
+:root {
+  --success: #10b981; --success-dark: #047857; --success-light: #d1fae5;
+  --danger: #ef4444; --danger-light: #fee2e2;
+  --bg: #f8fafc; --card-bg: #ffffff; --text: #0f172a; --text-body: #334155; --text-muted: #64748b;
+  --border: #e2e8f0; --code-bg: #0f172a; --radius: 12px;
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / .07), 0 2px 4px -2px rgb(0 0 0 / .07);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html[lang="it"] .es, html[lang="es"] .it { display: none !important; }
+body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; display: flex; min-height: 100vh; }
+a { color: var(--primary-dark); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .9em; }
+p code, li code, td code, .callout code { background: #f1f5f9; color: #0f172a; padding: 1px 5px; border-radius: 4px; }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ---------- Sidebar ---------- */
+#sidebar { width: 300px; background: var(--sidebar-bg); color: #f1f5f9; display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+.sidebar-header { padding: 1.6rem 1.4rem 1.2rem; border-bottom: 1px solid rgb(255 255 255 / .08); }
+.student-badge { display: inline-flex; align-items: center; gap: 8px; background: rgb(255 255 255 / .07); padding: 5px 12px; border-radius: 8px; font-size: .82rem; color: #cbd5e1; margin-bottom: .7rem; }
+.student-badge strong { color: var(--primary-soft); }
+.sidebar-title { font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1.3; }
+.mentor-note { font-size: .8rem; color: #94a3b8; margin-top: .4rem; }
+.progress-container { padding: 1.1rem 1.4rem; background: rgb(0 0 0 / .18); border-bottom: 1px solid rgb(255 255 255 / .08); }
+.progress-info { display: flex; justify-content: space-between; font-size: .84rem; margin-bottom: 6px; color: #cbd5e1; }
+.progress-bar { height: 8px; background: rgb(255 255 255 / .1); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--primary-soft), var(--success)); transition: width .4s; }
+.nav-list { list-style: none; margin: 0; padding: .9rem .7rem; display: flex; flex-direction: column; gap: 4px; }
+.nav-item { width: 100%; text-align: left; background: none; border: 0; font: inherit; padding: 9px 12px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: .88rem; color: #a3aec2; font-weight: 500; transition: background .15s, color .15s; }
+.nav-item:hover { background: rgb(255 255 255 / .07); color: #fff; }
+.nav-item.active { background: var(--primary); color: #fff; font-weight: 600; }
+.nav-item .icon { font-size: 1.05rem; }
+.nav-item .check { margin-left: auto; color: var(--success); font-weight: 700; visibility: hidden; }
+.nav-item.completed .check { visibility: visible; }
+.nav-item.active .check { color: #fff; }
+.sidebar-footer { margin-top: auto; padding: 1.1rem 1.4rem; font-size: .8rem; border-top: 1px solid rgb(255 255 255 / .08); display: flex; flex-direction: column; gap: 8px; }
+.sidebar-footer a { color: var(--primary-soft); text-decoration: none; font-weight: 600; }
+.sidebar-footer small { color: #8792a6; line-height: 1.45; }
 
-    body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.65;
-      display: flex;
-      min-height: 100vh;
-    }
+/* ---------- Main ---------- */
+#main-content { flex: 1; min-width: 0; max-width: 1000px; margin: 0 auto; padding: 2.2rem 2.4rem 4rem; }
+.top-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; padding-bottom: 1.1rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 12px; }
+.levels { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: .82rem; font-weight: 600; }
+.levels a, .levels span.cur { text-decoration: none; padding: 5px 10px; border-radius: 7px; background: #f1f5f9; color: var(--text-muted); border: 1px solid transparent; }
+.levels a:hover { color: var(--text); background: #e2e8f0; }
+.levels span.cur { background: var(--primary-light); color: var(--primary-dark); border-color: var(--primary-soft); }
+.levels .sep { color: #cbd5e1; }
+.lang-selector { display: flex; background: var(--border); border-radius: 99px; padding: 3px; gap: 3px; }
+.lang-btn { border: 0; background: transparent; padding: 6px 14px; font-size: .86rem; font-weight: 600; border-radius: 99px; cursor: pointer; color: var(--text-muted); }
+.lang-btn.active { background: #fff; color: var(--primary-dark); box-shadow: 0 1px 3px rgb(0 0 0 / .1); }
 
-    #sidebar {
-      width: 320px;
-      background: var(--sidebar-bg);
-      color: var(--sidebar-text);
-      display: flex;
-      flex-direction: column;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-      flex-shrink: 0;
-      border-right: 1px solid #292524;
-    }
+.module-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); padding: 2.4rem; margin-bottom: 2rem; }
+.module-card[hidden] { display: none; }
+.module-tag { display: inline-block; background: var(--primary-light); color: var(--primary-dark); font-size: .78rem; font-weight: 700; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: .6rem; }
+h1 { font-size: 1.85rem; margin-bottom: .5rem; line-height: 1.28; }
+h2 { font-size: 1.3rem; margin: 1.9rem 0 .7rem; line-height: 1.35; }
+h3 { font-size: 1.08rem; margin: 1.3rem 0 .5rem; }
+p { margin-bottom: 1rem; color: var(--text-body); }
+.lead { color: var(--text-muted); font-size: 1.05rem; }
+ul, ol { margin: .4rem 0 1.2rem 1.4rem; color: var(--text-body); }
+li { margin-bottom: .45rem; }
+.muted { color: var(--text-muted); font-size: .9rem; }
 
-    #main-content {
-      flex: 1;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 2.5rem;
-      overflow-y: auto;
-    }
+/* Callouts */
+.callout { border-left: 4px solid var(--primary); background: #f8fafc; padding: 1rem 1.25rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.3rem 0; font-size: .95rem; color: var(--text-body); }
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout.tip { border-left-color: #0ea5e9; background: #f0f9ff; }
+.callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
+.callout.security { border-left-color: #10b981; background: #ecfdf5; }
+.callout.history { border-left-color: #f59e0b; background: #fffbeb; }
+.callout.warn { border-left-color: #ef4444; background: #fef2f2; }
+.callout-title { font-weight: 700; margin-bottom: .35rem; color: var(--text); }
 
-    .top-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+/* Code */
+.code-container { background: var(--code-bg); color: #e2e8f0; border-radius: 10px; padding: 1.1rem 1.1rem 2.4rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; overflow-x: auto; margin: 1rem 0 1.5rem; position: relative; }
+.code-container pre { margin: 0; white-space: pre; }
+.code-container code { background: none; padding: 0; color: inherit; font-size: inherit; }
+.code-badge { position: absolute; top: 8px; right: 12px; font-size: .68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .5px; }
+.copy-btn { position: absolute; bottom: 8px; right: 10px; background: #334155; color: #f1f5f9; border: 0; border-radius: 5px; padding: 4px 10px; font-size: .75rem; cursor: pointer; }
+.copy-btn:hover { background: #475569; }
+.c-com { color: #7dd3a0; }
 
-    .nav-breadcrumbs {
-      display: flex;
-      gap: 8px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      align-items: center;
-    }
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 7px; background: var(--primary); color: #fff; border: 0; padding: 10px 18px; border-radius: 8px; font-weight: 600; font-size: .92rem; cursor: pointer; text-decoration: none; font-family: inherit; }
+.btn:hover { background: var(--primary-dark); }
+.btn.ghost { background: #fff; color: var(--text-body); border: 1px solid var(--border); }
+.btn.ghost:hover { background: #f1f5f9; }
+.btn.dark { background: #0f172a; } .btn.dark:hover { background: #1e293b; }
+.btn.green { background: var(--success); } .btn.green:hover { background: var(--success-dark); }
+.btn.sm { padding: 6px 12px; font-size: .82rem; }
+.btn-next-module { margin-top: 1.6rem; background: var(--success); padding: 12px 22px; font-weight: 700; }
+.btn-next-module:hover { background: var(--success-dark); }
+.btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
 
-    .nav-breadcrumbs a {
-      color: #64748b;
-      text-decoration: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: #f1f5f9;
-    }
+/* Diagram & cards */
+.diagram-box { background: #f1f5f9; border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; margin: 1.4rem 0; display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 8px; text-align: center; }
+.diagram-arrow { align-self: center; }
+.diagram-step { background: #fff; padding: 12px 12px; border-radius: 8px; border: 1px solid #cbd5e1; font-size: .84rem; flex: 1 1 130px; max-width: 190px; }
+.diagram-step .big { font-size: 1.5rem; }
+.diagram-step p { font-size: .78rem; color: var(--text-muted); margin: 2px 0 0; }
+.diagram-arrow { font-size: 1.25rem; color: var(--text-muted); font-weight: 800; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 1.4rem 0; }
+.card { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 1.15rem; display: flex; flex-direction: column; }
+.card p { font-size: .87rem; flex: 1; margin-bottom: .6rem; }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: .6rem; }
+.card-icon { font-size: 1.6rem; background: #f1f5f9; padding: 5px 10px; border-radius: 8px; }
+.badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; margin-top: 3px; background: var(--primary-light); color: var(--primary-dark); }
+.card .ideal { font-size: .78rem; font-weight: 700; color: var(--success-dark); }
+.step-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); line-height: 1; margin-bottom: 6px; }
 
-    .nav-breadcrumbs a:hover {
-      color: #0f172a;
-      background: #e2e8f0;
-    }
+table.simple { width: 100%; border-collapse: collapse; font-size: .88rem; margin: 1rem 0 1.5rem; }
+table.simple th, table.simple td { padding: 9px 11px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+table.simple th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
+.table-wrap { overflow-x: auto; }
 
-    .lang-selector {
-      display: flex;
-      background: var(--border);
-      border-radius: 9999px;
-      padding: 3px;
-      gap: 4px;
-    }
+/* Choice selector (path / wizard) */
+.choice-box { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%); color: #fff; padding: 1.8rem; border-radius: var(--radius); margin: 1.8rem 0; }
+.choice-box h3 { color: #fff; margin-top: 0; }
+.choice-box p { color: #cbd5e1; }
+.choice-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 1rem; }
+.choice-btn { background: rgb(255 255 255 / .07); border: 1px solid rgb(255 255 255 / .2); color: #fff; padding: 14px; border-radius: 10px; cursor: pointer; text-align: left; font: inherit; transition: background .15s, border-color .15s; }
+.choice-btn:hover { background: rgb(255 255 255 / .14); border-color: #38bdf8; }
+.choice-btn.selected { background: #4f46e5; border-color: #a5b4fc; }
+.choice-btn small { display: block; color: #cbd5e1; font-size: .8rem; margin-top: 3px; }
+.choice-result { margin-top: 1.3rem; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .15); border-radius: 8px; padding: 16px 18px; line-height: 1.55; }
+.choice-result ul { color: #e2e8f0; margin-bottom: 0; }
+.choice-result a { color: #7dd3fc; }
 
-    .lang-btn {
-      border: none;
-      background: transparent;
-      padding: 6px 14px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      color: var(--text-muted);
-    }
+/* Box model */
+.box-model-demo { background: #fed7aa; border: 2px dashed #ea580c; padding: 18px; border-radius: 8px; text-align: center; margin: 1.5rem 0; font-size: .84rem; color: #7c2d12; }
+.box-model-border { background: #fef08a; border: 2px solid #ca8a04; padding: 14px; border-radius: 6px; color: #713f12; margin-top: 8px; }
+.box-model-padding { background: #bbf7d0; border: 2px dashed #16a34a; padding: 12px; border-radius: 4px; color: #14532d; margin-top: 8px; }
+.box-model-content { background: #bfdbfe; border: 2px solid #2563eb; padding: 12px; border-radius: 4px; font-weight: 700; color: #1e3a8a; margin-top: 8px; }
 
-    .lang-btn.active {
-      background: #ffffff;
-      color: #b45309;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+/* Labs */
+.lab { background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; margin: 1.5rem 0; }
+.lab-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: .7rem; }
+.lab-title { font-weight: 700; font-size: .95rem; }
+.lab-split { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.lab-code { width: 100%; min-height: 230px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.5; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; resize: vertical; background: #0f172a; color: #e2e8f0; tab-size: 2; }
+.lab-code:focus { outline: 2px solid var(--primary-soft); }
+.lab-view { width: 100%; min-height: 230px; height: 100%; border: 1px dashed #94a3b8; border-radius: 8px; background: #fff; }
+.lab-label { font-size: .72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+.lab.tall .lab-code, .lab.tall .lab-view { min-height: 330px; }
 
-    /* Sidebar */
-    .sidebar-header {
-      padding: 1.75rem 1.5rem 1.25rem;
-      border-bottom: 1px solid #292524;
-    }
+/* Challenge */
+.challenge { border: 2px dashed var(--primary-soft); background: var(--primary-light); border-radius: 12px; padding: 1.2rem 1.3rem; margin: 1.6rem 0; }
+.challenge-title { font-weight: 800; color: var(--primary-dark); margin-bottom: .4rem; font-size: 1rem; }
+.challenge p { margin-bottom: .6rem; }
+.checklist { list-style: none; margin: .4rem 0 0; }
+.checklist li { margin-bottom: 6px; }
+.checklist label { display: flex; gap: 9px; align-items: flex-start; cursor: pointer; font-size: .92rem; color: var(--text-body); }
+.checklist input { margin-top: 4px; width: 17px; height: 17px; accent-color: var(--success); flex-shrink: 0; }
+.checklist input:checked + span { color: var(--text-muted); text-decoration: line-through; }
+.challenge-count { font-size: .8rem; font-weight: 700; color: var(--primary-dark); margin-top: 6px; }
 
-    .student-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #292524;
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      color: #d6d3d1;
-      margin-bottom: 0.75rem;
-    }
-    .student-badge strong { color: #fbbf24; }
+/* Quiz */
+.quiz-container { background: #f8fafc; border: 2px solid var(--border); border-radius: var(--radius); padding: 1.6rem; margin-top: 2rem; }
+.quiz-title { font-size: 1.15rem; font-weight: 700; margin-bottom: 1.1rem; }
+.question-block { background: #fff; padding: 1.15rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem; }
+.question-text { font-weight: 600; margin-bottom: .8rem; }
+.options-list { display: flex; flex-direction: column; gap: 7px; }
+.option-btn { text-align: left; padding: 10px 14px; border: 1px solid var(--border); border-radius: 7px; background: #fff; cursor: pointer; font: inherit; font-size: .9rem; color: var(--text); }
+.option-btn:hover { background: #f1f5f9; }
+.option-btn.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 600; }
+.option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
+.option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
+.feedback-box { margin-top: .7rem; padding: 9px 13px; border-radius: 7px; font-size: .87rem; display: none; }
+.feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
+.feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
+.quiz-submit-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.score-badge { font-weight: 700; color: var(--primary-dark); }
 
-    .sidebar-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #ffffff;
-      line-height: 1.3;
-    }
+/* Prompt boxes */
+.prompt-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 1rem 1rem 2.4rem; margin: .8rem 0; position: relative; }
+.prompt-label { font-size: .74rem; font-weight: 700; color: #6366f1; text-transform: uppercase; margin-bottom: 4px; }
+.prompt-text { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .86rem; color: #1e293b; }
 
-    .mentor-note {
-      font-size: 0.8rem;
-      color: #a8a29e;
-      margin-top: 0.5rem;
-    }
+/* Forms & builders */
+.controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; padding: 16px; background: #fff; border-bottom: 1px solid var(--border); }
+.control-group label { display: block; font-size: .78rem; font-weight: 700; color: #475569; margin-bottom: 4px; }
+.control-group input, .control-group select, .control-group textarea, .field { width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 7px; font-size: .9rem; font-family: inherit; background: #fff; }
+.builder { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: var(--radius); overflow: hidden; margin: 1.5rem 0; }
+.builder-toolbar { background: #0f172a; color: #fff; padding: 11px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.builder-toolbar strong { color: var(--primary-soft); font-size: .92rem; }
+.seg { display: flex; gap: 5px; }
+.seg button { background: #1e293b; border: 1px solid #334155; color: #94a3b8; padding: 4px 11px; border-radius: 6px; font-size: .8rem; cursor: pointer; font-family: inherit; }
+.seg button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+.frame-wrap { padding: 18px; background: #e2e8f0; display: flex; justify-content: center; }
+.frame-wrap iframe { width: 100%; height: 560px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; box-shadow: 0 10px 25px -5px rgb(0 0 0 / .15); transition: width .3s; }
+.frame-wrap.mobile iframe { width: 375px; border: 8px solid #0f172a; border-radius: 26px; }
+.frame-wrap.tablet iframe { width: 768px; max-width: 100%; }
+.export-bar { padding: 13px 16px; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.export-bar span { font-size: .86rem; color: #475569; }
+details.code-peek { border-top: 1px solid var(--border); background: #fff; }
+details.code-peek summary { cursor: pointer; padding: 10px 16px; font-size: .86rem; font-weight: 600; color: var(--primary-dark); }
+details.code-peek textarea { width: 100%; height: 260px; border: 0; border-top: 1px solid var(--border); padding: 12px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .78rem; background: #0f172a; color: #e2e8f0; resize: vertical; }
 
-    .progress-container {
-      padding: 1.25rem 1.5rem;
-      background: #141210;
-      border-bottom: 1px solid #292524;
-    }
+/* Playground */
+.pg { display: grid; grid-template-columns: 260px 1fr; gap: 14px; background: #f1f5f9; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin: 1.4rem 0; }
+.pg .control-group { margin-bottom: 10px; }
+.pg-stage { background: #fff; border: 1px dashed #94a3b8; border-radius: 8px; min-height: 220px; padding: 10px; }
+.pg-item { background: var(--primary); color: #fff; font-weight: 700; border-radius: 6px; padding: 14px 18px; text-align: center; }
+.pg-item:nth-child(2) { background: #0ea5e9; } .pg-item:nth-child(3) { background: #10b981; } .pg-item:nth-child(4) { background: #f59e0b; } .pg-item:nth-child(5) { background: #ef4444; } .pg-item:nth-child(6) { background: #8b5cf6; }
+.pg-css { margin-top: 10px; background: #0f172a; color: #a7f3d0; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; padding: 10px 12px; border-radius: 8px; white-space: pre; overflow-x: auto; }
 
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      margin-bottom: 6px;
-      color: #e7e5e4;
-    }
+/* SQL workbench */
+.sql-workbench { background: #0f172a; border-radius: 10px; color: #f8fafc; overflow: hidden; margin-top: 1rem; border: 1px solid #334155; }
+.sql-toolbar { background: #1e293b; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; flex-wrap: wrap; gap: 8px; }
+.sql-title { font-size: .85rem; font-weight: 700; color: #38bdf8; }
+.sql-toolbar select, .sql-toolbar button { background: #0b1120; color: #cbd5e1; border: 1px solid #475569; padding: 3px 8px; border-radius: 5px; font-size: .78rem; cursor: pointer; font-family: inherit; }
+.sql-chips { display: flex; gap: 6px; flex-wrap: wrap; padding: 10px 14px; background: #131c31; border-bottom: 1px solid #1e293b; }
+.sql-chip-btn { background: #1e293b; border: 1px solid #334155; color: #cbd5e1; padding: 4px 10px; border-radius: 6px; font-size: .77rem; cursor: pointer; font-family: ui-monospace, Menlo, monospace; }
+.sql-chip-btn:hover { background: #334155; color: #fff; }
+.sql-input-area { padding: 12px 14px; }
+.sql-textarea { width: 100%; height: 74px; background: #070b14; border: 1px solid #334155; color: #7dd3fc; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88rem; padding: 10px; border-radius: 6px; resize: vertical; }
+.sql-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 10px; flex-wrap: wrap; }
+.sql-actions span { font-size: .76rem; color: #94a3b8; }
+.sql-log { background: #070b14; padding: 8px 14px; font-family: ui-monospace, Menlo, monospace; font-size: .8rem; color: #34d399; border-top: 1px solid #1e293b; min-height: 34px; }
+.sql-log.error { color: #f87171; }
+.sql-result { background: #fff; padding: 12px; color: #1e293b; overflow-x: auto; }
+.db-table { width: 100%; border-collapse: collapse; font-size: .86rem; }
+.db-table th, .db-table td { padding: 7px 11px; border-bottom: 1px solid var(--border); text-align: left; }
+.db-table th { background: #f8fafc; color: var(--text-muted); font-weight: 600; }
 
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #292524;
-      border-radius: 9999px;
-      overflow: hidden;
-    }
+/* Demo boxes (L3) */
+.demo-area { background: #fff; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1.4rem; text-align: center; margin-top: .8rem; transition: background .3s, color .3s; }
+.demo-area.dark { background: #0f172a; color: #f8fafc; border-color: #334155; }
+.demo-area.dark p { color: #cbd5e1; }
+.counter-display { font-size: 2.4rem; font-weight: 800; color: var(--primary-dark); margin: 6px 0; }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #f59e0b, #10b981);
-      width: 0%;
-      transition: width 0.4s ease;
-    }
+/* Certificate */
+.certificate-card { border: 4px double #cbd5e1; background: linear-gradient(135deg, #fff 0%, var(--primary-light) 140%); padding: 3rem 2rem; text-align: center; border-radius: 16px; box-shadow: var(--shadow-lg); }
+.cert-name { font-size: 1.9rem; font-weight: 800; margin: 1.4rem 0; border-bottom: 3px solid var(--primary); display: inline-block; padding: 0 2rem .45rem; }
+.cert-signs { display: flex; justify-content: center; gap: 3rem; margin-top: 2rem; flex-wrap: wrap; }
+.cert-signs div div:first-child { font-weight: 700; border-top: 1px solid #94a3b8; padding-top: 6px; width: 180px; }
+.cert-signs small { color: var(--text-muted); }
+.cert-status { margin: 1.2rem auto 0; max-width: 560px; font-size: .9rem; padding: 9px 13px; border-radius: 8px; background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.cert-status.ok { background: var(--success-light); color: #065f46; border-color: #a7f3d0; }
 
-    .nav-list {
-      list-style: none;
-      padding: 1rem 0.75rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
+/* Toast & modal */
+#toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: #0f172a; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: .9rem; box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 50; max-width: 90vw; }
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#modal { position: fixed; inset: 0; background: rgb(15 23 42 / .6); display: none; align-items: center; justify-content: center; z-index: 60; padding: 20px; }
+#modal.show { display: flex; }
+#modal .box { background: #fff; border-radius: 12px; padding: 1.3rem; width: min(760px, 100%); }
+#modal textarea { width: 100%; height: 320px; font-family: ui-monospace, Menlo, monospace; font-size: .78rem; margin: .7rem 0; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; }
 
-    .nav-item {
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 0.925rem;
-      color: #a8a29e;
-      transition: all 0.2s ease;
-      font-weight: 500;
-    }
+@media (max-width: 960px) {
+  body { flex-direction: column; }
+  #sidebar { width: 100%; height: auto; position: relative; }
+  .sidebar-header { padding: 1rem 1rem .8rem; }
+  .mentor-note, .sidebar-footer small { display: none; }
+  .progress-container { padding: .7rem 1rem; }
+  .nav-list { flex-direction: row; flex-wrap: nowrap; overflow-x: auto; padding: .6rem; gap: 6px; }
+  .nav-list li { flex-shrink: 0; }
+  .nav-item { width: auto; white-space: nowrap; background: rgb(255 255 255 / .06); }
+  .sidebar-footer { flex-direction: row; flex-wrap: wrap; gap: 14px; padding: .7rem 1rem; }
+  #main-content { width: 100%; margin: 0; padding: 1.1rem .8rem 3rem; }
+  .top-controls { gap: 8px; }
+  .frame-wrap { padding: 8px; }
+  .frame-wrap.mobile iframe { width: 100%; border-width: 4px; }
+  .module-card { padding: 1.4rem 1.1rem; }
+  .lab-split, .pg { grid-template-columns: 1fr; }
+  h1 { font-size: 1.5rem; }
+}
+@media print {
+  #sidebar, .top-controls, .module-card:not(.printing), .no-print, .btn-next-module { display: none !important; }
+  body { display: block; background: #fff; }
+  #main-content { padding: 0; max-width: none; }
+  .module-card.printing { display: block !important; box-shadow: none; border: 0; }
+}
 
-    .nav-item:hover { background: #292524; color: #f8fafc; }
-    .nav-item.active { background: #d97706; color: #ffffff; font-weight: 600; }
-    .nav-item .icon { font-size: 1.15rem; }
-    .nav-item .check { margin-left: auto; font-size: 0.85rem; color: var(--success); display: none; }
-    .nav-item.completed .check { display: inline-block; }
-
-    /* Module cards */
-    .module-card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-      padding: 2.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .module-tag {
-      background: var(--primary-light);
-      color: #b45309;
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    h1 { font-size: 1.9rem; margin-bottom: 0.5rem; color: #0f172a; line-height: 1.3; }
-    h2 { font-size: 1.35rem; margin: 1.75rem 0 0.75rem; color: #0f172a; }
-    h3 { font-size: 1.1rem; margin: 1.25rem 0 0.5rem; color: #0f172a; }
-    p { margin-bottom: 1.1rem; color: #334155; }
-    ul, ol { margin: 0.5rem 0 1.25rem 1.5rem; color: #334155; }
-    li { margin-bottom: 0.4rem; }
-
-    .callout {
-      border-left: 4px solid var(--primary);
-      background: #f8fafc;
-      padding: 1.1rem 1.3rem;
-      border-radius: 0 var(--radius) var(--radius) 0;
-      margin: 1.35rem 0;
-      font-size: 0.95rem;
-    }
-    .callout.tip { border-left-color: #f59e0b; background: #fffbeb; }
-    .callout.mentor { border-left-color: #8b5cf6; background: #f5f3ff; }
-
-    .callout-title { font-weight: 700; margin-bottom: 0.35rem; display: flex; align-items: center; gap: 6px; }
-
-    .code-container {
-      background: #0f172a;
-      color: #f8fafc;
-      border-radius: 8px;
-      padding: 1.1rem;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.875rem;
-      overflow-x: auto;
-      margin: 1rem 0 1.5rem;
-      position: relative;
-    }
-
-    .code-badge {
-      position: absolute; top: 8px; right: 10px;
-      font-size: 0.7rem; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: 0.5px;
-    }
-
-    .copy-btn {
-      position: absolute; bottom: 8px; right: 10px;
-      background: #334155; color: #f1f5f9;
-      border: none; border-radius: 4px; padding: 4px 10px;
-      font-size: 0.75rem; cursor: pointer; opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-    .copy-btn:hover { opacity: 1; }
-
-    /* Interactive JS Sandbox Widget */
-    .js-lab-box {
-      background: #f8fafc;
-      border: 2px solid #cbd5e1;
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .interactive-demo-area {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 10px;
-      padding: 1.5rem;
-      text-align: center;
-      margin-top: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    .btn-action-js {
-      background: #f59e0b;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: transform 0.1s, background 0.2s;
-    }
-    .btn-action-js:hover { background: #d97706; transform: scale(1.03); }
-
-    /* Dark mode toggle demo */
-    .theme-demo-box {
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      color: #0f172a;
-      transition: all 0.3s ease;
-      margin-top: 1rem;
-    }
-
-    .theme-demo-box.dark {
-      background: #0f172a;
-      color: #f8fafc;
-      border-color: #334155;
-    }
-
-    /* Counter demo */
-    .counter-display {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #d97706;
-      margin: 10px 0;
-    }
-
-    /* Quiz */
-    .quiz-container {
-      background: #f8fafc;
-      border: 2px solid #e2e8f0;
-      border-radius: var(--radius);
-      padding: 1.75rem;
-      margin-top: 2rem;
-    }
-
-    .quiz-title {
-      display: flex; align-items: center; gap: 8px;
-      font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem;
-    }
-
-    .question-block {
-      background: #ffffff; padding: 1.25rem;
-      border-radius: 8px; border: 1px solid var(--border);
-      margin-bottom: 1.25rem;
-    }
-    .question-text { font-weight: 600; margin-bottom: 1rem; }
-    .options-list { display: flex; flex-direction: column; gap: 8px; }
-
-    .option-btn {
-      text-align: left; padding: 10px 14px;
-      border: 1px solid var(--border); border-radius: 6px;
-      background: #ffffff; cursor: pointer; font-size: 0.9rem;
-      transition: all 0.15s ease;
-    }
-    .option-btn:hover { background: #f1f5f9; }
-    .option-btn.selected { border-color: #d97706; background: #fef3c7; font-weight: 600; }
-    .option-btn.correct { border-color: var(--success); background: var(--success-light); color: #065f46; font-weight: 600; }
-    .option-btn.wrong { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight: 600; }
-
-    .feedback-box {
-      margin-top: 0.75rem; padding: 10px 14px;
-      border-radius: 6px; font-size: 0.875rem; display: none;
-    }
-    .feedback-box.correct { display: block; background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
-    .feedback-box.wrong { display: block; background: var(--danger-light); color: #991b1b; border: 1px solid #fecaca; }
-
-    .btn-verify {
-      background: #d97706; color: white; border: none;
-      padding: 10px 20px; border-radius: 6px; font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-verify:hover { background: #b45309; }
-
-    .btn-next-module {
-      background: var(--success); color: white; border: none;
-      padding: 12px 24px; border-radius: 8px; font-weight: 700;
-      cursor: pointer; display: inline-flex; align-items: center;
-      gap: 8px; margin-top: 1.5rem;
-    }
-    .btn-next-module:hover { background: #059669; }
-
-    .certificate-card {
-      border: 4px double #cbd5e1;
-      background: linear-gradient(135deg, #ffffff 0%, #fffbeb 100%);
-      padding: 3rem 2rem; text-align: center;
-      border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-      margin-top: 2rem;
-    }
-
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #sidebar { width: 100%; height: auto; position: relative; }
-      #main-content { padding: 1.5rem; }
-    }
   </style>
 </head>
 <body>
 
-  <!-- SIDEBAR -->
   <aside id="sidebar">
     <div class="sidebar-header">
-      <div class="student-badge">
-        <span>⚡</span>
-        <span id="txt-student-badge">Livello 3: <strong>Riccardo</strong></span>
-      </div>
-      <div class="sidebar-title" id="txt-course-title">Dare Vita al Sito con JavaScript</div>
-      <div class="mentor-note" id="txt-mentor-note">Con il tuo mentore argentino 🇦🇷🇮🇹</div>
+      <div class="student-badge"><span>⚡</span><span class="it">Livello 3: <strong>Riccardo</strong></span><span class="es">Nivel 3: <strong>Ricardo</strong></span></div>
+      <div class="sidebar-title"><span class="it">Dare Vita al Sito con JavaScript</span><span class="es">Dar Vida al Sitio con JavaScript</span></div>
+      <div class="mentor-note"><span class="it">Insieme al tuo mentore argentino 🇦🇷🇮🇹</span><span class="es">Junto a tu mentor argentino 🇦🇷🇮🇹</span></div>
     </div>
-
     <div class="progress-container">
-      <div class="progress-info">
-        <span id="txt-progress-label">Progresso Livello 3</span>
-        <span id="progress-percent">0%</span>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
+      <div class="progress-info"><span class="it">Progresso Livello 3</span><span class="es">Progreso Nivel 3</span><span id="progress-percent">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
-
     <ul class="nav-list">
-      <li class="nav-item active" onclick="switchSection(0)">
-        <span class="icon">📜</span>
-        <span id="nav-s0">1. Dalla Web Statica alla Dinamica</span>
-        <span class="check" id="check-0">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(1)">
-        <span class="icon">🖱️</span>
-        <span id="nav-s1">2. Gli Eventi (Click, Modifiche)</span>
-        <span class="check" id="check-1">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(2)">
-        <span class="icon">🌓</span>
-        <span id="nav-s2">3. Modalità Scura & Contatore</span>
-        <span class="check" id="check-2">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(3)">
-        <span class="icon">📋</span>
-        <span id="nav-s3">4. Validazione Form prima del DB</span>
-        <span class="check" id="check-3">✓</span>
-      </li>
-      <li class="nav-item" onclick="switchSection(4)">
-        <span class="icon">🎓</span>
-        <span id="nav-s4">5. Diploma Interattività</span>
-        <span class="check" id="check-4">✓</span>
-      </li>
+      <li><button type="button" class="nav-item" data-go="0"><span class="icon">📜</span><span>1. <span class="it">Da Statico a Dinamico</span><span class="es">De Estático a Dinámico</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="1"><span class="icon">🖱️</span><span>2. <span class="it">Gli Eventi (Click)</span><span class="es">Los Eventos (Clics)</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="2"><span class="icon">🌓</span><span>3. <span class="it">Dark Mode & Carrello</span><span class="es">Modo Oscuro & Carrito</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="3"><span class="icon">📋</span><span>4. <span class="it">Validare i Form</span><span class="es">Validar Formularios</span></span><span class="check">✓</span></button></li>
+      <li><button type="button" class="nav-item" data-go="4"><span class="icon">🎓</span><span>5. <span class="it">Diploma Interattività</span><span class="es">Diploma Interactividad</span></span><span class="check">✓</span></button></li>
     </ul>
-
-    <div style="padding: 1.5rem; margin-top: auto; font-size: 0.75rem; color: #a8a29e; border-top: 1px solid #292524;">
-      <a href="modulo2.html" style="color: #fbbf24; text-decoration: none; font-weight: 600; display: block; margin-bottom: 6px;">⬅️ Torna al Livello 2 (Layout)</a>
-      <a href="modulo4.html" style="color: #38bdf8; text-decoration: none; font-weight: 600; display: block;">🚀 Vai al Livello 4 (Progetto Finale) ➔</a>
+    <div class="sidebar-footer">
+      <a href="modulo2.html">⬅️ <span class="it">Torna al Livello 2</span><span class="es">Volver al Nivel 2</span></a>
+      <a href="modulo4.html">🚀 <span class="it">Vai al Livello 4</span><span class="es">Ir al Nivel 4</span> ➔</a>
+      <small><span class="it">Corso 100% nel browser. I progressi si salvano su questo computer.</span><span class="es">Curso 100% en el navegador. El progreso se guarda en esta computadora.</span></small>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main id="main-content">
     <div class="top-controls">
-      <div class="nav-breadcrumbs">
-        <a href="index.html">Livello 1</a>
-        <span>➔</span>
-        <a href="modulo2.html">Livello 2</a>
-        <span>➔</span>
-        <span style="color: #d97706; font-weight: 700;">Livello 3 (Attuale)</span>
-        <span>➔</span>
-        <a href="modulo4.html">Livello 4</a>
-      </div>
-
+      <nav class="levels" aria-label="Livelli"><a href="index.html"><span class="it">Livello 1</span><span class="es">Nivel 1</span></a><span class="sep">➔</span><a href="modulo2.html"><span class="it">Livello 2</span><span class="es">Nivel 2</span></a><span class="sep">➔</span><span class="cur"><span class="it">Livello 3</span><span class="es">Nivel 3</span></span><span class="sep">➔</span><a href="modulo4.html"><span class="it">Livello 4</span><span class="es">Nivel 4</span></a></nav>
       <div class="lang-selector">
-        <button class="lang-btn active" id="btn-it" onclick="setLanguage('it')">🇮🇹 Italiano</button>
-        <button class="lang-btn" id="btn-es" onclick="setLanguage('es')">🇪🇸 Español</button>
+        <button type="button" class="lang-btn active" data-lang="it">🇮🇹 Italiano</button>
+        <button type="button" class="lang-btn" data-lang="es">🇪🇸 Español</button>
       </div>
     </div>
 
-    <!-- SECTION 0: HISTORY OF JS & DYNAMIC WEB -->
-    <section class="module-card" id="sec-0">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s0">Fase 1: Evoluzione</span>
-        <h1 id="title-s0">La Rivoluzione di JavaScript: Dalla Web 1.0 alla Web Viva</h1>
-        <p id="sub-s0" style="color: var(--text-muted); font-size: 1.05rem;">
-          Come una pagina è passata dall'essere un semplice foglio di giornale a un'esperienza interattiva.
-        </p>
+    <!-- ============ SEZIONE 1: DA STATICO A DINAMICO ============ -->
+    <section class="module-card">
+      <span class="module-tag"><span class="it">Fase 1: Evoluzione</span><span class="es">Fase 1: Evolución</span></span>
+      <h1 class="it">La Rivoluzione di JavaScript: dal Web 1.0 al Web Vivo</h1>
+      <h1 class="es">La Revolución de JavaScript: de la Web 1.0 a la Web Viva</h1>
+      <p class="lead it">Come una pagina è passata da semplice foglio di giornale a esperienza interattiva.</p>
+      <p class="lead es">Cómo una página pasó de ser una simple hoja de diario a una experiencia interactiva.</p>
+
+      <div class="callout history">
+        <div class="callout-title">🕰️ <span class="it">10 giorni che hanno cambiato il web</span><span class="es">10 días que cambiaron la web</span></div>
+        <p class="it">Nel <strong>1995</strong> l'ingegnere <strong>Brendan Eich</strong> creò la prima versione di <strong>JavaScript in circa 10 giorni</strong> per il browser Netscape Navigator. All'inizio serviva per piccole animazioni o per controllare un modulo. Oggi è uno dei linguaggi più usati al mondo e muove l'interattività di quasi ogni sito, da Google Maps a WhatsApp Web.</p>
+        <p class="es">En <strong>1995</strong> el ingeniero <strong>Brendan Eich</strong> creó la primera versión de <strong>JavaScript en unos 10 días</strong> para el navegador Netscape Navigator. Al principio servía para pequeñas animaciones o para controlar un formulario. Hoy es uno de los lenguajes más usados del mundo y mueve la interactividad de casi todo sitio, de Google Maps a WhatsApp Web.</p>
       </div>
 
-      <div class="callout tip">
-        <div class="callout-title">🕰️ <span id="hist-s0-title">Un aneddoto affascinante: 10 giorni che hanno cambiato il mondo</span></div>
-        <div id="hist-s0-text">
-          Nel <strong>1995</strong>, un ingegnere di nome <strong>Brendan Eich</strong> creò il linguaggio <strong>JavaScript in soli 10 giorni</strong> per il browser Netscape Navigator. All'inizio serviva solo per animare qualche scritta o validare un form. Oggi è il linguaggio più usato al mondo e muove l'interattività di ogni sito (da Google Maps a Netflix, da WhatsApp Web ai videogiochi nel browser).
-        </div>
-      </div>
-
-      <h2 id="h2-s0-web1vs2">1. Web 1.0 vs Web 2.0 spiegato in parole semplici</h2>
-      <ul id="list-s0-web1vs2">
-        <li><strong>Web 1.0 (Solo Lettura):</strong> Potevi solo leggere testi e cliccare link. Se volevi vedere un'informazione nuova, dovevi ricaricare l'intera pagina da zero.</li>
-        <li><strong>Web 2.0 (Interazione Viva):</strong> Clicchi un "Mi piace", aggiungi una pizza al carrello o apri una finestra e la pagina risponde all'istante senza mai ricaricarsi. Questo è il lavoro di <strong>JavaScript</strong>.</li>
+      <h2><span class="it">1. Web 1.0 e Web 2.0 in parole semplici</span><span class="es">1. Web 1.0 y Web 2.0 en palabras simples</span></h2>
+      <ul class="it">
+        <li><strong>Web 1.0 (solo lettura):</strong> potevi solo leggere e cliccare link. Per vedere un'informazione nuova il browser ricaricava tutta la pagina.</li>
+        <li><strong>Web 2.0 (interazione):</strong> metti un "Mi piace", aggiungi una pizza al carrello, apri un menu: la pagina risponde all'istante senza ricaricarsi. Questo è il lavoro di <strong>JavaScript</strong>.</li>
+      </ul>
+      <ul class="es">
+        <li><strong>Web 1.0 (solo lectura):</strong> solo podías leer y hacer clic en enlaces. Para ver información nueva el navegador recargaba toda la página.</li>
+        <li><strong>Web 2.0 (interacción):</strong> pones "Me gusta", agregas una pizza al carrito, abres un menú: la página responde al instante sin recargar. Ese es el trabajo de <strong>JavaScript</strong>.</li>
       </ul>
 
-      <!-- Quiz Section 0 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s0-title">Verifica Rapida: Sezione 1</span>
-        </div>
+      <h2><span class="it">2. I 4 mattoni di JavaScript</span><span class="es">2. Los 4 ladrillos de JavaScript</span></h2>
+      <p class="it">Con questi 4 concetti puoi già capire la maggior parte degli script dei siti vetrina:</p>
+      <p class="es">Con estos 4 conceptos ya puedes entender la mayoría de los scripts de los sitios vidriera:</p>
+      <div class="code-container"><span class="code-badge">JavaScript</span><pre><code><span class="c-com">// 1. VARIABILE: una scatola con un nome che contiene un valore</span>
+let prezzo = 8;
+let nome = "Riccardo";
 
-        <div class="question-block" id="q-block-0-0">
-          <div class="question-text" id="q-0-0-text">1. Qual è il ruolo primario di JavaScript in un sito web moderno?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(0, 0, 0)">Dare interattività immediata, rispondere alle azioni dell'utente e modificare la pagina al volo</button>
-            <button class="option-btn" onclick="selectOption(0, 0, 1)">Sostituire la connessione a internet</button>
-            <button class="option-btn" onclick="selectOption(0, 0, 2)">Stampare fatture fiscali in cartaceo</button>
-          </div>
-          <div class="feedback-box" id="fb-0-0"></div>
-        </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(0)" id="btn-check-0">Verifica Risposta</button>
-          <span id="score-badge-0" style="font-weight: 700; color: #d97706;"></span>
-        </div>
-      </div>
-
-      <button class="btn-next-module" onclick="switchSection(1)" id="btn-next-0">
-        <span id="txt-btn-next-0">Avanti alla Fase 2: Gli Eventi (Metti le mani in pasta) ➔</span>
-      </button>
-    </section>
-
-    <!-- SECTION 1: EVENTS (LISTENERS) -->
-    <section class="module-card" id="sec-1" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s1">Fase 2: Azione</span>
-        <h1 id="title-s1">Gli Eventi: Ascoltare e Rispondere ai Click dell'Utente</h1>
-        <p id="sub-s1" style="color: var(--text-muted); font-size: 1.05rem;">
-          In JavaScript tutto funziona con una formula magica: <em>"Quando succede X (evento), fai Y (azione)"</em>.
-        </p>
-      </div>
-
-      <div class="callout mentor">
-        <div class="callout-title">🤝 <span id="mentor-s1-title">La Regola del tuo Mentor</span></div>
-        <div id="mentor-s1-text">
-          Riccardo, guarda quanto è semplice: in HTML metti un bottone <code>&lt;button onclick="saluta()"&gt;</code> e in JavaScript scrivi cosa deve succedere dentro la funzione. Provalo subito nel laboratorio qui sotto!
-        </div>
-      </div>
-
-      <div class="code-container">
-        <span class="code-badge">JavaScript & HTML</span>
-        <pre><code>// 1. Funzione JavaScript
-function cambiaSaluto() {
-  document.getElementById('messaggio').innerText = 'Ciao Riccardo! Hai cliccato il bottone!';
-  document.getElementById('messaggio').style.color = '#10b981';
+<span class="c-com">// 2. FUNZIONE: un gruppo di istruzioni con un nome, che esegui quando vuoi</span>
+function calcolaTotale(quantita) {
+  return quantita * prezzo;
 }
 
-// 2. In HTML colleghi con onclick:
-// &lt;button onclick="cambiaSaluto()"&gt;Cliccami!&lt;/button&gt;</code></pre>
-        <button class="copy-btn" onclick="copyCode(this)">Copia</button>
-      </div>
+<span class="c-com">// 3. CONDIZIONE: se succede questo... altrimenti...</span>
+if (calcolaTotale(3) > 20) {
+  console.log("Spedizione gratis!");
+} else {
+  console.log("Spedizione: 3 euro");
+}
 
-      <!-- Live Interactive Event Lab -->
-      <div class="js-lab-box">
-        <strong id="lab-s1-title">🛠️ Laboratorio dal Vivo: Prova a Cliccare il Bottone</strong>
-        <p style="font-size: 0.9rem; color: #64748b; margin-top: 4px;" id="lab-s1-desc">
-          Guarda come il testo e il colore cambiano istantaneamente senza ricaricare la pagina:
-        </p>
+<span class="c-com">// 4. DOM: trovare un elemento della pagina e cambiarlo</span>
+document.getElementById("titolo").textContent = "Ciao " + nome;</code></pre><button type="button" class="copy-btn">Copia</button></div>
+      <p class="it"><strong>DOM</strong> è il nome della pagina vista da JavaScript: ogni tag è un oggetto che puoi trovare (con <code>getElementById</code> o <code>querySelector</code>) e modificare (testo, stile, classi).</p>
+      <p class="es"><strong>DOM</strong> es el nombre de la página vista desde JavaScript: cada etiqueta es un objeto que puedes encontrar (con <code>getElementById</code> o <code>querySelector</code>) y modificar (texto, estilo, clases).</p>
 
-        <div class="interactive-demo-area">
-          <h3 id="demo-msg" style="margin-bottom: 12px; color: #334155;">Testo originale in attesa...</h3>
-          <button class="btn-action-js" onclick="testClickAction()" id="btn-test-action">
-            ⚡ Clicca per Attivare JavaScript!
-          </button>
+      <div class="lab" data-lab="l3-basics" data-file="primo-script">
+        <div class="lab-head"><span class="lab-title">🛠️ <span class="it">Laboratorio: il tuo primo script</span><span class="es">Laboratorio: tu primer script</span></span>
+          <div class="btn-row"><button type="button" class="btn ghost sm" data-lab-reset><span class="it">↺ Ripristina</span><span class="es">↺ Restablecer</span></button><button type="button" class="btn sm" data-lab-download><span class="it">📥 Scarica</span><span class="es">📥 Descargar</span></button></div></div>
+        <div class="lab-split">
+          <div><div class="lab-label"><span class="it">Il tuo codice</span><span class="es">Tu código</span></div><textarea class="lab-code" spellcheck="false"><h2 id="titolo">Titolo originale</h2>
+<p id="totale"></p>
+
+<script>
+  let nome = "Riccardo";
+  let prezzo = 8;
+  let quantita = 3;
+
+  document.getElementById("titolo").textContent = "Ciao " + nome + "!";
+
+  let totale = prezzo * quantita;
+  if (totale > 20) {
+    document.getElementById("totale").textContent = "Totale: " + totale + " € — spedizione gratis!";
+  } else {
+    document.getElementById("totale").textContent = "Totale: " + totale + " €";
+  }
+</script></textarea></div>
+          <div><div class="lab-label"><span class="it">Risultato</span><span class="es">Resultado</span></div><iframe class="lab-view" title="Risultato" sandbox="allow-scripts"></iframe></div>
         </div>
       </div>
 
-      <!-- Quiz Section 1 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s1-title">Verifica Rapida: Sezione 2</span>
-        </div>
-
-        <div class="question-block" id="q-block-1-0">
-          <div class="question-text" id="q-1-0-text">1. Quale attributo HTML si usa più comunemente per eseguire codice JavaScript al clic di un pulsante?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(1, 0, 0)">onclick="..."</button>
-            <button class="option-btn" onclick="selectOption(1, 0, 1)">href="..."</button>
-            <button class="option-btn" onclick="selectOption(1, 0, 2)">src="..."</button>
-          </div>
-          <div class="feedback-box" id="fb-1-0"></div>
-        </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(1)" id="btn-check-1">Verifica Risposta</button>
-          <span id="score-badge-1" style="font-weight: 700; color: #d97706;"></span>
-        </div>
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: gioca con le variabili</span><span class="es">Desafío: juega con las variables</span></div>
+        <ul class="checklist" data-key="l3-s0">
+          <li><label><input type="checkbox"><span><span class="it">Metti il tuo nome nella variabile <code>nome</code>.</span><span class="es">Pon tu nombre en la variable <code>nome</code>.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Cambia <code>quantita</code> a 2: quale messaggio appare? Perché?</span><span class="es">Cambia <code>quantita</code> a 2: ¿qué mensaje aparece? ¿Por qué?</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Togli una virgoletta per sbaglio: il codice si rompe. Ora sai cosa vuol dire "errore di sintassi". Rimettila!</span><span class="es">Saca una comilla a propósito: el código se rompe. Ahora sabes qué es un "error de sintaxis". ¡Vuelve a ponerla!</span></span></label></li>
+        </ul>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(2)" id="btn-next-1">
-        <span id="txt-btn-next-1">Avanti alla Fase 3: Modalità Scura & Carrello ➔</span>
-      </button>
+      <div data-quiz="0"></div>
+      <button type="button" class="btn btn-next-module" data-go="1"><span class="it">Avanti alla Fase 2: Gli Eventi ➔</span><span class="es">Avanzar a la Fase 2: Los Eventos ➔</span></button>
     </section>
 
-    <!-- SECTION 2: DARK MODE & COUNTER (HANDS ON) -->
-    <section class="module-card" id="sec-2" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s2">Fase 3: Componenti Reali</span>
-        <h1 id="title-s2">Due Componenti che Ogni Cliente ti Chiederà</h1>
-        <p id="sub-s2" style="color: var(--text-muted); font-size: 1.05rem;">
-          Il selettore Modalità Chiara / Scura (Dark Mode) e il contatore per ordinare prodotti.
-        </p>
+    <!-- ============ SEZIONE 2: EVENTI ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag"><span class="it">Fase 2: Azione</span><span class="es">Fase 2: Acción</span></span>
+      <h1 class="it">Gli Eventi: Ascoltare e Rispondere all'Utente</h1>
+      <h1 class="es">Los Eventos: Escuchar y Responder al Usuario</h1>
+      <p class="lead it">In JavaScript quasi tutto segue una formula: <em>"quando succede X (evento), fai Y (funzione)"</em>.</p>
+      <p class="lead es">En JavaScript casi todo sigue una fórmula: <em>"cuando pasa X (evento), haz Y (función)"</em>.</p>
+
+      <div class="callout mentor">
+        <div class="callout-title">🤝 <span class="it">La regola del tuo mentore</span><span class="es">La regla de tu mentor</span></div>
+        <p class="it">Riccardo, ci sono due modi per collegare un click a una funzione. Il primo è il più semplice per iniziare; il secondo è quello che userai nei progetti veri, perché tiene separati HTML e JavaScript.</p>
+        <p class="es">Ricardo, hay dos formas de conectar un clic con una función. La primera es la más simple para empezar; la segunda es la que vas a usar en proyectos reales, porque mantiene separados HTML y JavaScript.</p>
       </div>
+      <div class="code-container"><span class="code-badge">JavaScript & HTML</span><pre><code><span class="c-com">&lt;!-- Modo 1: attributo onclick nell'HTML --&gt;</span>
+&lt;button onclick="saluta()"&gt;Cliccami&lt;/button&gt;
 
-      <!-- Interactive Dark Mode Demo -->
-      <h2 id="h2-s2-dark">1. Il Selettore Dark Mode (Modalità Scura)</h2>
-      <p id="p-s2-dark">
-        I moderni siti web permettono all'utente di passare a uno sfondo scuro per riposare gli occhi. Prova a premere l'interruttore:
-      </p>
+<span class="c-com">&lt;!-- Modo 2 (professionale): addEventListener --&gt;</span>
+&lt;button id="btn-saluta"&gt;Cliccami&lt;/button&gt;
+&lt;p id="messaggio"&gt;&lt;/p&gt;
 
-      <div class="js-lab-box">
-        <div class="theme-demo-box" id="theme-box">
-          <h4 id="theme-title" style="margin-bottom: 6px;">Scheda Prodotto / Ristorante</h4>
-          <p id="theme-desc" style="font-size: 0.85rem; margin-bottom: 12px;">Questa card cambia tema al volo modificando una semplice classe CSS con JavaScript!</p>
-          <button class="btn-action-js" onclick="toggleThemeDemo()" id="btn-toggle-theme">
-            🌓 Alterna Modalità Chiara / Scura
-          </button>
+&lt;script&gt;
+  function saluta() {
+    document.getElementById("messaggio").textContent = "Ciao Riccardo!";
+  }
+  document.getElementById("btn-saluta").addEventListener("click", saluta);
+&lt;/script&gt;</code></pre><button type="button" class="copy-btn">Copia</button></div>
+      <p class="it">Eventi che userai spesso: <code>click</code> (clic), <code>input</code> (scrivi in un campo), <code>submit</code> (invio di un modulo), <code>mouseover</code> (passi sopra col mouse), <code>scroll</code> (scorri la pagina).</p>
+      <p class="es">Eventos que vas a usar seguido: <code>click</code> (clic), <code>input</code> (escribes en un campo), <code>submit</code> (envío de un formulario), <code>mouseover</code> (pasas el mouse por encima), <code>scroll</code> (te desplazas por la página).</p>
+
+      <div class="lab" style="margin-top:1rem">
+        <div class="lab-title">⚡ <span class="it">Demo dal vivo: clicca il pulsante</span><span class="es">Demo en vivo: haz clic en el botón</span></div>
+        <div class="demo-area">
+          <h3 id="demo-msg" style="margin:0 0 12px;color:#334155"><span class="it">Testo originale in attesa...</span><span class="es">Texto original esperando...</span></h3>
+          <button type="button" class="btn" id="btn-demo-click">⚡ <span class="it">Clicca per attivare JavaScript!</span><span class="es">¡Haz clic para activar JavaScript!</span></button>
         </div>
       </div>
 
-      <!-- Interactive Counter Demo -->
-      <h2 id="h2-s2-counter">2. Il Contatore Dinamico (Quantità Carrello)</h2>
-      <p id="p-s2-counter">
-        Quando un cliente ordina 3 pizze o 2 consulenze, questo script aggiorna i numeri e il prezzo totale al volo:
-      </p>
+      <div class="lab tall" data-lab="l3-events" data-file="eventi">
+        <div class="lab-head"><span class="lab-title">🛠️ <span class="it">Laboratorio: eventi click e input</span><span class="es">Laboratorio: eventos click e input</span></span>
+          <div class="btn-row"><button type="button" class="btn ghost sm" data-lab-reset><span class="it">↺ Ripristina</span><span class="es">↺ Restablecer</span></button><button type="button" class="btn sm" data-lab-download><span class="it">📥 Scarica</span><span class="es">📥 Descargar</span></button></div></div>
+        <div class="lab-split">
+          <div><div class="lab-label"><span class="it">Il tuo codice</span><span class="es">Tu código</span></div><textarea class="lab-code" spellcheck="false"><input id="campo-nome" placeholder="Scrivi il tuo nome">
+<p id="anteprima">Ciao, ...</p>
 
-      <div class="js-lab-box" style="text-align: center;">
-        <div style="font-size: 1rem; font-weight: 700;" id="cart-item-name">🍕 Pizza Margherita Napoletana (€8,00)</div>
+<button id="btn-colore">Cambia colore</button>
+
+<script>
+  // Evento "input": si attiva a ogni lettera
+  document.getElementById("campo-nome").addEventListener("input", function () {
+    let nome = document.getElementById("campo-nome").value;
+    document.getElementById("anteprima").textContent = "Ciao, " + nome + "!";
+  });
+
+  // Evento "click"
+  document.getElementById("btn-colore").addEventListener("click", function () {
+    document.body.style.background = "#fef3c7";
+  });
+</script></textarea></div>
+          <div><div class="lab-label"><span class="it">Risultato (prova a scrivere e cliccare)</span><span class="es">Resultado (prueba escribir y hacer clic)</span></div><iframe class="lab-view" title="Risultato" sandbox="allow-scripts"></iframe></div>
+        </div>
+      </div>
+
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: aggiungi i tuoi eventi</span><span class="es">Desafío: agrega tus eventos</span></div>
+        <ul class="checklist" data-key="l3-s1">
+          <li><label><input type="checkbox"><span><span class="it">Fai in modo che il pulsante cambi anche il testo del paragrafo.</span><span class="es">Haz que el botón también cambie el texto del párrafo.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi un secondo pulsante "Ripristina" che rimette lo sfondo bianco.</span><span class="es">Agrega un segundo botón "Restablecer" que vuelva a poner el fondo blanco.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Bonus: conta i clic e mostra "Hai cliccato 3 volte" (ti serve una variabile!).</span><span class="es">Bonus: cuenta los clics y muestra "Hiciste clic 3 veces" (¡necesitas una variable!).</span></span></label></li>
+        </ul>
+      </div>
+
+      <div data-quiz="1"></div>
+      <button type="button" class="btn btn-next-module" data-go="2"><span class="it">Avanti alla Fase 3: Dark Mode & Carrello ➔</span><span class="es">Avanzar a la Fase 3: Modo Oscuro & Carrito ➔</span></button>
+    </section>
+
+    <!-- ============ SEZIONE 3: DARK MODE & CONTATORE ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag"><span class="it">Fase 3: Componenti Reali</span><span class="es">Fase 3: Componentes Reales</span></span>
+      <h1 class="it">Due Componenti che Ogni Cliente ti Chiederà</h1>
+      <h1 class="es">Dos Componentes que Todo Cliente te Va a Pedir</h1>
+      <p class="lead it">Il selettore modalità chiara/scura e il contatore della quantità con il prezzo totale.</p>
+      <p class="lead es">El interruptor de modo claro/oscuro y el contador de cantidad con el precio total.</p>
+
+      <h2><span class="it">1. Il selettore Dark Mode</span><span class="es">1. El interruptor de Modo Oscuro</span></h2>
+      <p class="it">Il trucco è semplice: il CSS prepara due aspetti, JavaScript aggiunge o toglie una classe con <code>classList.toggle()</code>.</p>
+      <p class="es">El truco es simple: el CSS prepara dos aspectos y JavaScript agrega o quita una clase con <code>classList.toggle()</code>.</p>
+      <div class="lab">
+        <div class="demo-area" id="theme-box" style="margin-top:0">
+          <h4 style="margin-bottom:6px"><span class="it">Scheda prodotto / ristorante</span><span class="es">Tarjeta de producto / restaurante</span></h4>
+          <p style="font-size:.88rem"><span class="it">Questa card cambia tema al volo aggiungendo una classe CSS con JavaScript.</span><span class="es">Esta tarjeta cambia de tema al instante agregando una clase CSS con JavaScript.</span></p>
+          <button type="button" class="btn" id="btn-toggle-theme">🌓 <span class="it">Alterna chiaro / scuro</span><span class="es">Alternar claro / oscuro</span></button>
+        </div>
+      </div>
+      <div class="code-container"><span class="code-badge">CSS + JS</span><pre><code>&lt;style&gt;
+  .card { background: white; color: #0f172a; }
+  .card.dark { background: #0f172a; color: white; }   <span class="c-com">/* l'aspetto scuro */</span>
+&lt;/style&gt;
+
+&lt;div class="card" id="card"&gt; ... &lt;/div&gt;
+&lt;button id="btn-tema"&gt;🌓 Cambia tema&lt;/button&gt;
+
+&lt;script&gt;
+  document.getElementById("btn-tema").addEventListener("click", function () {
+    document.getElementById("card").classList.toggle("dark");  <span class="c-com">// aggiunge o toglie</span>
+  });
+&lt;/script&gt;</code></pre><button type="button" class="copy-btn">Copia</button></div>
+
+      <h2><span class="it">2. Il contatore dinamico (quantità nel carrello)</span><span class="es">2. El contador dinámico (cantidad en el carrito)</span></h2>
+      <p class="it">Quando un cliente ordina 3 pizze, lo script aggiorna quantità e prezzo totale al volo:</p>
+      <p class="es">Cuando un cliente pide 3 pizzas, el script actualiza la cantidad y el precio total al instante:</p>
+      <div class="lab" style="text-align:center">
+        <div style="font-weight:700">🍕 <span class="it">Pizza Margherita (8,00 €)</span><span class="es">Pizza Margherita (8,00 €)</span></div>
         <div class="counter-display" id="counter-val">1</div>
-        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
-          <button class="btn-action-js" style="padding: 8px 18px;" onclick="changeCounter(-1)">-</button>
-          <button class="btn-action-js" style="padding: 8px 18px;" onclick="changeCounter(1)">+</button>
+        <div class="btn-row" style="justify-content:center;margin-bottom:10px">
+          <button type="button" class="btn" style="padding:8px 20px" id="btn-minus" aria-label="meno">−</button>
+          <button type="button" class="btn" style="padding:8px 20px" id="btn-plus" aria-label="più">+</button>
         </div>
-        <div style="font-weight: 700; color: #10b981; font-size: 1.1rem;" id="total-price-text">Totale: €8,00</div>
+        <div style="font-weight:700;color:var(--success-dark);font-size:1.1rem" id="total-price"></div>
+      </div>
+      <div class="code-container"><span class="code-badge">JavaScript</span><pre><code>let quantita = 1;
+const prezzo = 8;
+
+function cambia(delta) {
+  quantita = Math.max(1, quantita + delta);          <span class="c-com">// mai sotto 1</span>
+  document.getElementById("qta").textContent = quantita;
+  let totale = (quantita * prezzo).toFixed(2).replace(".", ",");
+  document.getElementById("totale").textContent = "Totale: " + totale + " €";
+}
+
+<span class="c-com">// In HTML: &lt;button onclick="cambia(-1)"&gt;−&lt;/button&gt; &lt;button onclick="cambia(1)"&gt;+&lt;/button&gt;</span></code></pre><button type="button" class="copy-btn">Copia</button></div>
+
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: costruiscili da solo</span><span class="es">Desafío: constrúyelos solo</span></div>
+        <p class="it">Apri il laboratorio della Fase 2 (oppure VS Code) e, copiando dai codici qui sopra:</p>
+        <p class="es">Abre el laboratorio de la Fase 2 (o VS Code) y, copiando de los códigos de arriba:</p>
+        <ul class="checklist" data-key="l3-s2">
+          <li><label><input type="checkbox"><span><span class="it">Crea una card con il pulsante dark mode funzionante.</span><span class="es">Crea una tarjeta con el botón de modo oscuro funcionando.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Crea il contatore con i pulsanti − e + e il totale.</span><span class="es">Crea el contador con los botones − y + y el total.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Bonus: metti un massimo di 10 pizze (suggerimento: <code>Math.min</code>).</span><span class="es">Bonus: pon un máximo de 10 pizzas (pista: <code>Math.min</code>).</span></span></label></li>
+        </ul>
       </div>
 
-      <!-- Quiz Section 2 -->
-      <div class="quiz-container">
-        <div class="quiz-title">
-          <span>📝</span>
-          <span id="quiz-s2-title">Verifica Rapida: Sezione 3</span>
-        </div>
-
-        <div class="question-block" id="q-block-2-0">
-          <div class="question-text" id="q-2-0-text">1. Come fa JavaScript a cambiare lo stile o i colori di un elemento quando clicchi un bottone?</div>
-          <div class="options-list">
-            <button class="option-btn" onclick="selectOption(2, 0, 0)">Aggiunge o rimuove una classe CSS (classList.toggle) oppure modifica direttamente la proprietà .style</button>
-            <button class="option-btn" onclick="selectOption(2, 0, 1)">Formatta il disco rigido del computer</button>
-            <button class="option-btn" onclick="selectOption(2, 0, 2)">Manda un'email all'utente</button>
-          </div>
-          <div class="feedback-box" id="fb-2-0"></div>
-        </div>
-
-        <div class="quiz-submit-row">
-          <button class="btn-verify" onclick="checkSectionQuiz(2)" id="btn-check-2">Verifica Risposta</button>
-          <span id="score-badge-2" style="font-weight: 700; color: #d97706;"></span>
-        </div>
-      </div>
-
-      <button class="btn-next-module" onclick="switchSection(3)" id="btn-next-2">
-        <span id="txt-btn-next-2">Avanti alla Fase 4: Validazione Form prima del Database ➔</span>
-      </button>
+      <div data-quiz="2"></div>
+      <button type="button" class="btn btn-next-module" data-go="3"><span class="it">Avanti alla Fase 4: Validare i Form ➔</span><span class="es">Avanzar a la Fase 4: Validar Formularios ➔</span></button>
     </section>
 
-    <!-- SECTION 3: FORM VALIDATION BEFORE DB -->
-    <section class="module-card" id="sec-3" style="display: none;">
-      <div class="module-header">
-        <span class="module-tag" id="tag-s3">Fase 4: Integrazione</span>
-        <h1 id="title-s3">Validare i Dati Prima di Inviarli al Database</h1>
-        <p id="sub-s3" style="color: var(--text-muted); font-size: 1.05rem;">
-          Come evitare che gli utenti inseriscano dati vuoti o email sbagliate nel tuo database.
-        </p>
-      </div>
+    <!-- ============ SEZIONE 4: VALIDAZIONE ============ -->
+    <section class="module-card" hidden>
+      <span class="module-tag"><span class="it">Fase 4: Integrazione</span><span class="es">Fase 4: Integración</span></span>
+      <h1 class="it">Validare i Dati Prima di Inviarli</h1>
+      <h1 class="es">Validar los Datos Antes de Enviarlos</h1>
+      <p class="lead it">Come evitare che arrivino moduli vuoti o email sbagliate.</p>
+      <p class="lead es">Cómo evitar que lleguen formularios vacíos o emails equivocados.</p>
 
       <div class="callout tip">
-        <div class="callout-title">🛡️ <span id="tip-s3-title">Il Guardiano del Database</span></div>
-        <div id="tip-s3-text">
-          Nel Livello 1 abbiamo visto come salvare dati in SQLite. Ma cosa succede se un utente lascia il campo email vuoto o scrive una password di 2 lettere? <strong>JavaScript intercetta il form prima che parta</strong>, controlla gli errori e avvisa l'utente in rosso!
+        <div class="callout-title">🛡️ <span class="it">Il guardiano del modulo</span><span class="es">El guardián del formulario</span></div>
+        <p class="it">Nel Livello 1 hai visto come si salvano i dati con SQL. Ma se un utente lascia l'email vuota o scrive "ciao" al posto del telefono? <strong>JavaScript intercetta il modulo prima dell'invio</strong>, controlla i campi e avvisa l'utente in rosso. Il server deve comunque ricontrollare tutto: la validazione nel browser serve a <em>aiutare l'utente</em>, non a proteggere il database.</p>
+        <p class="es">En el Nivel 1 viste cómo se guardan los datos con SQL. ¿Pero si un usuario deja el email vacío o escribe "hola" en lugar del teléfono? <strong>JavaScript intercepta el formulario antes del envío</strong>, controla los campos y avisa al usuario en rojo. El servidor igual debe volver a controlar todo: la validación en el navegador sirve para <em>ayudar al usuario</em>, no para proteger la base de datos.</p>
+      </div>
+
+      <div class="lab">
+        <div class="lab-title">🛠️ <span class="it">Prova il validatore (simulazione: non invia niente)</span><span class="es">Prueba el validador (simulación: no envía nada)</span></div>
+        <p class="muted it">Premi "Verifica e invia" con i campi vuoti, oppure scrivi un'email senza @.</p>
+        <p class="muted es">Presiona "Verificar y enviar" con los campos vacíos, o escribe un email sin @.</p>
+        <div style="background:#fff;border:1px solid #cbd5e1;border-radius:8px;padding:18px;max-width:480px">
+          <div class="control-group" style="margin-bottom:10px"><label><span class="it">Nome completo</span><span class="es">Nombre completo</span></label><input type="text" id="val-name" data-ph-it="Es: Riccardo Rossi" data-ph-es="Ej: Ricardo Rossi"></div>
+          <div class="control-group" style="margin-bottom:10px"><label>Email</label><input type="text" id="val-email" data-ph-it="Es: riccardo@email.it" data-ph-es="Ej: ricardo@email.com"></div>
+          <div class="control-group" style="margin-bottom:12px"><label><span class="it">Telefono</span><span class="es">Teléfono</span></label><input type="text" id="val-phone" placeholder="+39 340 1234567"></div>
+          <button type="button" class="btn" id="btn-validate" style="width:100%;justify-content:center">🚀 <span class="it">Verifica e invia</span><span class="es">Verificar y enviar</span></button>
+          <div id="val-result" style="margin-top:10px;padding:9px 12px;border-radius:7px;font-size:.88rem" hidden></div>
         </div>
       </div>
 
-      <!-- Live Interactive Form Validator -->
-      <div class="js-lab-box">
-        <strong id="val-box-title">🛠️ Prova il Validatore dal Vivo:</strong>
-        <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;" id="val-box-desc">
-          Prova a premere "Invia al Database" lasciando vuoti i campi, oppure scrivi un'email senza la chiocciola @:
-        </p>
+      <div class="code-container"><span class="code-badge">JavaScript</span><pre><code>document.getElementById("modulo").addEventListener("submit", function (evento) {
+  let nome = document.getElementById("nome").value.trim();
+  let email = document.getElementById("email").value.trim();
+  let errore = document.getElementById("errore");
 
-        <div style="background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px; margin-top: 12px; max-width: 480px;">
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 4px;" id="lbl-val-name">Nome Completo:</label>
-            <input type="text" id="val-in-name" placeholder="Es: Riccardo" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
-          </div>
-          <div style="margin-bottom: 12px;">
-            <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #475569; margin-bottom: 4px;">Email:</label>
-            <input type="text" id="val-in-email" placeholder="Es: riccardo@italia.it" style="width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
-          </div>
-          <button class="btn-action-js" onclick="validateFormDemo()" id="btn-val-submit" style="width: 100%; justify-content: center;">
-            🚀 Verifica e Invia al Database
-          </button>
-          <div id="val-result-msg" style="margin-top: 10px; padding: 8px 12px; border-radius: 6px; font-size: 0.85rem; display: none;"></div>
-        </div>
+  if (nome === "") {
+    evento.preventDefault();                  <span class="c-com">// blocca l'invio</span>
+    errore.textContent = "Il nome è obbligatorio";
+    return;
+  }
+  if (!email.includes("@") || !email.includes(".")) {
+    evento.preventDefault();
+    errore.textContent = "Email non valida";
+    return;
+  }
+  errore.textContent = "";                    <span class="c-com">// tutto ok: il modulo parte</span>
+});</code></pre><button type="button" class="copy-btn">Copia</button></div>
+      <p class="it"><strong>Scorciatoia HTML:</strong> molte verifiche si fanno anche senza JavaScript, con attributi come <code>required</code>, <code>type="email"</code> e <code>minlength="3"</code>. Usa JavaScript quando vuoi messaggi personalizzati o regole speciali.</p>
+      <p class="es"><strong>Atajo HTML:</strong> muchas verificaciones se hacen sin JavaScript, con atributos como <code>required</code>, <code>type="email"</code> y <code>minlength="3"</code>. Usa JavaScript cuando quieras mensajes personalizados o reglas especiales.</p>
+
+      <div class="challenge">
+        <div class="challenge-title">🎯 <span class="it">Sfida: il tuo modulo di prenotazione</span><span class="es">Desafío: tu formulario de reservas</span></div>
+        <ul class="checklist" data-key="l3-s3">
+          <li><label><input type="checkbox"><span><span class="it">Nel laboratorio della Fase 2 crea un <code>&lt;form&gt;</code> con nome, email e numero di persone.</span><span class="es">En el laboratorio de la Fase 2 crea un <code>&lt;form&gt;</code> con nombre, email y cantidad de personas.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Aggiungi <code>required</code> e <code>type="email"</code> e prova a inviarlo vuoto.</span><span class="es">Agrega <code>required</code> y <code>type="email"</code> y prueba enviarlo vacío.</span></span></label></li>
+          <li><label><input type="checkbox"><span><span class="it">Con JavaScript, blocca le prenotazioni per più di 12 persone con un messaggio gentile.</span><span class="es">Con JavaScript, bloquea las reservas de más de 12 personas con un mensaje amable.</span></span></label></li>
+        </ul>
       </div>
 
-      <button class="btn-next-module" onclick="switchSection(4)" id="btn-next-3">
-        <span id="txt-btn-next-3">Visualizza il Diploma del Livello 3 ➔</span>
-      </button>
+      <div data-quiz="3"></div>
+      <button type="button" class="btn btn-next-module" data-go="4"><span class="it">Vai al Diploma del Livello 3 ➔</span><span class="es">Ir al Diploma del Nivel 3 ➔</span></button>
     </section>
 
-    <!-- SECTION 4: CERTIFICATE LEVEL 3 -->
-    <section class="module-card" id="sec-4" style="display: none;">
+    <!-- ============ SEZIONE 5: DIPLOMA ============ -->
+    <section class="module-card" data-done="final" hidden>
       <div class="certificate-card">
-        <div style="font-size: 3.5rem;">⚡</div>
-        <h1 style="font-size: 2.2rem; color: #d97706; margin-bottom: 0.5rem;" id="cert-title">Certificato di Interattività Web (Livello 3)</h1>
-        <p style="color: var(--text-muted); font-size: 1.15rem;" id="cert-sub">
-          Padronanza degli Eventi, Logica Dinamica e Validazione con JavaScript
-        </p>
-
-        <div style="font-size: 1.85rem; font-weight: 800; color: #0f172a; margin: 1.5rem 0; border-bottom: 3px solid #f59e0b; display: inline-block; padding: 0 2rem 0.5rem;" id="cert-name">
-          Riccardo
+        <div style="font-size:3.4rem">⚡</div>
+        <h1 style="color:var(--primary)"><span class="it">Certificato di Interattività Web — Livello 3</span><span class="es">Certificado de Interactividad Web — Nivel 3</span></h1>
+        <p class="lead"><span class="it">Variabili, funzioni, eventi, DOM e validazione con JavaScript</span><span class="es">Variables, funciones, eventos, DOM y validación con JavaScript</span></p>
+        <div class="cert-name">Riccardo</div>
+        <p style="max-width:620px;margin:0 auto"><span class="it">Ha completato il <strong>Livello 3</strong> imparando a dare vita agli elementi web, gestire gli eventi dell'utente e controllare i dati dei moduli.</span><span class="es">Completó el <strong>Nivel 3</strong> aprendiendo a dar vida a los elementos web, manejar los eventos del usuario y controlar los datos de los formularios.</span></p>
+        <div class="cert-signs">
+          <div><div>Riccardo</div><small>Interactive Developer</small></div>
+          <div><div>Mentore 🇦🇷</div><small><span class="it">Docente & Guida</span><span class="es">Docente & Guía</span></small></div>
         </div>
-
-        <p style="max-width: 620px; margin: 1.5rem auto; font-size: 1.05rem;" id="cert-desc">
-          Ha completato con successo il <strong>Livello 3 di Interattività</strong> imparando come dare vita a qualsiasi elemento web, gestire eventi utente e connettere l'interfaccia con il backend.
-        </p>
-
-        <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 2rem;">
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Riccardo</div>
-            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-student">Interactive Developer</div>
-          </div>
-          <div style="text-align: center;">
-            <div style="font-weight: 700; color: #0f172a; border-top: 1px solid #cbd5e1; padding-top: 6px; width: 180px;">Mentore 🇦🇷</div>
-            <div style="font-size: 0.8rem; color: #64748b;" id="cert-role-mentor">Docente & Guida</div>
-          </div>
-        </div>
-
-        <div style="margin-top: 2.5rem; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-          <button class="btn-verify" onclick="window.print()" id="btnPrintCert">🖨️ Stampa o Salva PDF</button>
-          <a href="modulo4.html" class="btn-verify" style="background: #0284c7; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;" id="btn-next-lvl4">
-            🚀 Passa al Livello 4: Progetto Finale & Pubblicazione ➔
-          </a>
+        <div class="cert-status no-print"></div>
+        <div class="btn-row no-print" style="justify-content:center;margin-top:2rem">
+          <button type="button" class="btn" onclick="window.print()">🖨️ <span class="it">Stampa o Salva PDF</span><span class="es">Imprimir o Guardar PDF</span></button>
+          <a href="modulo4.html" class="btn green">🚀 <span class="it">Passa al Livello 4: Progetto Finale ➔</span><span class="es">Pasar al Nivel 4: Proyecto Final ➔</span></a>
         </div>
       </div>
     </section>
 
   </main>
 
+  <div id="toast" role="status"></div>
+  <div id="modal"><div class="box">
+    <strong id="modal-title"></strong>
+    <textarea id="modal-text" readonly></textarea>
+    <button type="button" class="btn" onclick="document.getElementById('modal').classList.remove('show')">OK</button>
+  </div></div>
+
   <script>
-    let currentLang = 'it';
-    let currentSection = 0;
-    const totalSections = 5;
+const PAGE = { id: "l3", title: { it: 'Livello 3: Dare Vita al Sito con JavaScript — Corso di Riccardo', es: 'Nivel 3: Dar Vida al Sitio con JavaScript — Curso de Ricardo' } };
+/* ===== Motore comune del corso (Riccardo) ===== */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* storage non disponibile */ } }
+};
+let LANG = store.get('riccardo_lang_v2', 'it');
+if (LANG !== 'it' && LANG !== 'es') LANG = 'it';
+const STATE_KEY = 'riccardo_' + PAGE.id + '_v2';
+const state = Object.assign({ done: {}, answers: {}, checks: {}, last: 0, labs: {} }, store.get(STATE_KEY, {}));
+const save = () => store.set(STATE_KEY, state);
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const tr = (it, es) => (LANG === 'es' ? es : it);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const sections = () => $$('section.module-card');
+let current = 0;
 
-    let userAnswers = { 0: {}, 1: {}, 2: {} };
-    let completedSections = { 0: false, 1: false, 2: false, 3: false, 4: false };
+/* ---------- Lingua ---------- */
+function setLanguage(lang) {
+  LANG = lang;
+  store.set('riccardo_lang_v2', lang);
+  document.documentElement.lang = lang;
+  document.title = tr(PAGE.title.it, PAGE.title.es);
+  $$('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  $$('[data-ph-it]').forEach(el => { el.placeholder = lang === 'es' ? el.dataset.phEs : el.dataset.phIt; });
+  $$('.copy-btn').forEach(b => { b.textContent = tr('Copia', 'Copiar'); });
+  $$('.cert-name').forEach(el => { el.textContent = tr('Riccardo', 'Ricardo'); });
+  renderAllQuizzes();
+  updateProgress();
+  if (typeof PAGE.onLang === 'function') PAGE.onLang(lang);
+}
 
-    const quizData = {
-      0: [{
-        correct: 0,
-        feedback: {
-          it: {
-            correct: "Bravissimo! JavaScript è il motore che rende le pagine dinamiche, capaci di cambiare testo, colori o inviare dati senza mai ricaricarsi.",
-            wrong: "Riprova: La funzione principe di JavaScript è l'interattività istantanea nel browser."
-          },
-          es: {
-            correct: "¡Excelente! JavaScript es el motor que vuelve las páginas dinámicas, capaces de actualizarse sin recargar.",
-            wrong: "Reintenta: La función primordial de JavaScript es la interactividad inmediata en el navegador."
-          }
-        }
-      }],
-      1: [{
-        correct: 0,
-        feedback: {
-          it: {
-            correct: "Esatto! L'attributo onclick='nomeFunzione()' dice al browser quale istruzione eseguire al tocco o click dell'utente.",
-            wrong: "Attenzione: Per intercettare il click dell'utente si usa l'evento onclick."
-          },
-          es: {
-            correct: "¡Exacto! El atributo onclick='nombreFuncion()' le indica al navegador qué instrucción ejecutar cuando el usuario hace clic.",
-            wrong: "Atención: Para escuchar el clic del usuario se utiliza el evento onclick."
-          }
-        }
-      }],
-      2: [{
-        correct: 0,
-        feedback: {
-          it: {
-            correct: "Centro! Invertire o aggiungere classi CSS con .classList.toggle() è lo standard moderno per Dark Mode e animazioni.",
-            wrong: "Riprova: JavaScript modifica le classi CSS o le proprietà di stile degli elementi."
-          },
-          es: {
-            correct: "¡En el blanco! Alternar clases CSS con .classList.toggle() es el estándar moderno para modo oscuro y animaciones.",
-            wrong: "Reintenta: JavaScript modifica las clases CSS o los estilos de los elementos."
-          }
-        }
-      }]
+/* ---------- Navigazione tra sezioni ---------- */
+function showSection(i, scroll = true) {
+  const secs = sections();
+  i = Math.max(0, Math.min(secs.length - 1, Number(i) || 0));
+  current = i;
+  secs.forEach((s, k) => { s.hidden = k !== i; s.classList.toggle('printing', k === i); });
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('active', k === i));
+  const nl = $('.nav-list'), an = $$('.nav-item')[i];
+  if (nl && an && nl.scrollWidth > nl.clientWidth) nl.scrollLeft = an.parentElement.offsetLeft - 10;
+  state.last = i; save();
+  if (secs[i].dataset.done === 'visit') markDone(i);
+  if (typeof PAGE.onShow === 'function') PAGE.onShow(i);
+  if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+  try { history.replaceState(null, '', '#s' + (i + 1)); } catch (e) { }
+}
+function markDone(i) {
+  if (!state.done[i]) { state.done[i] = true; save(); }
+  updateProgress();
+}
+function updateProgress() {
+  const secs = sections();
+  const finalIdx = secs.findIndex(s => s.dataset.done === 'final');
+  const others = secs.map((s, k) => k).filter(k => k !== finalIdx);
+  const allOthers = others.every(k => state.done[k]);
+  if (finalIdx >= 0) state.done[finalIdx] = allOthers;
+  const count = secs.filter((s, k) => state.done[k]).length;
+  const pct = Math.round(count / secs.length * 100);
+  const pe = $('#progress-percent'); if (pe) pe.textContent = pct + '%';
+  const pf = $('#progress-fill'); if (pf) pf.style.width = pct + '%';
+  $$('.nav-item').forEach((n, k) => n.classList.toggle('completed', !!state.done[k]));
+  const missing = others.filter(k => !state.done[k]).length;
+  $$('.cert-status').forEach(el => {
+    el.classList.toggle('ok', allOthers);
+    el.textContent = allOthers
+      ? tr('✅ Tutte le sezioni completate: il diploma è meritato!', '✅ Todas las secciones completadas: ¡el diploma está merecido!')
+      : tr(`Ti mancano ancora ${missing} sezioni (rispondi bene ai quiz o visita la sezione) per completare il livello.`,
+           `Todavía te faltan ${missing} secciones (responde bien los quiz o visita la sección) para completar el nivel.`);
+  });
+}
+
+/* ---------- Quiz ---------- */
+function renderAllQuizzes() { $$('[data-quiz]').forEach(el => renderQuiz(el)); }
+function renderQuiz(el) {
+  const sec = el.dataset.quiz;
+  const qs = (PAGE.quiz || {})[sec] || [];
+  const ans = state.answers[sec] || {};
+  const checked = !!(state.answers[sec] && state.answers[sec]._checked);
+  let h = `<div class="quiz-title">📝 ${tr('Verifica Rapida', 'Comprobación Rápida')} <span class="muted">(${qs.length} ${tr('domande', 'preguntas')})</span></div>`;
+  qs.forEach((q, qi) => {
+    h += `<div class="question-block"><div class="question-text">${qi + 1}. ${esc(tr(q.q[0], q.q[1]))}</div><div class="options-list">`;
+    q.o.forEach((o, oi) => {
+      let cls = ans[qi] === oi ? 'selected' : '';
+      if (checked && ans[qi] !== undefined) {
+        if (oi === q.c && ans[qi] === oi) cls = 'correct';
+        else if (ans[qi] === oi) cls = 'wrong';
+      }
+      h += `<button type="button" class="option-btn ${cls}" data-q="${qi}" data-o="${oi}">${esc(tr(o[0], o[1]))}</button>`;
+    });
+    h += `</div>`;
+    if (checked && ans[qi] !== undefined) {
+      const ok = ans[qi] === q.c;
+      h += `<div class="feedback-box ${ok ? 'correct' : 'wrong'}">${ok ? '✅ ' : '❌ '}${esc(ok ? tr(q.e[0], q.e[1]) : tr(q.w ? q.w[0] : 'Non è questa. Rileggi la spiegazione sopra e riprova.', q.w ? q.w[1] : 'No es esa. Relee la explicación de arriba y reintenta.'))}</div>`;
+    }
+    h += `</div>`;
+  });
+  const score = qs.filter((q, qi) => ans[qi] === q.c).length;
+  h += `<div class="quiz-submit-row"><button type="button" class="btn" data-check>${tr('Verifica Risposte', 'Verificar Respuestas')}</button>`;
+  if (checked) h += `<span class="score-badge">${score}/${qs.length} ${tr('corrette', 'correctas')}${score === qs.length ? ' 🎉' : ''}</span>`;
+  h += `</div>`;
+  el.innerHTML = h;
+  el.classList.add('quiz-container');
+}
+document.addEventListener('click', e => {
+  const opt = e.target.closest('[data-quiz] .option-btn');
+  if (opt) {
+    const sec = opt.closest('[data-quiz]').dataset.quiz;
+    state.answers[sec] = state.answers[sec] || {};
+    state.answers[sec][opt.dataset.q] = Number(opt.dataset.o);
+    state.answers[sec]._checked = false;
+    save(); renderQuiz(opt.closest('[data-quiz]'));
+    return;
+  }
+  const chk = e.target.closest('[data-quiz] [data-check]');
+  if (chk) {
+    const box = chk.closest('[data-quiz]'); const sec = box.dataset.quiz;
+    const qs = PAGE.quiz[sec]; const ans = state.answers[sec] || {};
+    const answered = qs.filter((q, qi) => ans[qi] !== undefined).length;
+    if (answered < qs.length) { toast(tr('Rispondi a tutte le domande prima di verificare!', '¡Responde todas las preguntas antes de verificar!')); return; }
+    ans._checked = true; state.answers[sec] = ans;
+    if (qs.every((q, qi) => ans[qi] === q.c)) { markDone(Number(sec)); toast(tr('Perfetto! Sezione completata ✓', '¡Perfecto! Sección completada ✓')); }
+    save(); renderQuiz(box);
+    return;
+  }
+  const go = e.target.closest('[data-go]');
+  if (go) { showSection(go.dataset.go); return; }
+  const lb = e.target.closest('.lang-btn');
+  if (lb) { setLanguage(lb.dataset.lang); return; }
+  const cp = e.target.closest('.copy-btn');
+  if (cp) {
+    const src = cp.dataset.copyTarget ? $(cp.dataset.copyTarget) : (cp.parentElement.querySelector('.prompt-text.' + LANG) || cp.parentElement.querySelector('code, .prompt-text'));
+    const text = src ? (src.value !== undefined && src.tagName === 'TEXTAREA' ? src.value : src.innerText) : '';
+    copyText(text).then(ok => {
+      if (ok) { const old = cp.textContent; cp.textContent = tr('Copiato!', '¡Copiado!'); setTimeout(() => cp.textContent = old, 1400); }
+      else showModal(text, tr('Seleziona tutto il testo e copialo (Ctrl+C):', 'Selecciona todo el texto y cópialo (Ctrl+C):'));
+    });
+  }
+});
+
+/* ---------- Checklist delle sfide ---------- */
+function initChecklists() {
+  $$('.checklist[data-key]').forEach(ul => {
+    const key = ul.dataset.key;
+    const boxes = $$('input[type=checkbox]', ul);
+    const counter = document.createElement('div'); counter.className = 'challenge-count';
+    ul.after(counter);
+    const upd = () => {
+      const n = boxes.filter(b => b.checked).length;
+      counter.innerHTML = `<span class="it">Fatto: ${n}/${boxes.length}${n === boxes.length ? ' — Grande, Riccardo! 💪' : ''}</span><span class="es">Hecho: ${n}/${boxes.length}${n === boxes.length ? ' — ¡Genial, Ricardo! 💪' : ''}</span>`;
     };
+    boxes.forEach((b, i) => {
+      b.checked = !!(state.checks[key] || {})[i];
+      b.addEventListener('change', () => { state.checks[key] = state.checks[key] || {}; state.checks[key][i] = b.checked; save(); upd(); });
+    });
+    upd();
+  });
+}
 
-    const i18n = {
-      it: {
-        studentBadge: "Livello 3: <strong>Riccardo</strong>",
-        courseTitle: "Dare Vita al Sito con JavaScript",
-        mentorNote: "Con il tuo mentore argentino 🇦🇷🇮🇹",
-        progressLabel: "Progresso Livello 3",
-        navS0: "1. Dalla Web Statica alla Dinamica",
-        navS1: "2. Gli Eventi (Click, Modifiche)",
-        navS2: "3. Modalità Scura & Contatore",
-        navS3: "4. Validazione Form prima del DB",
-        navS4: "5. Diploma Interattività",
+/* ---------- Laboratori live (iframe isolato) ---------- */
+function initLabs() {
+  $$('.lab[data-lab]').forEach(lab => {
+    const id = lab.dataset.lab;
+    const ta = $('.lab-code', lab), frame = $('.lab-view', lab);
+    const original = ta.value;
+    if (state.labs[id] !== undefined) ta.value = state.labs[id];
+    let t;
+    const render = () => { frame.srcdoc = '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;padding:12px;margin:0;color:#0f172a}</style></head><body>' + ta.value + '</body></html>'; };
+    ta.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { render(); state.labs[id] = ta.value; save(); }, 300); });
+    ta.addEventListener('keydown', e => { if (e.key === 'Tab') { e.preventDefault(); const s = ta.selectionStart; ta.setRangeText('  ', s, ta.selectionEnd, 'end'); } });
+    const reset = $('[data-lab-reset]', lab);
+    if (reset) reset.addEventListener('click', () => { ta.value = original; delete state.labs[id]; save(); render(); });
+    const run = $('[data-lab-run]', lab);
+    if (run) run.addEventListener('click', render);
+    $$('[data-lab-width]', lab).forEach(b => b.addEventListener('click', () => {
+      $$('[data-lab-width]', lab).forEach(x => x.classList.toggle('active', x === b));
+      frame.style.width = b.dataset.labWidth; frame.style.marginInline = 'auto'; frame.style.display = 'block';
+    }));
+    const dl = $('[data-lab-download]', lab);
+    if (dl) dl.addEventListener('click', () => downloadFile((lab.dataset.file || 'esercizio') + '.html',
+      '<!DOCTYPE html>\n<html lang="it">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>Esercizio di Riccardo</title>\n</head>\n<body>\n' + ta.value + '\n</body>\n</html>\n'));
+    render();
+  });
+}
 
-        // S0
-        tagS0: "Fase 1: Evoluzione",
-        titleS0: "La Rivoluzione di JavaScript: Dalla Web 1.0 alla Web Viva",
-        subS0: "Come una pagina è passata dall'essere un semplice foglio di giornale a un'esperienza interattiva.",
-        histS0Title: "Un aneddoto affascinante: 10 giorni che hanno cambiato il mondo",
-        histS0Text: "Nel <strong>1995</strong>, un ingegnere di nome <strong>Brendan Eich</strong> creò il linguaggio <strong>JavaScript in soli 10 giorni</strong> per il browser Netscape Navigator. All'inizio serviva solo per animare qualche scritta o validare un form. Oggi è il linguaggio più usato al mondo e muove l'interattività di ogni sito (da Google Maps a Netflix, da WhatsApp Web ai videogiochi nel browser).",
-        h2S0Web1vs2: "1. Web 1.0 vs Web 2.0 spiegato in parole semplici",
-        listS0Web1vs2: `
-          <li><strong>Web 1.0 (Solo Lettura):</strong> Potevi solo leggere testi e cliccare link. Se volevi vedere un'informazione nuova, dovevi ricaricare l'intera pagina da zero.</li>
-          <li><strong>Web 2.0 (Interazione Viva):</strong> Clicchi un 'Mi piace', aggiungi una pizza al carrello o apri una finestra e la pagina risponde all'istante senza mai ricaricarsi. Questo è il lavoro di <strong>JavaScript</strong>.</li>
-        `,
-        quizS0Title: "Verifica Rapida: Sezione 1",
-        q00Text: "1. Qual è il ruolo primario di JavaScript in un sito web moderno?",
-        btnNext0: "Avanti alla Fase 2: Gli Eventi (Metti le mani in pasta) ➔",
+/* ---------- Utilità: copia, scarica, toast, modale ---------- */
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) {
+    try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return ok; } catch (e2) { return false; }
+  }
+}
+function downloadFile(name, content) {
+  try {
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    toast(tr(`📥 File "${name}" scaricato: aprilo con doppio clic!`, `📥 Archivo "${name}" descargado: ¡ábrelo con doble clic!`));
+  } catch (e) {
+    showModal(content, tr(`Non riesco a scaricare: copia questo codice e salvalo come ${name}`, `No puedo descargar: copia este código y guárdalo como ${name}`));
+  }
+}
+let toastTimer;
+function toast(msg) {
+  const el = $('#toast'); el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+function showModal(text, title) {
+  const m = $('#modal'); $('#modal-title').textContent = title; $('#modal-text').value = text;
+  m.classList.add('show'); $('#modal-text').select();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#modal').classList.remove('show'); });
 
-        // S1
-        tagS1: "Fase 2: Azione",
-        titleS1: "Gli Eventi: Ascoltare e Rispondere ai Click dell'Utente",
-        subS1: "In JavaScript tutto funziona con una formula magica: 'Quando succede X (evento), fai Y (azione)'.",
-        mentorS1Title: "La Regola del tuo Mentor",
-        mentorS1Text: "Riccardo, guarda quanto è semplice: in HTML metti un bottone <code>&lt;button onclick='saluta()'&gt;</code> e in JavaScript scrivi cosa deve succedere dentro la funzione. Provalo subito nel laboratorio qui sotto!",
-        labS1Title: "🛠️ Laboratorio dal Vivo: Prova a Cliccare il Bottone",
-        labS1Desc: "Guarda come il testo e il colore cambiano istantaneamente senza ricaricare la pagina:",
-        btnTestAction: "⚡ Clicca per Attivare JavaScript!",
-        quizS1Title: "Verifica Rapida: Sezione 2",
-        q10Text: "1. Quale attributo HTML si usa più comunemente per eseguire codice JavaScript al clic di un pulsante?",
-        btnNext1: "Avanti alla Fase 3: Modalità Scura & Carrello ➔",
+/* ---------- Avvio ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  try { if (typeof PAGE.init === 'function') PAGE.init(); } catch (e) { console.error(e); }
+  initChecklists();
+  initLabs();
+  setLanguage(LANG);
+  const m = /^#s(\d+)$/.exec(location.hash);
+  showSection(m ? Number(m[1]) - 1 : state.last, false);
+});
+window.addEventListener('hashchange', () => {
+  const m = /^#s(\d+)$/.exec(location.hash);
+  if (m && Number(m[1]) - 1 !== current) showSection(Number(m[1]) - 1);
+});
 
-        // S2
-        tagS2: "Fase 3: Componenti Reali",
-        titleS2: "Due Componenti che Ogni Cliente ti Chiederà",
-        subS2: "Il selettore Modalità Chiara / Scura (Dark Mode) e il contatore per ordinare prodotti.",
-        h2S2Dark: "1. Il Selettore Dark Mode (Modalità Scura)",
-        pS2Dark: "I moderni siti web permettono all'utente di passare a uno sfondo scuro per riposare gli occhi. Prova a premere l'interruttore:",
-        btnToggleTheme: "🌓 Alterna Modalità Chiara / Scura",
-        h2S2Counter: "2. Il Contatore Dinamico (Quantità Carrello)",
-        pS2Counter: "Quando un cliente ordina 3 pizze o 2 consulenze, questo script aggiorna i numeri e il prezzo totale al volo:",
-        cartItemName: "🍕 Pizza Margherita Napoletana (€8,00)",
-        quizS2Title: "Verifica Rapida: Sezione 3",
-        q20Text: "1. Come fa JavaScript a cambiare lo stile o i colori di un elemento quando clicchi un bottone?",
-        btnNext2: "Avanti alla Fase 4: Validazione Form prima del Database ➔",
+/* ===== Livello 3: dati e logica specifica ===== */
+PAGE.quiz = {
+  0: [
+    { q: ["Qual è il ruolo principale di JavaScript in un sito?", "¿Cuál es el rol principal de JavaScript en un sitio?"],
+      o: [["Dare interattività: rispondere alle azioni dell'utente e modificare la pagina al volo", "Dar interactividad: responder a las acciones del usuario y modificar la página al instante"],
+          ["Sostituire la connessione internet", "Reemplazar la conexión a internet"], ["Stampare fatture su carta", "Imprimir facturas en papel"]], c: 0,
+      e: ["Bravissimo! JavaScript rende la pagina viva senza ricaricarla.", "¡Excelente! JavaScript hace la página viva sin recargarla."] },
+    { q: ["Cos'è una variabile?", "¿Qué es una variable?"],
+      o: [["Un errore del codice", "Un error del código"], ["Una 'scatola' con un nome che contiene un valore", "Una 'caja' con un nombre que contiene un valor"], ["Un tipo di immagine", "Un tipo de imagen"]], c: 1,
+      e: ["Esatto: let prezzo = 8; crea la scatola 'prezzo' con dentro 8.", "Exacto: let prezzo = 8; crea la caja 'prezzo' con 8 adentro."] },
+    { q: ["Cosa fa document.getElementById(\"titolo\").textContent = \"Ciao\"?", "¿Qué hace document.getElementById(\"titolo\").textContent = \"Ciao\"?"],
+      o: [["Cambia il testo dell'elemento con id=\"titolo\" in \"Ciao\"", "Cambia el texto del elemento con id=\"titolo\" por \"Ciao\""], ["Crea un nuovo file", "Crea un archivo nuevo"], ["Cancella la pagina", "Borra la página"]], c: 0,
+      e: ["Perfetto: trovi l'elemento nel DOM e ne cambi il contenuto.", "Perfecto: encuentras el elemento en el DOM y cambias su contenido."] }
+  ],
+  1: [
+    { q: ["Quale attributo HTML esegue JavaScript al clic di un pulsante?", "¿Qué atributo HTML ejecuta JavaScript al hacer clic en un botón?"],
+      o: [['onclick="..."', 'onclick="..."'], ['href="..."', 'href="..."'], ['src="..."', 'src="..."']], c: 0,
+      e: ["Esatto! onclick dice al browser quale funzione eseguire.", "¡Exacto! onclick le dice al navegador qué función ejecutar."] },
+    { q: ["Perché nei progetti veri si preferisce addEventListener?", "¿Por qué en proyectos reales se prefiere addEventListener?"],
+      o: [["Perché è più colorato", "Porque es más colorido"], ["Perché tiene separati HTML e JavaScript e il codice resta ordinato", "Porque mantiene separados HTML y JavaScript y el código queda ordenado"], ["Perché funziona solo su Chrome", "Porque solo funciona en Chrome"]], c: 1,
+      e: ["Giusto: struttura in HTML, comportamento in JavaScript.", "Correcto: estructura en HTML, comportamiento en JavaScript."] },
+    { q: ["Quale evento si attiva a ogni lettera scritta in un campo?", "¿Qué evento se activa con cada letra escrita en un campo?"],
+      o: [["click", "click"], ["input", "input"], ["scroll", "scroll"]], c: 1,
+      e: ["Esatto: 'input' è perfetto per anteprime dal vivo.", "Exacto: 'input' es perfecto para vistas previas en vivo."] }
+  ],
+  2: [
+    { q: ["Come cambia JavaScript l'aspetto di un elemento al clic?", "¿Cómo cambia JavaScript el aspecto de un elemento al hacer clic?"],
+      o: [["Aggiunge o toglie una classe CSS (classList.toggle) o modifica .style", "Agrega o quita una clase CSS (classList.toggle) o modifica .style"], ["Formatta il disco", "Formatea el disco"], ["Manda un'email", "Manda un email"]], c: 0,
+      e: ["Centro! classList.toggle è lo standard per dark mode e animazioni.", "¡En el blanco! classList.toggle es el estándar para modo oscuro y animaciones."] },
+    { q: ["Nel contatore, a cosa serve Math.max(1, quantita + delta)?", "En el contador, ¿para qué sirve Math.max(1, quantita + delta)?"],
+      o: [["A non far scendere mai la quantità sotto 1", "Para que la cantidad nunca baje de 1"], ["A raddoppiare il prezzo", "Para duplicar el precio"], ["A cancellare il carrello", "Para vaciar el carrito"]], c: 0,
+      e: ["Esatto: prende il valore più grande tra 1 e il nuovo numero.", "Exacto: toma el valor más grande entre 1 y el número nuevo."] },
+    { q: ["Dove si prepara l'aspetto 'scuro' della card?", "¿Dónde se prepara el aspecto 'oscuro' de la tarjeta?"],
+      o: [["Nel CSS, con una classe come .dark", "En el CSS, con una clase como .dark"], ["Nel database", "En la base de datos"], ["Nel titolo della pagina", "En el título de la página"]], c: 0,
+      e: ["Giusto: CSS decide l'aspetto, JavaScript decide quando applicarlo.", "Correcto: el CSS decide el aspecto, JavaScript decide cuándo aplicarlo."] }
+  ],
+  3: [
+    { q: ["Cosa fa evento.preventDefault() in un submit?", "¿Qué hace evento.preventDefault() en un submit?"],
+      o: [["Blocca l'invio del modulo", "Bloquea el envío del formulario"], ["Invia il modulo due volte", "Envía el formulario dos veces"], ["Cancella il sito", "Borra el sitio"]], c: 0,
+      e: ["Esatto: così l'utente può correggere prima di inviare.", "Exacto: así el usuario puede corregir antes de enviar."] },
+    { q: ["La validazione JavaScript nel browser basta per proteggere il database?", "¿La validación con JavaScript en el navegador alcanza para proteger la base de datos?"],
+      o: [["Sì, sempre", "Sí, siempre"], ["No: aiuta l'utente, ma il server deve ricontrollare i dati", "No: ayuda al usuario, pero el servidor debe volver a controlar los datos"], ["Sì, se il sito è blu", "Sí, si el sitio es azul"]], c: 1,
+      e: ["Giusto: chiunque può aggirare il browser, il server è l'ultimo controllo.", "Correcto: cualquiera puede saltarse el navegador, el servidor es el último control."] },
+    { q: ["Quale attributo HTML rende obbligatorio un campo senza JavaScript?", "¿Qué atributo HTML hace obligatorio un campo sin JavaScript?"],
+      o: [["required", "required"], ["important", "important"], ["must", "must"]], c: 0,
+      e: ["Perfetto: required, type=\"email\" e minlength fanno già tanto lavoro.", "Perfecto: required, type=\"email\" y minlength ya hacen mucho trabajo."] }
+  ]
+};
 
-        // S3
-        tagS3: "Fase 4: Integrazione",
-        titleS3: "Validare i Dati Prima di Inviarli al Database",
-        subS3: "Come evitare che gli utenti inseriscano dati vuoti o email sbagliate nel tuo database.",
-        tipS3Title: "Il Guardiano del Database",
-        tipS3Text: "Nel Livello 1 abbiamo visto come salvare dati in SQLite. Ma cosa succede se un utente lascia il campo email vuoto o scrive una password di 2 lettere? <strong>JavaScript intercetta il form prima che parta</strong>, controlla gli errori e avvisa l'utente in rosso!",
-        valBoxTitle: "🛠️ Prova il Validatore dal Vivo:",
-        valBoxDesc: "Prova a premere 'Invia al Database' lasciando vuoti i campi, oppure scrivi un'email senza la chiocciola @:",
-        lblValName: "Nome Completo:",
-        btnValSubmit: "🚀 Verifica e Invia al Database",
-        btnNext3: "Visualizza il Diploma del Livello 3 ➔",
+let clickCount = 0, quantity = 1;
+const UNIT = 8;
+function renderTotal() {
+  document.getElementById('counter-val').textContent = quantity;
+  const tot = (quantity * UNIT).toFixed(2).replace('.', ',');
+  document.getElementById('total-price').textContent = tr('Totale: ', 'Total: ') + tot + ' €';
+}
+function renderClick() {
+  if (!clickCount) return;
+  const el = document.getElementById('demo-msg');
+  el.textContent = tr(`🎉 Bravissimo Riccardo! Hai attivato JavaScript (clic n° ${clickCount})`, `🎉 ¡Excelente Ricardo! Activaste JavaScript (clic n° ${clickCount})`);
+  el.style.color = '#059669';
+}
+let lastValidation = null;
+function validate() {
+  const name = document.getElementById('val-name').value.trim();
+  const email = document.getElementById('val-email').value.trim();
+  const phone = document.getElementById('val-phone').value.trim();
+  if (!name) lastValidation = ['err', '❌ Errore: il nome non può essere vuoto.', '❌ Error: el nombre no puede estar vacío.'];
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) lastValidation = ['err', '❌ Errore: inserisci un\'email valida (es. nome@dominio.it).', '❌ Error: ingresa un email válido (ej. nombre@dominio.com).'];
+  else if (phone && !/^\+?[\d\s]{7,16}$/.test(phone)) lastValidation = ['err', '❌ Errore: il telefono può contenere solo numeri, spazi e il +.', '❌ Error: el teléfono solo puede tener números, espacios y el +.'];
+  else lastValidation = ['ok', `✅ Dati perfetti! In un sito vero ora il modulo partirebbe verso il server con: ${name} | ${email}`, `✅ ¡Datos correctos! En un sitio real ahora el formulario saldría hacia el servidor con: ${name} | ${email}`];
+  renderValidation();
+}
+function renderValidation() {
+  if (!lastValidation) return;
+  const r = document.getElementById('val-result');
+  r.hidden = false;
+  const ok = lastValidation[0] === 'ok';
+  r.style.background = ok ? '#d1fae5' : '#fee2e2'; r.style.color = ok ? '#065f46' : '#991b1b';
+  r.style.border = '1px solid ' + (ok ? '#a7f3d0' : '#fecaca');
+  r.textContent = tr(lastValidation[1], lastValidation[2]);
+}
 
-        // Cert
-        certTitle: "Certificato di Interattività Web (Livello 3)",
-        certSub: "Padronanza degli Eventi, Logica Dinamica e Validazione con JavaScript",
-        certDesc: "Ha completato con successo il <strong>Livello 3 di Interattività</strong> imparando come dare vita a qualsiasi elemento web, gestire eventi utente e connettere l'interfaccia con il backend.",
-        certRoleStudent: "Interactive Developer",
-        certRoleMentor: "Docente & Guida 🇦🇷",
-        btnPrintCert: "🖨️ Stampa o Salva PDF",
-        btnNextLvl4: "🚀 Passa al Livello 4: Progetto Finale & Pubblicazione ➔"
-      },
-      es: {
-        studentBadge: "Nivel 3: <strong>Ricardo</strong>",
-        courseTitle: "Dar Vida al Sitio con JavaScript",
-        mentorNote: "Con tu mentor argentino 🇦🇷🇮🇹",
-        progressLabel: "Progreso Nivel 3",
-        navS0: "1. De la Web Estática a la Dinámica",
-        navS1: "2. Los Eventos (Clics, Acciones)",
-        navS2: "3. Modo Oscuro & Carrito",
-        navS3: "4. Validación de Formularios",
-        navS4: "5. Diploma de Interactividad",
+PAGE.init = () => {
+  document.getElementById('btn-demo-click').addEventListener('click', () => { clickCount++; renderClick(); });
+  document.getElementById('btn-toggle-theme').addEventListener('click', () => document.getElementById('theme-box').classList.toggle('dark'));
+  document.getElementById('btn-minus').addEventListener('click', () => { quantity = Math.max(1, quantity - 1); renderTotal(); });
+  document.getElementById('btn-plus').addEventListener('click', () => { quantity = Math.min(20, quantity + 1); renderTotal(); });
+  document.getElementById('btn-validate').addEventListener('click', validate);
+};
+PAGE.onLang = () => { renderTotal(); renderClick(); renderValidation(); };
 
-        // S0
-        tagS0: "Fase 1: Evolución",
-        titleS0: "La Revolución de JavaScript: De la Web 1.0 a la Web Viva",
-        subS0: "Cómo una página pasó de ser un simple periódico de texto a una aplicación viva.",
-        histS0Title: "Una historia fascinante: 10 días que cambiaron la historia",
-        histS0Text: "En <strong>1995</strong>, un programador llamado <strong>Brendan Eich</strong> creó el lenguaje <strong>JavaScript en apenas 10 días</strong> para el navegador Netscape Navigator. En sus inicios solo servía para pequeñas animaciones o validar un campo. Hoy es el lenguaje más utilizado del planeta y mueve toda la interactividad (desde Google Maps hasta Netflix, WhatsApp Web o juegos en el navegador).",
-        h2S0Web1vs2: "1. Web 1.0 vs Web 2.0 explicado fácil",
-        listS0Web1vs2: `
-          <li><strong>Web 1.0 (Solo Lectura):</strong> Solo podías leer textos y hacer clic en enlaces. Si querías ver nueva información, el navegador tenía que recargar toda la página desde cero.</li>
-          <li><strong>Web 2.0 (Interacción Viva):</strong> Haces clic en 'Me gusta', agregas un plato al carrito o abres una ventana flotante y la página responde en milisegundos sin recargar. Ese es el poder de <strong>JavaScript</strong>.</li>
-        `,
-        quizS0Title: "Comprobación Rápida: Sección 1",
-        q00Text: "1. ¿Cuál es el rol primordial de JavaScript en un sitio web moderno?",
-        btnNext0: "Avanzar a la Fase 2: Los Eventos (Mete mano al código) ➔",
-
-        // S1
-        tagS1: "Fase 2: Acción",
-        titleS1: "Los Eventos: Escuchar y Responder a los Clics del Usuario",
-        subS1: "En JavaScript todo sigue una lógica clara: 'Cuando suceda X (evento), ejecuta Y (función)'.",
-        mentorS1Title: "La Regla de tu Mentor",
-        mentorS1Text: "Ricardo, mira qué sencillo: en HTML pones un botón <code>&lt;button onclick='saludar()'&gt;</code> y en JavaScript escribes lo que debe pasar dentro de esa función. ¡Pruébalo en el laboratorio de abajo!",
-        labS1Title: "🛠️ Laboratorio en Vivo: Haz Clic en el Botón",
-        labS1Desc: "Observa cómo el texto y el color cambian de inmediato sin recargar la página:",
-        btnTestAction: "⚡ ¡Haz Clic para Activar JavaScript!",
-        quizS1Title: "Comprobación Rápida: Sección 2",
-        q10Text: "1. ¿Qué atributo HTML se usa habitualmente para ejecutar código JavaScript al hacer clic en un botón?",
-        btnNext1: "Avanzar a la Fase 3: Modo Oscuro & Carrito ➔",
-
-        // S2
-        tagS2: "Fase 3: Componentes Reales",
-        titleS2: "Dos Componentes que Todo Cliente te Va a Pedir",
-        subS2: "El interruptor de Modo Oscuro / Claro y el contador para ordenar productos.",
-        h2S2Dark: "1. El Interruptor de Modo Oscuro (Dark Mode)",
-        pS2Dark: "Los sitios web modernos permiten al visitante activar un fondo oscuro para descansar la vista. Presiona el interruptor:",
-        btnToggleTheme: "🌓 Alternar Modo Claro / Oscuro",
-        h2S2Counter: "2. El Contador Dinámico (Cantidad de Pedido)",
-        pS2Counter: "Cuando un cliente pide 3 pizzas o 2 servicios, este script actualiza la cantidad y el precio total en el acto:",
-        cartItemName: "🍕 Pizza Margherita Napolitana (€8,00)",
-        quizS2Title: "Comprobación Rápida: Sección 3",
-        q20Text: "1. ¿Cómo hace JavaScript para cambiar el estilo o color de un elemento al hacer clic?",
-        btnNext2: "Avanzar a la Fase 4: Validación de Formulario antes de la BD ➔",
-
-        // S3
-        tagS3: "Fase 4: Integración",
-        titleS3: "Validar los Datos Antes de Guardar en la Base de Datos",
-        subS3: "Cómo evitar que los usuarios envíen campos vacíos o correos inválidos a tu base de datos.",
-        tipS3Title: "El Guardián de la Base de Datos",
-        tipS3Text: "En el Nivel 1 aprendimos a guardar datos en SQLite. Pero ¿qué pasa si un cliente deja el correo vacío o escribe una contraseña de 2 letras? <strong>JavaScript intercepta el formulario antes del envío</strong>, valida los datos y avisa en rojo.",
-        valBoxTitle: "🛠️ Prueba el Validador en Vivo:",
-        valBoxDesc: "Intenta presionar 'Enviar a Base de Datos' dejando campos vacíos, o escribe un correo sin arroba @:",
-        lblValName: "Nombre Completo:",
-        btnValSubmit: "🚀 Verificar y Enviar a la Base de Datos",
-        btnNext3: "Ver el Diploma del Nivel 3 ➔",
-
-        // Cert
-        certTitle: "Certificado de Interactividad Web (Nivel 3)",
-        certSub: "Dominio de Eventos, Lógica Dinámica y Validación con JavaScript",
-        certDesc: "Completó con éxito el <strong>Nivel 3 de Interactividad</strong> aprendiendo a dar vida a elementos web, gestionar eventos del usuario y conectar la interfaz con el almacenamiento de datos.",
-        certRoleStudent: "Interactive Developer",
-        certRoleMentor: "Docente & Guía 🇦🇷",
-        btnPrintCert: "🖨️ Imprimir o Guardar PDF",
-        btnNextLvl4: "🚀 Pasar al Nivel 4: Proyecto Final & Publicación ➔"
-      }
-    };
-
-    function init() {
-      const savedLang = localStorage.getItem('riccardo_lang') || 'it';
-      setLanguage(savedLang);
-      loadSavedState();
-      updateProgressBar();
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('riccardo_lang', lang);
-
-      document.getElementById('btn-it').classList.toggle('active', lang === 'it');
-      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
-
-      const t = i18n[lang];
-
-      document.getElementById('txt-student-badge').innerHTML = t.studentBadge;
-      document.getElementById('txt-course-title').innerText = t.courseTitle;
-      document.getElementById('txt-mentor-note').innerText = t.mentorNote;
-      document.getElementById('txt-progress-label').innerText = t.progressLabel;
-
-      document.getElementById('nav-s0').innerText = t.navS0;
-      document.getElementById('nav-s1').innerText = t.navS1;
-      document.getElementById('nav-s2').innerText = t.navS2;
-      document.getElementById('nav-s3').innerText = t.navS3;
-      document.getElementById('nav-s4').innerText = t.navS4;
-
-      // S0
-      document.getElementById('tag-s0').innerText = t.tagS0;
-      document.getElementById('title-s0').innerText = t.titleS0;
-      document.getElementById('sub-s0').innerText = t.subS0;
-      document.getElementById('hist-s0-title').innerText = t.histS0Title;
-      document.getElementById('hist-s0-text').innerHTML = t.histS0Text;
-      document.getElementById('h2-s0-web1vs2').innerText = t.h2S0Web1vs2;
-      document.getElementById('list-s0-web1vs2').innerHTML = t.listS0Web1vs2;
-      document.getElementById('quiz-s0-title').innerText = t.quizS0Title;
-      document.getElementById('q-0-0-text').innerText = t.q00Text;
-      document.getElementById('btn-next-0').querySelector('span').innerText = t.btnNext0;
-
-      // S1
-      document.getElementById('tag-s1').innerText = t.tagS1;
-      document.getElementById('title-s1').innerText = t.titleS1;
-      document.getElementById('sub-s1').innerText = t.subS1;
-      document.getElementById('mentor-s1-title').innerText = t.mentorS1Title;
-      document.getElementById('mentor-s1-text').innerHTML = t.mentorS1Text;
-      document.getElementById('lab-s1-title').innerText = t.labS1Title;
-      document.getElementById('lab-s1-desc').innerText = t.labS1Desc;
-      document.getElementById('btn-test-action').innerText = t.btnTestAction;
-      document.getElementById('quiz-s1-title').innerText = t.quizS1Title;
-      document.getElementById('q-1-0-text').innerText = t.q10Text;
-      document.getElementById('btn-next-1').querySelector('span').innerText = t.btnNext1;
-
-      // S2
-      document.getElementById('tag-s2').innerText = t.tagS2;
-      document.getElementById('title-s2').innerText = t.titleS2;
-      document.getElementById('sub-s2').innerText = t.subS2;
-      document.getElementById('h2-s2-dark').innerText = t.h2S2Dark;
-      document.getElementById('p-s2-dark').innerText = t.pS2Dark;
-      document.getElementById('btn-toggle-theme').innerText = t.btnToggleTheme;
-      document.getElementById('h2-s2-counter').innerText = t.h2S2Counter;
-      document.getElementById('p-s2-counter').innerText = t.pS2Counter;
-      document.getElementById('cart-item-name').innerText = t.cartItemName;
-      document.getElementById('quiz-s2-title').innerText = t.quizS2Title;
-      document.getElementById('q-2-0-text').innerText = t.q20Text;
-      document.getElementById('btn-next-2').querySelector('span').innerText = t.btnNext2;
-
-      // S3
-      document.getElementById('tag-s3').innerText = t.tagS3;
-      document.getElementById('title-s3').innerText = t.titleS3;
-      document.getElementById('sub-s3').innerText = t.subS3;
-      document.getElementById('tip-s3-title').innerText = t.tipS3Title;
-      document.getElementById('tip-s3-text').innerHTML = t.tipS3Text;
-      document.getElementById('val-box-title').innerText = t.valBoxTitle;
-      document.getElementById('val-box-desc').innerText = t.valBoxDesc;
-      document.getElementById('lbl-val-name').innerText = t.lblValName;
-      document.getElementById('btn-val-submit').innerText = t.btnValSubmit;
-      document.getElementById('btn-next-3').querySelector('span').innerText = t.btnNext3;
-
-      // Cert
-      document.getElementById('cert-title').innerText = t.certTitle;
-      document.getElementById('cert-sub').innerText = t.certSub;
-      document.getElementById('cert-name').innerText = lang === 'it' ? 'Riccardo' : 'Ricardo';
-      document.getElementById('cert-desc').innerHTML = t.certDesc;
-      document.getElementById('cert-role-student').innerText = t.certRoleStudent;
-      document.getElementById('cert-role-mentor').innerText = t.certRoleMentor;
-      document.getElementById('btnPrintCert').innerText = t.btnPrintCert;
-      document.getElementById('btn-next-lvl4').innerText = t.btnNextLvl4;
-
-      for (let s = 0; s < 3; s++) {
-        if (completedSections[s]) renderQuizFeedback(s);
-      }
-    }
-
-    function switchSection(index) {
-      currentSection = index;
-      for (let i = 0; i < totalSections; i++) {
-        const sec = document.getElementById(`sec-${i}`);
-        if (sec) sec.style.display = (i === index) ? 'block' : 'none';
-
-        const nav = document.querySelectorAll('.nav-item')[i];
-        if (nav) nav.classList.toggle('active', i === index);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // ==========================================
-    // INTERACTIVE JS DEMOS
-    // ==========================================
-    let clickCount = 0;
-    function testClickAction() {
-      clickCount++;
-      const el = document.getElementById('demo-msg');
-      if (currentLang === 'it') {
-        el.innerText = `🎉 Bravissimo Riccardo! Hai attivato JavaScript (Click n° ${clickCount})!`;
-      } else {
-        el.innerText = `🎉 ¡Excelente Ricardo! Activaste JavaScript (Clic n° ${clickCount})!`;
-      }
-      el.style.color = '#10b981';
-      el.style.fontWeight = '700';
-    }
-
-    function toggleThemeDemo() {
-      const box = document.getElementById('theme-box');
-      box.classList.toggle('dark');
-    }
-
-    let quantity = 1;
-    const unitPrice = 8;
-    function changeCounter(delta) {
-      quantity = Math.max(1, quantity + delta);
-      document.getElementById('counter-val').innerText = quantity;
-      const total = quantity * unitPrice;
-      document.getElementById('total-price-text').innerText = `Totale: €${total},00`;
-    }
-
-    function validateFormDemo() {
-      const name = document.getElementById('val-in-name').value.trim();
-      const email = document.getElementById('val-in-email').value.trim();
-      const res = document.getElementById('val-result-msg');
-      res.style.display = 'block';
-
-      if (!name) {
-        res.style.background = '#fee2e2';
-        res.style.color = '#991b1b';
-        res.style.border = '1px solid #fecaca';
-        res.innerText = currentLang === 'it' ? '❌ Errore: Il campo Nome non può essere vuoto!' : '❌ Error: ¡El campo Nombre no puede estar vacío!';
-        return;
-      }
-
-      if (!email || !email.includes('@') || !email.includes('.')) {
-        res.style.background = '#fee2e2';
-        res.style.color = '#991b1b';
-        res.style.border = '1px solid #fecaca';
-        res.innerText = currentLang === 'it' ? '❌ Errore: Inserisci un indirizzo email valido con @!' : '❌ Error: ¡Ingresa un correo electrónico válido con @!';
-        return;
-      }
-
-      // Success
-      res.style.background = '#d1fae5';
-      res.style.color = '#065f46';
-      res.style.border = '1px solid #a7f3d0';
-      res.innerHTML = currentLang === 'it' 
-        ? `✅ <strong>Dati Perfetti!</strong> JavaScript ha validato con successo e ha inviato [${name} | ${email}] al Database SQLite!` 
-        : `✅ <strong>¡Datos Correctos!</strong> JavaScript validó con éxito y envió [${name} | ${email}] a la Base de Datos SQLite!`;
-    }
-
-    // ==========================================
-    // QUIZ SYSTEM
-    // ==========================================
-    function selectOption(secId, qId, optIndex) {
-      userAnswers[secId][qId] = optIndex;
-      const qBlock = document.getElementById(`q-block-${secId}-${qId}`);
-      const btns = qBlock.querySelectorAll('.option-btn');
-      btns.forEach((btn, idx) => btn.classList.toggle('selected', idx === optIndex));
-    }
-
-    function checkSectionQuiz(secId) {
-      const questions = quizData[secId];
-      let correctCount = 0;
-      let answeredCount = 0;
-
-      questions.forEach((q, qIndex) => {
-        const userChoice = userAnswers[secId][qIndex];
-        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
-        const qBlock = document.getElementById(`q-block-${secId}-${qIndex}`);
-        const btns = qBlock.querySelectorAll('.option-btn');
-
-        if (userChoice !== undefined) {
-          answeredCount++;
-          if (userChoice === q.correct) {
-            correctCount++;
-            fbBox.className = 'feedback-box correct';
-            fbBox.innerText = q.feedback[currentLang].correct;
-            btns[userChoice].className = 'option-btn correct';
-          } else {
-            fbBox.className = 'feedback-box wrong';
-            fbBox.innerText = q.feedback[currentLang].wrong;
-            btns[userChoice].className = 'option-btn wrong';
-            btns[q.correct].className = 'option-btn correct';
-          }
-        }
-      });
-
-      if (answeredCount < questions.length) {
-        alert(currentLang === 'it' ? 'Rispondi alla domanda!' : '¡Responde la pregunta!');
-        return;
-      }
-
-      const badge = document.getElementById(`score-badge-${secId}`);
-      badge.innerText = `${correctCount}/${questions.length} ${currentLang === 'it' ? 'Corretta' : 'Correcta'}`;
-
-      if (correctCount === questions.length) {
-        completedSections[secId] = true;
-        document.getElementById(`check-${secId}`).style.display = 'inline-block';
-        document.querySelectorAll('.nav-item')[secId].classList.add('completed');
-      }
-
-      saveState();
-      updateProgressBar();
-    }
-
-    function renderQuizFeedback(secId) {
-      const questions = quizData[secId];
-      questions.forEach((q, qIndex) => {
-        const userChoice = userAnswers[secId][qIndex];
-        const fbBox = document.getElementById(`fb-${secId}-${qIndex}`);
-        if (userChoice !== undefined && fbBox) {
-          const isCorrect = userChoice === q.correct;
-          fbBox.className = isCorrect ? 'feedback-box correct' : 'feedback-box wrong';
-          fbBox.innerText = isCorrect ? q.feedback[currentLang].correct : q.feedback[currentLang].wrong;
-        }
-      });
-    }
-
-    function updateProgressBar() {
-      let count = 0;
-      for (let i = 0; i < 3; i++) {
-        if (completedSections[i]) count++;
-      }
-      completedSections[3] = true;
-      document.getElementById('check-3').style.display = 'inline-block';
-      document.querySelectorAll('.nav-item')[3].classList.add('completed');
-      count++;
-
-      if (count >= 4) {
-        completedSections[4] = true;
-        document.getElementById('check-4').style.display = 'inline-block';
-        document.querySelectorAll('.nav-item')[4].classList.add('completed');
-        count = 5;
-      }
-
-      const percent = Math.round((count / 5) * 100);
-      document.getElementById('progress-percent').innerText = `${percent}%`;
-      document.getElementById('progress-fill').style.width = `${percent}%`;
-    }
-
-    function copyCode(btn) {
-      const code = btn.parentElement.querySelector('code').innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        const old = btn.innerText;
-        btn.innerText = currentLang === 'it' ? 'Copiato!' : '¡Copiado!';
-        setTimeout(() => btn.innerText = old, 1500);
-      });
-    }
-
-    function saveState() {
-      const state = { answers: userAnswers, completed: completedSections };
-      localStorage.setItem('riccardo_m3_state', JSON.stringify(state));
-    }
-
-    function loadSavedState() {
-      const saved = localStorage.getItem('riccardo_m3_state');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          userAnswers = parsed.answers || userAnswers;
-          completedSections = parsed.completed || completedSections;
-          for (let i = 0; i < 5; i++) {
-            if (completedSections[i]) {
-              const chk = document.getElementById(`check-${i}`);
-              if (chk) chk.style.display = 'inline-block';
-              const nav = document.querySelectorAll('.nav-item')[i];
-              if (nav) nav.classList.add('completed');
-            }
-          }
-        } catch(e) { console.error(e); }
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
